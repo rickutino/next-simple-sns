@@ -70,7 +70,7 @@ AnyCloudの研修用にシンプルなsnsアプリを作成.
 
 ## License
  
- This project is under the MIT license. See the [LICENSE](LICENSE.md) for more details.
+ This project is under the MIT license. See the [LICENSE](LICENSE) for more details.
 ## Authors
  
 * Ricardo Utino: @rickutino (https://github.com/rickutino)
