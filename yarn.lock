@@ -1049,14 +1049,6 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
-"@material-ui/styled-engine@npm:@mui/styled-engine-sc@latest", "@mui/styled-engine-sc@^5.3.0", "@mui/styled-engine@^5.3.0", "@mui/styled-engine@npm:@mui/styled-engine-sc@latest":
-  name "@mui/styled-engine"
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.3.0.tgz#4e63e1d2b1a74ea5b422f8b1e12140d8f9356ce9"
-  integrity sha512-dASXl3Xn56tGtDBJC61G4dxsfkkgYaVsqEBqNfmi3NxUjXT7Tlz/wr4FVFJARZ7Fef0NYWNE8sb+exfGecjXyA==
-  dependencies:
-    prop-types "^15.7.2"
-
 "@material-ui/styles@^4.11.4":
   version "4.11.4"
   resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.11.4.tgz#eb9dfccfcc2d208243d986457dff025497afa00d"
@@ -1148,6 +1140,13 @@
   dependencies:
     "@babel/runtime" "^7.16.7"
     "@mui/utils" "^5.3.0"
+    prop-types "^15.7.2"
+
+"@mui/styled-engine-sc@^5.3.0", "@mui/styled-engine@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.3.0.tgz#4e63e1d2b1a74ea5b422f8b1e12140d8f9356ce9"
+  integrity sha512-dASXl3Xn56tGtDBJC61G4dxsfkkgYaVsqEBqNfmi3NxUjXT7Tlz/wr4FVFJARZ7Fef0NYWNE8sb+exfGecjXyA==
+  dependencies:
     prop-types "^15.7.2"
 
 "@mui/system@^5.3.0":
