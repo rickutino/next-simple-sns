@@ -1,3 +1,4 @@
+import "../styles/styles.css";
 import theme from "../styles/theme";
 import {
   ThemeProvider as MaterialThemeProvider,
