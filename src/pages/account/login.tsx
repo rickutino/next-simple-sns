@@ -1,14 +1,47 @@
+import type { NextPage } from "next";
+import { useForm, FormProvider } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { Box, Grid, Typography } from '@mui/material';
 
-
 import StyledButton from '../../components/StyledButton';
 import theme from "../../styles/theme";
-import StyledInput from '../../components/StyledInput';
+import { RHFTextInput } from "../../components/RHFTextInput";
 
-export default function Login() {
+
+interface ILoginForm {
+  email: string;
+  password: string;
+}
+
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email("有効なメールアドレスを入力してください。")
+    .required("メールアドレスは必出です。"),
+  password: yup
+    .string()
+    .min(8, "パスワードを8文字以上にいれてください。.")
+    .required("パスワードは必出ですa."),
+});
+
+export default function Login({}: NextPage) {
+  const methods = useForm<ILoginForm>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: ILoginForm) => {
+    console.log(data);
+    methods.reset();
+  };
+
   return (
     <>
       <Grid container component="main" sx={{ height: '100vh', backgroundColor: theme.palette.primary.main, color: theme.palette.grey[200] }}>
@@ -33,33 +66,30 @@ export default function Login() {
               ログイン
             </Typography>
 
-            <Box component="form" noValidate  sx={{ mt: 7 }}> {/* onSubmit={} */}
-              <StyledInput
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <StyledInput
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <StyledButton
-                type="submit"
-                fullWidth
-                variant="contained"
-              >
-                ログイン
-              </StyledButton>
-              <Link href="#">Link</Link>
+
+            <Box sx={{ mt: 7 }}>
+              <FormProvider {...methods}>
+                <form onSubmit={methods.handleSubmit(onSubmit)}>
+                  <RHFTextInput
+                    label="Email"
+                    name="email"
+                    type="text"
+                  />
+                  <RHFTextInput
+                    name="password"
+                    label="Password"
+                    type="password"
+                  />
+                  <StyledButton
+                    variant="contained"
+                    fullWidth
+                    type="submit"
+                  >
+                    ログイン
+                  </StyledButton>
+                  <Link href="#">Link</Link>
+                </form>
+              </FormProvider>
             </Box>
           </Box>
         </Grid>
