@@ -1,15 +1,16 @@
 import type { NextPage } from "next";
+import Image from 'next/image';
+import Link from 'next/link';
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Image from 'next/image';
-import Link from 'next/link';
 
 import { Box, Grid, Typography } from '@mui/material';
 
-import StyledButton from '../../components/StyledButton';
 import theme from "../../styles/theme";
+import StyledButton from '../../components/StyledButton';
 import { RHFTextInput } from "../../components/RHFTextInput";
+
 
 
 interface ILoginForm {
@@ -62,7 +63,7 @@ export default function Login({}: NextPage) {
               height={200}
             />
 
-            <Typography component="h2" variant="h5" sx={{ fontWeight: 'bold' }}>
+            <Typography component="h2" variant="h5" sx={{ mt: 2, fontWeight: 'bold' }}>
               ログイン
             </Typography>
 
@@ -74,11 +75,19 @@ export default function Login({}: NextPage) {
                     label="Email"
                     name="email"
                     type="text"
+                    defaultValue="Small"
+                    size="small"
+                    variant="standard"
+                    fullWidth
                   />
                   <RHFTextInput
                     name="password"
                     label="Password"
                     type="password"
+                    defaultValue="Small"
+                    size="small"
+                    variant="standard"
+                    fullWidth
                   />
                   <StyledButton
                     variant="contained"
@@ -87,9 +96,12 @@ export default function Login({}: NextPage) {
                   >
                     ログイン
                   </StyledButton>
-                  <Link href="#">Link</Link>
                 </form>
               </FormProvider>
+            </Box>
+
+            <Box sx={{ mt: 18 }}>
+              <Link href="#">新しいアカウントを作成</Link>
             </Box>
           </Box>
         </Grid>

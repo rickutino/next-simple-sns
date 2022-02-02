@@ -9,3 +9,9 @@ body{
   -webkit-font-smoothing: antialiased !important;
   background-color: #5636D3;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

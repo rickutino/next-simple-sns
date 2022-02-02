@@ -1,9 +1,14 @@
-import { useFormContext, Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import StyledInput from "./StyledInput";
 interface ITextInput {
   name: string;
   type: "text" | "password";
   label: string;
+  fullWidth: true;
+  required: true;
+  defaultValue: string;
+  size: string;
+  otherProp?: any;
 }
 
 export const RHFTextInput: React.FC<ITextInput> = ({ name, type, label }) => {

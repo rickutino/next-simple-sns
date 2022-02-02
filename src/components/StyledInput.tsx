@@ -13,7 +13,7 @@ const StyledInput = styled(TextField)`
   outline: 0;
   color: ${props => props.theme.palette.grey[800]};
   height: 48px;
-  weight: 325px;
+  width: 325px;
   padding: 0 auto;
   &&:nth-child(2) {
     margin-top: 0.5rem;
