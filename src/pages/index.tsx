@@ -1,11 +1,13 @@
-import StyledButton from "../components/Button";
-import { Button } from '@material-ui/core';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
 export default function Home() {
+  const { user } = useContext(AuthContext);
+
   return (
     <>
-      <Button variant="contained" color="secondary">Material-UI</Button>
-      <StyledButton>Hello World</StyledButton>
+      <img src={user?.iconImageUrl} alt="User Image"/>
+      <h1>Post: {user?.email}</h1>
     </>
   );
 }

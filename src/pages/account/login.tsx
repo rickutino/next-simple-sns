@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm, FormProvider } from "react-hook-form";
+
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -10,8 +11,8 @@ import { Box, Grid, Typography } from '@mui/material';
 import theme from "../../styles/theme";
 import StyledButton from '../../components/StyledButton';
 import { RHFTextInput } from "../../components/RHFTextInput";
-
-
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 interface ILoginForm {
   email: string;
@@ -30,6 +31,8 @@ const schema = yup.object().shape({
 });
 
 export default function Login({}: NextPage) {
+  const { login, isAuthenticated } = useContext(AuthContext);
+
   const methods = useForm<ILoginForm>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -38,9 +41,10 @@ export default function Login({}: NextPage) {
     },
   });
 
-  const onSubmit = (data: ILoginForm) => {
-    console.log(data);
-    methods.reset();
+  async function handleSingIn (data: ILoginForm)  {
+    await login(data);
+
+    // methods.reset();
   };
 
   return (
@@ -70,14 +74,13 @@ export default function Login({}: NextPage) {
 
             <Box sx={{ mt: 7 }}>
               <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit(onSubmit)}>
+                <form onSubmit={methods.handleSubmit(handleSingIn)}>
                   <RHFTextInput
                     label="Email"
                     name="email"
                     type="text"
                     defaultValue="Small"
                     size="small"
-                    variant="standard"
                     fullWidth
                   />
                   <RHFTextInput
@@ -86,7 +89,6 @@ export default function Login({}: NextPage) {
                     type="password"
                     defaultValue="Small"
                     size="small"
-                    variant="standard"
                     fullWidth
                   />
                   <StyledButton
@@ -113,8 +115,6 @@ export default function Login({}: NextPage) {
           sx={{
             backgroundImage: 'url(https://user-images.githubusercontent.com/48019175/151697465-e9dfa806-5404-4142-bf8b-4cdaa8957f74.png)',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
         }}/>

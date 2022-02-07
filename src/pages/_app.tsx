@@ -1,5 +1,6 @@
 import "../styles/styles.css";
 import theme from "../styles/theme";
+import { AuthProvider } from "../contexts/AuthContext";
 import {
   ThemeProvider as MaterialThemeProvider,
   StylesProvider
@@ -15,7 +16,9 @@ export default function MyApp({ Component, pageProps }) {
       <StylesProvider injectFirst>
         <MaterialThemeProvider theme={theme}>
           <StyledThemeProvider theme={theme}>
-            <Component {...pageProps} />
+            <AuthProvider>
+              <Component {...pageProps} />
+            </AuthProvider>
           </StyledThemeProvider>
         </MaterialThemeProvider>
       </StylesProvider>
