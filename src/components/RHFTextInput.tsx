@@ -4,8 +4,7 @@ interface ITextInput {
   name: string;
   type: "text" | "password";
   label: string;
-  fullWidth: true;
-  required: true;
+  fullWidth: boolean;
   defaultValue: string;
   size: string;
   otherProp?: any;
