@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useState } from "react";
-import { setCookie } from 'nookies';
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { parseCookies, setCookie } from 'nookies';
 import Router from "next/router";
 import { api } from "../services/api";
 
@@ -30,6 +30,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>()
   const isAuthenticated = !!user;
 
+  useEffect(() => {
+    const { 'next-simple-sns': token } = parseCookies();
+
+    if(token) {
+      api.get('/account').then(response => {
+        console.log(response);
+        const { name, email, iconImageURL } = response.data;
+
+        setUser({ name, email, iconImageURL })
+      })
+    }
+  }, [])
+
   async function login({ email, password }: LoginCredentials) {
     try {
       const response = await api.post('auth', {
@@ -47,6 +60,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser({
         email
       });
+
+      // Headerにあるtokenの更新
+      api.defaults.headers['Authorization'] = `Bearer ${token}`
 
       Router.push('/')
     } catch (error) {
