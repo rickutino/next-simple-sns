@@ -35,10 +35,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if(token) {
       api.get('/account').then(response => {
-        console.log(response);
-        const { name, email, iconImageURL } = response.data;
+        const { name, email, iconImageUrl } = response.data.user;
 
-        setUser({ name, email, iconImageURL })
+        setUser({ name, email, iconImageUrl })
       })
     }
   }, [])
@@ -50,7 +49,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password
       });
 
-      const { token, name, iconImageUrl } = response.data;
+      console.log("login", response);
+
+      const { token } = response.data;
+      const { name, iconImageUrl } = response.data.user;
 
       setCookie(undefined, 'next-simple-sns', token, {
         maxAge: 60 * 60 * 24, //24 hours;
@@ -58,7 +60,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       setUser({
-        email
+        name, email, iconImageUrl
       });
 
       // Headerにあるtokenの更新
