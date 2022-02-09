@@ -14,8 +14,15 @@ interface LoginCredentials {
   password: string;
 }
 
+interface SingUpCredentials {
+  name: string;
+  email: string;
+  password: string;
+}
+
 interface AuthContextData {
   login(credentials: LoginCredentials): Promise<void>;
+  singUp(credentials: SingUpCredentials): Promise<void>;
   isAuthenticated: boolean;
   user: User;
 }
@@ -71,9 +78,56 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log(error);
     }
   }
+  
+  async function singUp({ name, email, password }: SingUpCredentials) {
+    try {
+      const response = await api.post('account', {
+        name,
+        email,
+        password
+      });
+
+      const { token } = response.data;
+
+      setUser({
+        name,
+        email
+      });
+
+      const responseUploadIconImage = await api.patch('account/icon_image', {
+        ...user,
+        iconImageUrl: "PrefixIconImage"
+      });
+
+      const { iconImageUrl } = responseUploadIconImage.data.user.iconImageUrl;
+
+      setUser({
+        ...user,
+        iconImageUrl
+      });
+
+      setCookie(undefined, 'next-simple-sns', token, {
+        maxAge: 60 * 60 * 24, //24 hours;
+        path: '/' //どのパスがこのクッキーをアクセスできるか。
+      });
+
+      setUser({
+        name,
+        email,
+        iconImageUrl
+      });
+
+      // Headerにあるtokenの更新
+      api.defaults.headers['Authorization'] = `Bearer ${token}`
+
+      Router.push('/')
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
-    <AuthContext.Provider value={{ login, isAuthenticated, user }}>
+    <AuthContext.Provider value={{ login, singUp, isAuthenticated, user }}>
       { children }
     </AuthContext.Provider>
   )
