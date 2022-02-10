@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { parseCookies } from "nookies";
+import Router from "next/router";
+import { destroyCookie, parseCookies } from "nookies";
 
 const cookies = parseCookies();
 
@@ -13,5 +14,13 @@ export const api = axios.create({
 api.interceptors.response.use(response => {
   return response;
 }, (error: AxiosError) => {
-  console.log(error.response);
+  if (error.response.status === 401) {
+    if(error.response.statusText === 'Unauthorized') {
+      destroyCookie(undefined, 'next-simple-sns');
+
+      Router.push('/account/login')
+    }
+  };
+
+  return Promise.reject(error);
 });
