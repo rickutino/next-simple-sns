@@ -31,7 +31,7 @@ const schema = yup.object().shape({
 });
 
 export default function Login({}: NextPage) {
-  const { login, isAuthenticated } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const methods = useForm<ILoginForm>({
     resolver: yupResolver(schema),
@@ -44,7 +44,7 @@ export default function Login({}: NextPage) {
   async function handleSingIn (data: ILoginForm)  {
     await login(data);
 
-    // methods.reset();
+    methods.reset();
   };
 
   return (
@@ -103,7 +103,7 @@ export default function Login({}: NextPage) {
             </Box>
 
             <Box sx={{ mt: 18 }}>
-              <Link href="#">新しいアカウントを作成</Link>
+              <Link href="/account/singup">新しいアカウントを作成</Link>
             </Box>
           </Box>
         </Grid>
