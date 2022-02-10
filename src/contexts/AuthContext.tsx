@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { parseCookies, setCookie } from 'nookies';
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { api } from "../services/api";
 
 interface User {
@@ -23,7 +23,6 @@ interface SingUpCredentials {
 interface AuthContextData {
   login(credentials: LoginCredentials): Promise<void>;
   singUp(credentials: SingUpCredentials): Promise<void>;
-  isAuthenticated: boolean;
   user: User;
 }
 
@@ -34,18 +33,34 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User>()
-  const isAuthenticated = !!user;
+  const [user, setUser] = useState<User>();
+  const router = useRouter();
+
+  useEffect(() => {
+    window.addEventListener('popstate', function(e) {
+      router.push('/');
+    });
+    // cleanup this component
+    return () => {
+      window.removeEventListener('popstate', function(e) {});
+    };
+  }, []);
 
   useEffect(() => {
     const { 'next-simple-sns': token } = parseCookies();
+
+    if(!!token) {
+      router.push('/')
+    };
 
     if(token) {
       api.get('/account').then(response => {
         const { name, email, iconImageUrl } = response.data.user;
 
         setUser({ name, email, iconImageUrl })
-      })
+      }).catch((error) => {
+      console.log(error);
+    });
     }
   }, [])
 
@@ -56,10 +71,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password
       });
 
-      console.log("login", response);
-
-      const { token } = response.data;
-      const { name, iconImageUrl } = response.data.user;
+      const { token, user: { name, iconImageUrl} } = response.data;
 
       setCookie(undefined, 'next-simple-sns', token, {
         maxAge: 60 * 60 * 24, //24 hours;
@@ -73,12 +85,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Headerにあるtokenの更新
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
-      Router.push('/')
-    } catch (error) {
-      console.log(error);
+      router.push('/')
+    } catch (err) {
+      console.log(err);
     }
   }
-  
+
   async function singUp({ name, email, password }: SingUpCredentials) {
     try {
       const response = await api.post('account', {
@@ -87,47 +99,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password
       });
 
-      const { token } = response.data;
-
       setUser({
         name,
         email
       });
 
-      const responseUploadIconImage = await api.patch('account/icon_image', {
-        ...user,
-        iconImageUrl: "PrefixIconImage"
-      });
-
-      const { iconImageUrl } = responseUploadIconImage.data.user.iconImageUrl;
-
-      setUser({
-        ...user,
-        iconImageUrl
-      });
+      const { token } = response.data;
 
       setCookie(undefined, 'next-simple-sns', token, {
         maxAge: 60 * 60 * 24, //24 hours;
         path: '/' //どのパスがこのクッキーをアクセスできるか。
       });
 
-      setUser({
-        name,
-        email,
-        iconImageUrl
-      });
-
-      // Headerにあるtokenの更新
+      // Headerにあるtokenアクセスの更新をさせる。
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
-      Router.push('/')
+      router.push('/')
     } catch (error) {
       console.log(error);
     }
   }
 
   return (
-    <AuthContext.Provider value={{ login, singUp, isAuthenticated, user }}>
+    <AuthContext.Provider value={{ login, singUp, user }}>
       { children }
     </AuthContext.Provider>
   )
