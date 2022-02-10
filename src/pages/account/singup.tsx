@@ -46,16 +46,16 @@ export default function SingUp({}: NextPage) {
   });
 
   async function handleSingIn (data: ISingUpForm)  {
-    const { singUp, isAuthenticated } = useContext(AuthContext);
+    const { singUp } = useContext(AuthContext);
     await singUp(data);
 
-    // methods.reset();
+    methods.reset();
   };
 
   return (
     <>
       <Grid container component="main" sx={{ height: '100vh', backgroundColor: theme.palette.primary.main, color: theme.palette.grey[200] }}>
-          
+
         <Grid
           item
           xs={false}
@@ -128,7 +128,7 @@ export default function SingUp({}: NextPage) {
             </Box>
 
             <Box sx={{ mt: 18 }}>
-              <Link href="#">ログインに戻る</Link>
+              <Link href="/account/login">ログインに戻る</Link>
             </Box>
           </Box>
         </Grid>
