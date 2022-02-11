@@ -18,6 +18,9 @@ const StyledInput = styled(TextField)`
   &&:nth-child(2) {
     margin-top: 0.5rem;
   }
+  &&:nth-child(3) {
+    margin-top: 0.5rem;
+  }
 `;
 
 export default StyledInput;
