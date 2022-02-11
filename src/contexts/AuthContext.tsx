@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { parseCookies, setCookie } from 'nookies';
+import { setCookie } from 'nookies';
 import { useRouter } from "next/router";
 import { api } from "../services/api";
-import { GetServerSideProps } from "next";
+
+import { useToasts } from "react-toast-notifications";
 
 interface User {
   name?: string;
@@ -34,6 +35,7 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const { addToast } = useToasts();
   const [user, setUser] = useState<User>();
   const router = useRouter();
 
@@ -58,13 +60,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   async function login({ email, password }: LoginCredentials) {
-    try {
-      const response = await api.post('auth', {
-        email,
-        password
-      });
-
-      const { token, user: { name, iconImageUrl} } = response.data;
+    await api.post('auth', {
+      email,
+      password
+    }).then(response => {
+      const { token, user: { name, iconImageUrl}} = response.data;
 
       setCookie(undefined, 'next-simple-sns', token, {
         maxAge: 60 * 60 * 24, //24 hours;
@@ -79,9 +79,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
       router.push('/')
-    } catch (err) {
-      console.log(err);
-    }
+
+    }).catch(() => {
+      addToast("メールアドレスかパスワードが間違っています",{
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    });
   }
 
   async function singUp({ name, email, password }: SingUpCredentials) {
@@ -109,7 +113,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       router.push('/')
     } catch (error) {
-      console.log(error);
+      addToast("このメールアドレスは既に使われています。",{
+        appearance: 'error',
+        autoDismiss: true,
+      });
     }
   }
 
@@ -118,21 +125,4 @@ export function AuthProvider({ children }: AuthProviderProps) {
       { children }
     </AuthContext.Provider>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ['next-simple-sns']: token } = parseCookies(ctx)
-
-  if (!token) {
-    return {
-      redirect: {
-        destination: '/account/login',
-        permanent: false,
-      }
-    }
-  }
-
-  return {
-    props: {}
-  }
 }

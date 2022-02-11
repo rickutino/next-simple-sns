@@ -8,6 +8,7 @@ import {
 import styled, {
   ThemeProvider as StyledThemeProvider
 } from "styled-components";
+import { ToastProvider } from "react-toast-notifications";
 
 
 export default function MyApp({ Component, pageProps }) {
@@ -16,9 +17,11 @@ export default function MyApp({ Component, pageProps }) {
       <StylesProvider injectFirst>
         <MaterialThemeProvider theme={theme}>
           <StyledThemeProvider theme={theme}>
-            <AuthProvider>
-              <Component {...pageProps} />
-            </AuthProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <Component {...pageProps} />
+              </AuthProvider>
+            </ToastProvider>
           </StyledThemeProvider>
         </MaterialThemeProvider>
       </StylesProvider>
