@@ -24,7 +24,6 @@ interface ISingUpForm {
 const schema = yup.object().shape({
   name: yup
     .string()
-    .email("名前を入力してください。")
     .required("名前は必出です。"),
   email: yup
     .string()
@@ -37,6 +36,8 @@ const schema = yup.object().shape({
 });
 
 export default function SingUp({}: NextPage) {
+  const { singUp } = useContext(AuthContext);
+
   const methods = useForm<ISingUpForm>({
     mode: "onChange",
     resolver: yupResolver(schema),
@@ -48,7 +49,6 @@ export default function SingUp({}: NextPage) {
   });
 
   async function handleSingIn (data: ISingUpForm)  {
-    const { singUp } = useContext(AuthContext);
     await singUp(data);
 
     methods.reset();
@@ -63,7 +63,7 @@ export default function SingUp({}: NextPage) {
           xs={false}
           lg={6.5}
           sx={{
-            backgroundImage: 'url(SingUp.png)',
+            backgroundImage: 'url(https://user-images.githubusercontent.com/48019175/153536143-2b002027-7d7d-4ed8-b967-5507498aa916.jpg)',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
