@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 
-import ImageIcon from '../components/ImageIcon';
+import ImageIcon from '../styles/ImageIcon';
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
+import { AppBar, Container, Toolbar, Box, IconButton, Avatar, ListItem, ListItemAvatar, Card, CardHeader, Typography } from '@mui/material';
+import Image from 'next/image';
+import theme from '../styles/theme';
 
 interface User {
   name: string;
@@ -17,10 +20,8 @@ interface Posts {
 }
 
 export default function Home() {
-  const [user, setUser] = useState<User>()
-  const [posts, setPosts] = useState<Posts[]>([])
-
-
+  const [user, setUser] = useState<User>();
+  const [posts, setPosts] = useState<Posts[]>([]);
 
   useEffect(() => {
     api.get('/posts').then(response => {
@@ -41,6 +42,26 @@ export default function Home() {
 
   return (
     <>
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <Box sx={{ mr: 8, display: { xs: 'none', md: 'flex' } }}>
+              <Image
+                src={`/logo.svg`}
+                alt="logo"
+                width={200}
+                height={144}
+              />
+              <Avatar alt="current_user" src="/icons/profileIcon.png" sx={{ width: 56, height: 56 }} />
+              <Box>
+                <Typography>Welcome</Typography>
+                <Typography>{user.name}</Typography>
+              </Box>
+            </Box>
+
+          </Toolbar>
+        </Container>
+      </AppBar>
       <ImageIcon
         src={`/icons/profileIcon.png`}
         alt="User Icon"
