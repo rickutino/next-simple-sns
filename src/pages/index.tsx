@@ -1,8 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import Router from "next/router";
+
 import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
+
 import Link from 'next/link';
+import Image from 'next/image';
+import ImageIcon from '../components/ImageIcon';
 
 interface User {
   name: string;
@@ -50,7 +54,12 @@ export default function Home() {
         </h2>
       }
       {user?.iconImageUrl  == null &&
-        <img src="../profileIcon.png" alt="User Icon" />
+        <ImageIcon
+          src={`/icons/profileIcon.png`}
+          alt="User Icon"
+          width={160}
+          height={160}
+        />
       }
       <h1>name: {user?.name}</h1>
 
