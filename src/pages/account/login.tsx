@@ -34,6 +34,7 @@ export default function Login({}: NextPage) {
   const { login } = useContext(AuthContext);
 
   const methods = useForm<ILoginForm>({
+    mode: "onChange",
     resolver: yupResolver(schema),
     defaultValues: {
       email: "",
@@ -94,6 +95,7 @@ export default function Login({}: NextPage) {
                   <StyledButton
                     variant="contained"
                     fullWidth
+                    disabled={!methods.formState.isDirty || !methods.formState.isValid}
                     type="submit"
                   >
                     ログイン
