@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
-
 import { api } from '../services/api';
 
-import Link from 'next/link';
 import ImageIcon from '../components/ImageIcon';
 import { GetServerSideProps } from 'next';
-import { getAPIClient } from '../services/axios';
 import { parseCookies } from 'nookies';
 
 interface User {
@@ -19,30 +16,37 @@ interface Posts {
   body: string;
 }
 
-interface HomeProps {
-  user: User;
-  posts: Posts[];
-}
+export default function Home() {
+  const [user, setUser] = useState<User>()
+  const [posts, setPosts] = useState<Posts[]>([])
 
-export default function Home({ posts, user }: HomeProps) {
+
+
+  useEffect(() => {
+    api.get('/posts').then(response => {
+
+      setPosts(response.data.posts);
+    }).catch((error) => {
+      console.log(error)
+    });
+
+    api.get('/account').then(response => {
+      const { name, email, iconImageUrl } = response.data.user;
+      console.log(name)
+      setUser({ name, email, iconImageUrl })
+    }).catch((error) => {
+      console.log(error);
+    });
+  },[]);
+
   return (
     <>
-      {/* {posts.length <= 0 &&
-        <h2>
-          投稿がありません初めての投稿者になりませんか？
-          <Link href="/post">
-            <a>Let's Post</a>
-          </Link>
-        </h2>
-      } */}
-      {user?.iconImageUrl  == null &&
-        <ImageIcon
-          src={`/icons/profileIcon.png`}
-          alt="User Icon"
-          width={160}
-          height={160}
-        />
-      }
+      <ImageIcon
+        src={`/icons/profileIcon.png`}
+        alt="User Icon"
+        width={160}
+        height={160}
+      />
       <h1>name: {user?.name}</h1>
 
       {posts.map((post) => (
@@ -52,19 +56,19 @@ export default function Home({ posts, user }: HomeProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['next-simple-sns']: token } = parseCookies(ctx)
 
-  const postsResponse = await apiClient.get('/posts');
-  const posts = await postsResponse.data.posts;
-
-  const userResponse = await apiClient.get('/account');
-  const user = await userResponse.data.user;
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/account/login',
+        permanent: false,
+      }
+    }
+  }
 
   return {
-    props: {
-      posts,
-      user
-    }
+    props: {}
   }
 }
