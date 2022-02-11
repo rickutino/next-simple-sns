@@ -1,8 +1,11 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Image from 'next/image';
 import Link from 'next/link';
-import { useForm, FormProvider } from "react-hook-form";
+import { useContext } from "react";
+import { parseCookies } from "nookies";
+import { AuthContext } from "../../contexts/AuthContext";
 
+import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -11,8 +14,6 @@ import { Box, Grid, Typography } from '@mui/material';
 import theme from "../../styles/theme";
 import StyledButton from '../../components/StyledButton';
 import { RHFTextInput } from "../../components/RHFTextInput";
-import { useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
 
 interface ILoginForm {
   email: string;
@@ -124,4 +125,21 @@ export default function Login({}: NextPage) {
       </Grid>
     </>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['next-simple-sns']: token } = parseCookies(ctx)
+
+  if (!!token) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }

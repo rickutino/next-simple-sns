@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm, FormProvider } from "react-hook-form";
@@ -13,6 +13,7 @@ import StyledButton from '../../components/StyledButton';
 import { RHFTextInput } from "../../components/RHFTextInput";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { parseCookies } from "nookies";
 
 interface ISingUpForm {
   name: string;
@@ -137,4 +138,21 @@ export default function SingUp({}: NextPage) {
       </Grid>
     </>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['next-simple-sns']: token } = parseCookies(ctx)
+
+  if (!!token) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }

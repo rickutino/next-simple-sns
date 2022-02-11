@@ -2,6 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { parseCookies, setCookie } from 'nookies';
 import { useRouter } from "next/router";
 import { api } from "../services/api";
+import { GetServerSideProps } from "next";
 
 interface User {
   name?: string;
@@ -47,21 +48,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   useEffect(() => {
-    const { 'next-simple-sns': token } = parseCookies();
+    api.get('/account').then(response => {
+      const { name, email, iconImageUrl } = response.data.user;
 
-    if(!!token) {
-      router.push('/')
-    };
-
-    if(token) {
-      api.get('/account').then(response => {
-        const { name, email, iconImageUrl } = response.data.user;
-
-        setUser({ name, email, iconImageUrl })
-      }).catch((error) => {
+      setUser({ name, email, iconImageUrl })
+    }).catch((error) => {
       console.log(error);
     });
-    }
   }, [])
 
   async function login({ email, password }: LoginCredentials) {
@@ -125,4 +118,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
       { children }
     </AuthContext.Provider>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['next-simple-sns']: token } = parseCookies(ctx)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/account/login',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }

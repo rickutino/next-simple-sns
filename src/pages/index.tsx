@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import Router from "next/router";
+import { useEffect, useState } from 'react';
 
-import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import ImageIcon from '../components/ImageIcon';
+import { GetServerSideProps } from 'next';
+import { getAPIClient } from '../services/axios';
+import { parseCookies } from 'nookies';
 
 interface User {
   name: string;
@@ -19,40 +19,22 @@ interface Posts {
   body: string;
 }
 
-export default function Home() {
-  // const { singOut } = useContext(AuthContext);
-  const [user, setUser] = useState<User>()
-  const [posts, setPosts] = useState<Posts[]>([])
+interface HomeProps {
+  user: User;
+  posts: Posts[];
+}
 
-
-
-  useEffect(() => {
-    api.get('/posts').then(response => {
-
-      setPosts(response.data.posts);
-    }).catch((error) => {
-      console.log(error)
-    });
-
-    api.get('/account').then(response => {
-      const { name, email, iconImageUrl } = response.data.user;
-      console.log(name)
-      setUser({ name, email, iconImageUrl })
-    }).catch((error) => {
-      console.log(error);
-    });
-  },[]);
-
+export default function Home({ posts, user }: HomeProps) {
   return (
     <>
-      {posts.length <= 0 &&
+      {/* {posts.length <= 0 &&
         <h2>
           投稿がありません初めての投稿者になりませんか？
           <Link href="/post">
             <a>Let's Post</a>
           </Link>
         </h2>
-      }
+      } */}
       {user?.iconImageUrl  == null &&
         <ImageIcon
           src={`/icons/profileIcon.png`}
@@ -68,4 +50,21 @@ export default function Home() {
       ))}
     </>
   );
+}
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
+
+  const postsResponse = await apiClient.get('/posts');
+  const posts = await postsResponse.data.posts;
+
+  const userResponse = await apiClient.get('/account');
+  const user = await userResponse.data.user;
+
+  return {
+    props: {
+      posts,
+      user
+    }
+  }
 }
