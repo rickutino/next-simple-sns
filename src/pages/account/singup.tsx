@@ -37,6 +37,7 @@ const schema = yup.object().shape({
 
 export default function SingUp({}: NextPage) {
   const methods = useForm<ISingUpForm>({
+    mode: "onChange",
     resolver: yupResolver(schema),
     defaultValues: {
       name: "",
@@ -119,6 +120,7 @@ export default function SingUp({}: NextPage) {
                   <StyledButton
                     variant="contained"
                     fullWidth
+                    disabled={!methods.formState.isDirty || !methods.formState.isValid}
                     type="submit"
                   >
                     登録
