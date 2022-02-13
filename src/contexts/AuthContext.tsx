@@ -1,5 +1,6 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
-import { setCookie } from 'nookies';
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
+import Router from "next/router";
+import { destroyCookie, setCookie } from "nookies";
 import { useRouter } from "next/router";
 import { api } from "../services/api";
 
@@ -8,8 +9,19 @@ import { useToasts } from "react-toast-notifications";
 interface User {
   name?: string;
   email: string;
-  iconImageUrl?: string | null
+  iconImageUrl?: string | null;
 }
+interface Notification {
+  isOpen: boolean;
+  message: string;
+  type: 'success' | 'info' | 'warning' | 'error';
+}
+
+interface DialogData {
+  isOpen: boolean,
+  title: string;
+  onConfirm?(): void;
+};
 
 interface LoginCredentials {
   email: string;
@@ -25,7 +37,12 @@ interface SingUpCredentials {
 interface AuthContextData {
   login(credentials: LoginCredentials): Promise<void>;
   singUp(credentials: SingUpCredentials): Promise<void>;
+  signOut(): void,
   user: User;
+  notify: Notification;
+  setNotify: Dispatch<SetStateAction<Notification>>;
+  confirmDialog: DialogData;
+  setConfirmDialog: Dispatch<SetStateAction<DialogData>>;
 }
 
 interface AuthProviderProps {
@@ -36,6 +53,8 @@ export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { addToast } = useToasts();
+  const [notify, setNotify] = useState({isOpen: false, message: "", type: null})
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: ""});
   const [user, setUser] = useState<User>();
   const router = useRouter();
 
@@ -57,7 +76,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }).catch((error) => {
       console.log(error);
     });
-  }, [])
+  }, []);
+
+  function signOut() {
+    setConfirmDialog({
+      ...confirmDialog,
+      isOpen: false
+    })
+    console.log("vbjcahkdv");
+    api.delete('/auth').then(() => {
+      destroyCookie(undefined, 'next-simple-sns');
+
+      Router.push('/account/login')
+    }).catch(() => {
+      setNotify({
+        isOpen: true,
+        message: "お手数ですが再ログインしていただくかしばらくお待ちください。",
+        type: 'error'
+      });
+    });
+  }
 
   async function login({ email, password }: LoginCredentials) {
     await api.post('auth', {
@@ -121,7 +159,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ login, singUp, user }}>
+    <AuthContext.Provider value={{
+      login,
+      singUp,
+      signOut,
+      user,
+      notify,
+      setNotify,
+      confirmDialog,
+      setConfirmDialog
+    }}>
       { children }
     </AuthContext.Provider>
   )
