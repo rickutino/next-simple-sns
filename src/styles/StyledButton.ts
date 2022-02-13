@@ -1,12 +1,13 @@
-import styled from 'styled-components';
+import { Button, styled } from '@mui/material';
+// import styled from 'styled-components';
 
-import { Button} from '@mui/material';
+// import { Button } from '@mui/icons-material';
 
 const StyledButton = styled(Button)`
-  background: ${props => props.theme.palette.secondary.main};
+  background-color: ${props => props.theme.palette.secondary.main};
   border-radius: 5px;
   border: 1px black ;
-  color: ${props => props.theme.palette.grey[200]};
+  color: ${props => props.theme.palette.secondary.main};
   height: 48px;
   weight: 325px;
   margin-top: 1rem;

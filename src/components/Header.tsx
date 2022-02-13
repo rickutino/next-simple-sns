@@ -57,7 +57,7 @@ export default function Header() {
             <Link href="/">
               <RiAccountCircleLine />
             </Link>
-            <button onClick={() => {
+            <button className='logout' onClick={() => {
               setConfirmDialog({
                 isOpen: true,
                 title: "ログアウトしてもよろしいでしょうか？",

@@ -29,7 +29,7 @@ export const HeaderContent = styled.div`
         opacity: 0.8;
       }
     }
-    button {
+    button.logout {
       background: transparent;
       border: 0;
     }
