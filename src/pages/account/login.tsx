@@ -12,8 +12,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Grid, Typography } from '@mui/material';
 
 import theme from "../../styles/theme";
-import StyledButton from '../../components/StyledButton';
 import { RHFTextInput } from "../../components/RHFTextInput";
+import StyledButton from "../../styles/StyledButton";
 
 interface ILoginForm {
   email: string;

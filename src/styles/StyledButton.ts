@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Button from '@material-ui/core/Button';
+import { Button} from '@mui/material';
 
 const StyledButton = styled(Button)`
   background: ${props => props.theme.palette.secondary.main};

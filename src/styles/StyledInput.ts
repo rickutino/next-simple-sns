@@ -1,6 +1,6 @@
 import styled from 'styled-components';
+import { TextField } from '@mui/material';
 
-import TextField from '@material-ui/core/TextField';
 
 const StyledInput = styled(TextField)`
   background: white;

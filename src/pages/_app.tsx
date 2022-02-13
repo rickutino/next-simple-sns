@@ -4,7 +4,7 @@ import { AuthProvider } from "../contexts/AuthContext";
 import {
   ThemeProvider as MaterialThemeProvider,
   StylesProvider
-} from "@material-ui/styles";
+} from "@mui/styles";
 import styled, {
   ThemeProvider as StyledThemeProvider
 } from "styled-components";
