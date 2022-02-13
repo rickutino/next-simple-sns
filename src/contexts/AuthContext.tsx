@@ -83,17 +83,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
       ...confirmDialog,
       isOpen: false
     })
-    console.log("vbjcahkdv");
+
     api.delete('/auth').then(() => {
       destroyCookie(undefined, 'next-simple-sns');
 
-      Router.push('/account/login')
+      Router.push('/account/login');
+
+      setNotify({
+        isOpen: true,
+        message: "ログアウトしました、また遊びに来てください。",
+        type: 'success'
+      });
     }).catch(() => {
       setNotify({
         isOpen: true,
         message: "お手数ですが再ログインしていただくかしばらくお待ちください。",
         type: 'error'
       });
+
+      return;
     });
   }
 

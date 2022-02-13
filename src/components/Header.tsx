@@ -61,7 +61,7 @@ export default function Header() {
               setConfirmDialog({
                 isOpen: true,
                 title: "ログアウトしてもよろしいでしょうか？",
-                onConfirm: () => {signOut()}
+                onConfirm: () => { signOut() }
               });
             }} >
               <FiPower color={"#E0483D"}/>
