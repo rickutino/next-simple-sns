@@ -14,6 +14,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import theme from "../../styles/theme";
 import { RHFTextInput } from "../../components/RHFTextInput";
 import StyledButton from "../../styles/StyledButton";
+import Notification from "../../components/Notification";
 
 interface ILoginForm {
   email: string;
@@ -32,7 +33,7 @@ const schema = yup.object().shape({
 });
 
 export default function Login({}: NextPage) {
-  const { login } = useContext(AuthContext);
+  const { login, notify, setNotify } = useContext(AuthContext);
 
   const methods = useForm<ILoginForm>({
     mode: "onChange",
@@ -123,6 +124,10 @@ export default function Login({}: NextPage) {
         }}/>
 
       </Grid>
+      <Notification
+        notify={notify}
+        setNotify={setNotify}
+      />
     </>
   );
 }

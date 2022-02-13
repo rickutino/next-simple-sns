@@ -1,19 +1,20 @@
+import { useContext } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import Image from 'next/image';
 import Link from 'next/link';
-import { useForm, FormProvider } from "react-hook-form";
 
+import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import theme from "../../styles/theme";
+import StyledButton from "../../styles/StyledButton";
+import { RHFTextInput } from "../../components/RHFTextInput";
 import { Box, Grid, Typography } from '@mui/material';
 
-import theme from "../../styles/theme";
-import StyledButton from '../../components/StyledButton';
-import { RHFTextInput } from "../../components/RHFTextInput";
-import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { parseCookies } from "nookies";
+import Notification from "../../components/Notification";
 
 interface ISingUpForm {
   name: string;
@@ -36,7 +37,7 @@ const schema = yup.object().shape({
 });
 
 export default function SingUp({}: NextPage) {
-  const { singUp } = useContext(AuthContext);
+  const { singUp, notify, setNotify } = useContext(AuthContext);
 
   const methods = useForm<ISingUpForm>({
     mode: "onChange",
@@ -136,6 +137,10 @@ export default function SingUp({}: NextPage) {
           </Box>
         </Grid>
       </Grid>
+      <Notification
+        notify={notify}
+        setNotify={setNotify}
+      />
     </>
   );
 }

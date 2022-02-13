@@ -127,10 +127,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       router.push('/')
 
     }).catch(() => {
-      addToast("メールアドレスかパスワードが間違っています",{
-        appearance: 'error',
-        autoDismiss: true,
+      setNotify({
+        isOpen: true,
+        message: "メールアドレスかパスワードが間違っています",
+        type: 'error'
       });
+      // addToast("メールアドレスかパスワードが間違っています",{
+      //   appearance: 'error',
+      //   autoDismiss: true,
+      // });
     });
   }
 
@@ -159,10 +164,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       router.push('/')
     } catch (error) {
-      addToast("このメールアドレスは既に使われています。",{
-        appearance: 'error',
-        autoDismiss: true,
+      setNotify({
+        isOpen: true,
+        message: "このメールアドレスは既に使われています。",
+        type: 'error'
       });
+      // addToast("このメールアドレスは既に使われています。",{
+      //   appearance: 'error',
+      //   autoDismiss: true,
+      // });
     }
   }
 
