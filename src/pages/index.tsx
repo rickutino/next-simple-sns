@@ -1,54 +1,102 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { GetServerSideProps } from 'next';
+import Link from 'next/link';
+
+import {
+  Avatar,
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+  Typography,
+} from '@mui/material';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+
 import { api } from '../services/api';
 
-import ImageIcon from '../styles/ImageIcon';
-import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
-import { AppBar, Container, Toolbar, Box, IconButton, Avatar, ListItem, ListItemAvatar, Card, CardHeader, Typography } from '@mui/material';
-import Image from 'next/image';
-import theme from '../styles/theme';
 import Header from '../components/Header';
+import useInfiniteScroll from '../components/InfiniteScroll';
 
-interface User {
-  name: string;
-  email: string;
-  iconImageUrl?: string | null
-}
+function jaTimeZone (hours) {
+  const dateToTime = date => date.toLocaleString('ja', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  });
 
-interface Posts {
-  id: number;
-  body: string;
+  const dateString = hours;
+  const localDate = new Date(dateString);
+
+  return dateToTime(localDate);
 }
 
 export default function Home() {
-  const [user, setUser] = useState<User>();
-  const [posts, setPosts] = useState<Posts[]>([]);
 
-  useEffect(() => {
-    api.get('/posts').then(response => {
-
-      setPosts(response.data.posts);
-    }).catch((error) => {
-      console.log(error)
-    });
-
-    api.get('/account').then(response => {
-      const { name, email, iconImageUrl } = response.data.user;
-
-      setUser({ name, email, iconImageUrl })
-    }).catch((error) => {
-      console.log(error);
-    });
-  },[ ]);
-
+  const {
+    loading,
+    error,
+    posts
+  } = useInfiniteScroll(10);
 
   return (
     <>
       <Header />
-
       {posts.map((post) => (
-        <div key={post.id}>post: {post.body}</div>
+        <>
+          <Grid
+            key={post.id}
+            sx={{
+              mx: 'auto',
+              mb: 3,
+              maxWidth: 735,
+            }}
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center">
+            <Card sx={{
+              width: '100%',
+              px: 10,
+              py: 2,
+              backgroundColor: (theme) => theme.palette.primary.light,
+              color: (theme) => theme.palette.grey[200],
+            }}>
+              <CardHeader
+                avatar={
+                  <Avatar
+                    src={post.user.iconImageUrl}
+                    alt={post.user.name}
+                  />
+                }
+                action={
+                  <Link href="/" >
+                    <ChatOutlinedIcon
+                      color="secondary"
+                      fontSize='large'
+                    />
+                  </Link>
+                }
+                title={<Typography variant='h6'>{post.user.name}</Typography>}
+                subheader={<Typography>{jaTimeZone(post.createdAt)}</Typography>}
+              />
+              <CardContent sx={{
+                flex: 1,
+                color: (theme) => theme.palette.grey[200],
+                }}>
+                <Typography variant="body1">
+                  {post.body}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </>
       ))}
+      <div>{loading && 'Loading...'}</div>
+      <div>{error && 'Error'}</div>
+      <div id="scroll"></div>
     </>
   );
 }

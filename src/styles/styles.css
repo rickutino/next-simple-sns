@@ -23,3 +23,8 @@ form {
   flex-direction: column;
   align-items: center;
 }
+
+#scroll {
+  width: 100%;
+  height: 5px;
+}
