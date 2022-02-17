@@ -96,7 +96,6 @@ export default function Login({}: NextPage) {
                   />
                   <StyledButton
                     variant="contained"
-                    color="secondary"
                     fullWidth
                     disabled={!methods.formState.isDirty || !methods.formState.isValid}
                     type="submit"
