@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import Link from 'next/link';
 
 import {
   Avatar,
@@ -9,14 +7,17 @@ import {
   CardContent,
   Grid,
   Typography,
+  Button,
 } from '@mui/material';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
-import { api } from '../services/api';
 
 import { parseCookies } from 'nookies';
 import Header from '../components/Header';
 import useInfiniteScroll from '../components/InfiniteScroll';
+import DMTextInput from '../components/DMTextInput';
+import { FormEvent, useCallback, useRef } from 'react';
+import { Grid4x4Sharp } from '@mui/icons-material';
 
 function jaTimeZone (hours) {
   const dateToTime = date => date.toLocaleString('ja', {
@@ -34,6 +35,7 @@ function jaTimeZone (hours) {
 }
 
 export default function Home() {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     loading,
@@ -41,8 +43,29 @@ export default function Home() {
     posts
   } = useInfiniteScroll(10);
 
+  // const handleSubmit = () => {
+  // console.log(inputRef.current?.value);
+  // console.log(inputRef);
+  // };
+  const handleSubmit = useCallback((e: FormEvent) => {
+  e.preventDefault()
+
+  console.log(inputRef.current?.value);
+  console.log(inputRef);
+  }, []);
+
   return (
     <>
+    <form onSubmit={handleSubmit}>
+      <input name="name" type="text" placeholder={'DMでの入力を…'} ref={inputRef} />
+      <button type="submit" >
+        enviar
+      </button>
+        {/* <ChatOutlinedIcon
+          color="secondary"
+          fontSize='large'
+        /> */}
+    </form>
       <Header />
       {posts.map((post) => (
         <>
@@ -57,7 +80,8 @@ export default function Home() {
             direction="column"
             justifyContent="center"
             alignItems="center">
-            <Card sx={{
+            <Card
+              sx={{
               width: '100%',
               px: 10,
               py: 2,
@@ -67,19 +91,11 @@ export default function Home() {
               <CardHeader
                 avatar={
                   <Avatar
-                    src={post.user.iconImageUrl}
-                    alt={post.user.name}
+                    src={post.user?.iconImageUrl}
+                    alt={post.user?.name}
                   />
                 }
-                action={
-                  <Link href="/" >
-                    <ChatOutlinedIcon
-                      color="secondary"
-                      fontSize='large'
-                    />
-                  </Link>
-                }
-                title={<Typography variant='h6'>{post.user.name}</Typography>}
+                title={<Typography variant='h6'>{post.user?.name}</Typography>}
                 subheader={<Typography>{jaTimeZone(post.createdAt)}</Typography>}
               />
               <CardContent sx={{

@@ -51,10 +51,10 @@ export default function Header() {
           </Profile>
 
           <nav>
-            <Link href="/">
+            <Link href="/#">
               <FiHome />
             </Link>
-            <Link href="/">
+            <Link href="/#">
               <RiAccountCircleLine />
             </Link>
             <button className='logout' onClick={() => {

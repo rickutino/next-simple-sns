@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 
@@ -22,26 +21,52 @@ export default function useInfiniteScroll(pageSize: number) {
   const [cursor, setCursor] = useState<number>();
   const [posts, setPosts] = useState<Posts[]>([]);
 
+  // useEffect(() => {
+  //   setLoading(true)
+  //   setError(false)
+  //   let lastPost;
+
+  //   api({
+  //     method: 'GET',
+  //     url: `/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`,
+  //   }).then(response => {
+  //     setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
+
+  //     lastPost = response.data.posts.pop();
+  //     setCursor(() => lastPost.id +1);
+
+  //     setLoading(false)
+  //   }).catch(() => {
+  //     setError(true)
+  //   });
+  // },[hasMore]);
+
   useEffect(() => {
     setLoading(true)
     setError(false)
     let lastPost;
 
-    api({
-      method: 'GET',
-      url: `/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`,
-    }).then(response => {
-      setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
-      console.log("1 post = pagesize",response.data.posts);
+    async function getPostsList() {
+      try{
+        const response = await api.get(`/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`)
 
-      lastPost = response.data.posts.pop();
-      setCursor(() => lastPost.id +1);
+        console.log("prevSet", posts)
+        setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
+        console.log("set",posts)
+
+        lastPost = response.data.posts.pop();
+        setCursor(lastPost.id);
+        console.log("cursor", cursor);
+      } catch (e) {
+        console.log(e);
+        setError(true)
+      }
 
       setLoading(false)
-    }).catch(() => {
-      setError(true)
-    });
-  },[hasMore]);
+    };
+
+    getPostsList();
+  }, [hasMore]);
 
   useEffect(() => {
     const intersectionObserver = new IntersectionObserver(entries => {
