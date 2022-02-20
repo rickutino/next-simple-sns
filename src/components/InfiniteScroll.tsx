@@ -17,66 +17,39 @@ interface Posts {
 export default function useInfiniteScroll(pageSize: number) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [hasMore, setHasMore] = useState<number>(0);
-  const [cursor, setCursor] = useState<number>();
   const [posts, setPosts] = useState<Posts[]>([]);
+  const [cursor, setCursor] = useState<number>();
 
-  // useEffect(() => {
-  //   setLoading(true)
-  //   setError(false)
-  //   let lastPost;
-
-  //   api({
-  //     method: 'GET',
-  //     url: `/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`,
-  //   }).then(response => {
-  //     setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
-
-  //     lastPost = response.data.posts.pop();
-  //     setCursor(() => lastPost.id +1);
-
-  //     setLoading(false)
-  //   }).catch(() => {
-  //     setError(true)
-  //   });
-  // },[hasMore]);
-
-  useEffect(() => {
+  async function getPostsList() {
     setLoading(true)
-    setError(false)
-    let lastPost;
 
-    async function getPostsList() {
-      try{
-        const response = await api.get(`/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`)
+    if(cursor === 1){
+      setLoading(false);
+      return;
+    }
 
-        console.log("prevSet", posts)
-        setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
-        console.log("set",posts)
+    try{
+      const response = await api.get(`/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`)
 
-        lastPost = response.data.posts.pop();
-        setCursor(lastPost.id);
-        console.log("cursor", cursor);
-      } catch (e) {
-        console.log(e);
-        setError(true)
-      }
+      setCursor(response.data.posts.pop().id);
+      setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
+    } catch (e) {
+      console.log(e);
+      setError(true);
+    }
 
-      setLoading(false)
-    };
-
-    getPostsList();
-  }, [hasMore]);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const intersectionObserver = new IntersectionObserver(entries => {
+    const intersectionObserver = new IntersectionObserver(async entries => {
       if (entries.some(entry => entry.isIntersecting)) {
-        setHasMore(() => cursor +1);
+        await getPostsList();
       }
-    })
+    });
     intersectionObserver.observe(document.querySelector('#scroll'));
     return () => intersectionObserver.disconnect();
-  }, []);
+  }, [cursor]);
 
   return { loading, error, posts };
 }
