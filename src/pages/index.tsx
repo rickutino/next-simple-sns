@@ -1,4 +1,6 @@
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 
 import {
   Avatar,
@@ -8,16 +10,49 @@ import {
   Grid,
   Typography,
   Button,
+  TextField,
+  Theme,
 } from '@mui/material';
-import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import { makeStyles } from '@mui/styles';
 
 
-import { parseCookies } from 'nookies';
 import Header from '../components/Header';
 import useInfiniteScroll from '../components/InfiniteScroll';
-import DMTextInput from '../components/DMTextInput';
-import { FormEvent, useCallback, useRef } from 'react';
-import { Grid4x4Sharp } from '@mui/icons-material';
+import { AuthContext } from '../contexts/AuthContext';
+import Notification from '../components/Notification';
+import { parseCookies } from 'nookies';
+import { api } from '../services/api';
+
+interface User {
+  id?: string;
+  name: string;
+  email: string;
+  iconImageUrl: string | null;
+}
+
+interface Posts {
+  id?: number;
+  body: string;
+  createdAt?: Date;
+  user: User
+}
+
+const useStyles = makeStyles((theme: Theme) => ({
+  form: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+  },
+  textField: {
+    borderRadius: '5px',
+    backgroundColor: theme.palette.grey[200],
+  },
+  button: {
+    borderRadius: '50px',
+    height: '3.5rem',
+    width: '16rem',
+  }
+}))
 
 function jaTimeZone (hours) {
   const dateToTime = date => date.toLocaleString('ja', {
@@ -35,45 +70,81 @@ function jaTimeZone (hours) {
 }
 
 export default function Home() {
-  const inputRef = useRef<HTMLInputElement>(null);
-
+  const { notify, setNotify } = useContext(AuthContext);
+  const [ comment, setComment ] = useState('');
+  const [ inputValue, setInputValue ] = useState(true);
+  const [ commentError, setCommentError ] = useState(false);
+  const [ user, setUser ] = useState<User>();
   const {
     loading,
     error,
     posts
   } = useInfiniteScroll(10);
 
-  // const handleSubmit = () => {
-  // console.log(inputRef.current?.value);
-  // console.log(inputRef);
-  // };
-  const handleSubmit = useCallback((e: FormEvent) => {
-  e.preventDefault()
 
-  console.log(inputRef.current?.value);
-  console.log(inputRef);
+  const router = useRouter();
+  const classes = useStyles();
+
+  function handleChange ( event ) {
+    setComment(event.target.value);
+    setInputValue(false);
+  }
+
+  async function handleSubmit ( event: FormEvent, post: Posts) {
+    event.preventDefault();
+    setCommentError(false);
+
+    if(comment == '') {
+      setCommentError(true);
+      setNotify({
+        isOpen: true,
+        message: "コメントは必須です。",
+        type: 'error'
+      });
+    }
+
+    try{
+      const response = await api.post('/messages/via_post', {
+        content: comment,
+        postId: post.id
+      });
+      const roomId = response.data.message.roomId;
+      router.push('/')
+    }catch (error) {
+      setNotify({
+        isOpen: true,
+        message: `${error}`,
+        type: 'error'
+      });
+      // addToast("このメールアドレスは既に使われています。",{
+      //   appearance: 'error',
+      //   autoDismiss: true,
+      // });
+    }
+  }
+
+  useEffect(() => {
+    api.get('/account').then(response => {
+      const { user } = response.data;
+
+      setUser(user);
+    }).catch((error) => {
+      console.log(error);
+    });
   }, []);
+
 
   return (
     <>
-    <form onSubmit={handleSubmit}>
-      <input name="name" type="text" placeholder={'DMでの入力を…'} ref={inputRef} />
-      <button type="submit" >
-        enviar
-      </button>
-        {/* <ChatOutlinedIcon
-          color="secondary"
-          fontSize='large'
-        /> */}
-    </form>
+
       <Header />
-      {posts.map((post) => (
+      {posts.map((post, i) => (
         <>
           <Grid
-            key={post.id}
+            key={i}
             sx={{
               mx: 'auto',
-              mb: 3,
+              mb: 8,
               maxWidth: 735,
             }}
             container
@@ -107,9 +178,36 @@ export default function Home() {
                 </Typography>
               </CardContent>
             </Card>
+            { post.user.id != user.id &&
+              <form className={classes.form} onSubmit={e => handleSubmit(e , post)}>
+                <TextField
+                  id={String(i)}
+                  className={classes.textField}
+                  variant="outlined"
+                  multiline
+                  fullWidth
+                  onChange={e => handleChange(e)}
+                  error={commentError}
+                />
+                <Button
+                  id={String(i)}
+                  className={classes.button}
+                  type="submit"
+                  variant="contained"
+                  disabled={inputValue}
+                  color="secondary"
+                >
+                  DMを送信
+                </Button>
+              </form>
+            }
           </Grid>
         </>
       ))}
+      <Notification
+        notify={notify}
+        setNotify={setNotify}
+      />
       <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
       <div id="scroll"></div>
