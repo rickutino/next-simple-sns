@@ -7,6 +7,7 @@ import { api } from "../services/api";
 import { useToasts } from "react-toast-notifications";
 
 interface User {
+  id?: string;
   name?: string;
   email: string;
   iconImageUrl?: string | null;
