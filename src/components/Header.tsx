@@ -54,7 +54,7 @@ export default function Header() {
             <Link href="/#">
               <FiHome />
             </Link>
-            <Link href="/#">
+            <Link href="/room">
               <RiAccountCircleLine />
             </Link>
             <button className='logout' onClick={() => {
