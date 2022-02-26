@@ -82,11 +82,14 @@ export default function Home() {
   const [ inputValue, setInputValue ] = useState(true);
   const [ commentError, setCommentError ] = useState(false);
   const [ user, setUser ] = useState<User>();
+
+  const pageSize = 10;
+  const url = `/posts?pagination[size]=${pageSize}`;
   const {
     loading,
     error,
     posts
-  } = useInfiniteScroll(10);
+  } = useInfiniteScroll(url, 'post');
 
 
   const router = useRouter();
