@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '1.25rem',
     padding: '1.25rem 3.75rem',
     backgroundColor: theme.palette.grey[200],
-    width: '60%',
     textAlign: 'left',
     font: "400 .9em 'Open Sans', sans-serif",
     border: `1px solid ${theme.palette.grey[800]}`,
@@ -82,7 +81,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   messageContent: {
     padding: 0,
-    margin: 0
+    margin: 0,
+    width: '300px'
   },
   messageTimeStampRight: {
     position: 'absolute',
@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   displayName: {
     marginLeft: '20px',
-    width: '100vw'
+    width: '100%',
   }
 }));
 function jaTimeZone (hours) {
@@ -131,9 +131,7 @@ export const MessageLeft = ({ user, content, createdAt } : Messages) => {
         <div>
           <div className={classes.displayName}>{user?.name}</div>
           <div className={classes.friendMessage}>
-            <div>
-              <p className={classes.messageContent}>{content}</p>
-            </div>
+            <p className={classes.messageContent}>{content}</p>
             <div className={classes.messageTimeStampRight}>{jaTimeZone(createdAt)}</div>
           </div>
         </div>

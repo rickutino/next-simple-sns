@@ -7,7 +7,8 @@ import { api } from '../../services/api';
 
 import Header from '../../components/Header';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Button, Card, CardHeader, Grid, TextField, Theme } from '@mui/material';
+import { Button, Grid, TextField, Theme } from '@mui/material';
+import { MessageLeft, MessageRight } from '../../components/Message';
 
 interface User {
   id: string;
@@ -25,16 +26,30 @@ interface Posts {
 
 interface Messages {
   id: number;
-  roomId: string;
-  post: Posts;
-  postId: number;
+  roomId?: string;
+  post?: Posts;
+  postId?: number;
   user: User;
-  userId: number;
+  userId?: number;
   content: string;
   createdAt: Date;
 }
 
 const useStyles = makeStyles((theme: Theme) =>({
+  container: {
+    width: '650px',
+    margin: '0 auto',
+    height: '75vh',
+    alignItems: "center",
+    flexDirection: "column",
+    position: "relative"
+  },
+  messagesBody: {
+    width: "calc( 100% - 20px )",
+    margin: 10,
+    overflowY: "scroll",
+    height: "calc( 100% - 80px )"
+  },
   form: {
     display: 'flex',
     width: '100%',
@@ -52,18 +67,28 @@ const useStyles = makeStyles((theme: Theme) =>({
 
 export default function Message() {
   const { notify, setNotify } = useContext(AuthContext);
-  const [ inputMessage, setInputMessage] = useState('')
+  const [ currentUser, setCurrentUser] = useState<User>()
   const [ messages, setMessages ] = useState<Messages[]>([]);
   const [ inputValue, setInputValue ] = useState(true);
+  const [ inputMessage, setInputMessage] = useState('')
   const [ messagesError, setMessagesError ] = useState(false);
+
   const classes = useStyles();
 	const router = useRouter();
   const roomId = router.query.slug;
 
   useEffect(() => {
+    api.get('/account').then(response => {
+      setCurrentUser(response.data.user);
+    }).catch(() => {
+      router.push('/account/login');
+    })
+  }, []);
+
+  useEffect(() => {
     if(!router.isReady) return;
 
-    api.get(`/messages?roomId=${roomId}`).then(response => {
+    api.get(`/messages?pagination[order]=ASC&roomId=${roomId}`).then(response => {
       setMessages(response.data.messages);
     }).catch((error) => {
       console.log(error);
@@ -101,21 +126,30 @@ export default function Message() {
         type: 'error'
       });
     }
+
+    setInputMessage('');
   }
 
   return (
     <>
       <Header />
-      <Grid>
-        {console.log(messages)}
-        {messages.map((message) => {
-          <>
-            <li key={message.id}>
-              <span>name: {message.user.name}</span>{" "}
-              <span>age: {message.createdAt}</span>
-            </li>
-          </>
-        })}
+      <Grid className={classes.container}>
+        <div className={classes.messagesBody}>
+          {messages.map((message: Messages) => (
+            (message.user.id == currentUser.id)
+            ? <MessageRight
+                user={message.user}
+                content={message.content}
+                createdAt={message.createdAt}
+              />
+            : <MessageLeft
+                key={message.id}
+                user={message.user}
+                content={message.content}
+                createdAt={message.createdAt}
+              />
+          ))}
+        </div>
         <form className={classes.form} onSubmit={e => handleSubmit(e)}>
           <TextField
             className={classes.textField}
@@ -123,6 +157,7 @@ export default function Message() {
             multiline
             fullWidth
             onChange={e => handleChange(e)}
+            value={inputMessage}
             error={messagesError}
           />
           <Button
