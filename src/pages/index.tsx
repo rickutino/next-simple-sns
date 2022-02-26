@@ -12,8 +12,10 @@ import {
   Button,
   TextField,
   Theme,
+  IconButton,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { MdPostAdd } from 'react-icons/md'
 
 
 import Header from '../components/Header';
@@ -51,7 +53,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '50px',
     height: '3.5rem',
     width: '16rem',
-  }
+  },
+  iconButton: {
+    position: 'relative',
+    top: '600px',
+    right: '-1200px',
+  },
 }))
 
 function jaTimeZone (hours) {
@@ -109,7 +116,7 @@ export default function Home() {
         postId: post.id
       });
       const roomId = response.data.message.roomId;
-      router.push('/')
+      router.push(`/message/${roomId}`)
     }catch (error) {
       setNotify({
         isOpen: true,
@@ -136,8 +143,10 @@ export default function Home() {
 
   return (
     <>
-
       <Header />
+      <IconButton className={classes.iconButton} size="large" color='secondary' href="/post" >
+        <MdPostAdd />
+      </IconButton>
       {posts.map((post, i) => (
         <>
           <Grid
@@ -178,7 +187,7 @@ export default function Home() {
                 </Typography>
               </CardContent>
             </Card>
-            { post.user.id != user.id &&
+            { post.user.id != user?.id &&
               <form className={classes.form} onSubmit={e => handleSubmit(e , post)}>
                 <TextField
                   id={String(i)}
