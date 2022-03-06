@@ -15,10 +15,22 @@ interface Posts {
   user: User
 }
 
-export default function useInfiniteScroll(pageSize: number) {
+interface Messages {
+  id: number;
+  roomId?: string;
+  post?: Posts;
+  postId?: number;
+  user: User;
+  userId?: number;
+  content: string;
+  createdAt: Date;
+}
+
+export default function useInfiniteScroll(url: string, urlType: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [posts, setPosts] = useState<Posts[]>([]);
+  const [ messages, setMessages ] = useState<Messages[]>([]);
   const [cursor, setCursor] = useState<number>();
 
   async function getPostsList() {
@@ -30,10 +42,20 @@ export default function useInfiniteScroll(pageSize: number) {
     }
 
     try{
-      const response = await api.get(`/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`)
+      switch(urlType) {
+        case 'post':
+          const postResponse = await api.get(`${url}&pagination[cursor]=${cursor}`)
 
-      setCursor(response.data.posts.pop().id);
-      setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
+          setCursor(postResponse.data.posts.pop().id);
+          setPosts((prevPosts) => [...prevPosts, ...postResponse.data.posts]);
+          break;
+        case 'messages':
+          const messageResponse = await api.get(`${url}&pagination[cursor]=${cursor}`)
+
+          setCursor(messageResponse.data.messages.pop().id);
+          setMessages((prevMessages) => [...prevMessages, ...messageResponse.data.messages]);
+          break;
+      }
     } catch (e) {
       console.log(e);
       setError(true);
@@ -52,5 +74,5 @@ export default function useInfiniteScroll(pageSize: number) {
     return () => intersectionObserver.disconnect();
   }, [cursor]);
 
-  return { loading, error, posts };
+  return { loading, error, posts, messages, setMessages };
 }

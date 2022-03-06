@@ -15,15 +15,15 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <StylesProvider injectFirst>
-        <MaterialThemeProvider theme={theme}>
-          <StyledThemeProvider theme={theme}>
+        <StyledThemeProvider theme={theme}>
+          <MaterialThemeProvider theme={theme}>
             <ToastProvider>
               <AuthProvider>
                 <Component {...pageProps} />
               </AuthProvider>
             </ToastProvider>
-          </StyledThemeProvider>
-        </MaterialThemeProvider>
+          </MaterialThemeProvider>
+        </StyledThemeProvider>
       </StylesProvider>
     </>
   );
