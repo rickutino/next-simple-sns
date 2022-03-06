@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.header`
   padding: 32px 0;
-  background:  ${props => props.theme.palette.primary.main};
+  background:  ${props => props.theme.palette.primary.dark};
 `;
 
 export const HeaderContent = styled.div`

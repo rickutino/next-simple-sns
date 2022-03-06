@@ -6,8 +6,13 @@
 }
 
 body{
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased !important;
   background-color: #5636D3;
+}
+
+html, body, #root {
+  height: 100%;
 }
 
 a{
