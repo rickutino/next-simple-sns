@@ -1,4 +1,4 @@
-import { Button, TextField, Theme } from "@mui/material";
+import { Box, Button, Container, TextField, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   form: {
     display: 'flex',
     width: '80%',
-    margin: "0 auto"
+    margin: "0 auto",
   },
   textField: {
     borderRadius: '5px',
@@ -19,8 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     borderRadius: '50px',
-    height: '3.5rem',
+    height: '55px',
     width: '100%',
+    marginTop: '1.25rem',
   }
 }));
 
@@ -35,7 +36,7 @@ export default function Post() {
   const router = useRouter();
   const classes = useStyles();
 
-  function handleChange ( event ) {
+  function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
     setPost(event.target.value);
     setInputValue(false);
   }
@@ -72,26 +73,30 @@ export default function Post() {
   return (
     <>
       <Header />
-      <form className={classes.form} onSubmit={e => handleSubmit(e)}>
-        <TextField
-          className={classes.textField}
-          variant="outlined"
-          multiline
-          fullWidth
-          rows={6}
-          onChange={e => handleChange(e)}
-          error={postError}
-        />
-        <Button
-          className={classes.button}
-          type="submit"
-          variant="contained"
-          disabled={inputValue}
-          color="secondary"
-        >
-          投稿を送信
-        </Button>
-      </form>
+      <Container maxWidth='lg'>
+        <form className={classes.form} onSubmit={e => handleSubmit(e)}>
+          <TextField
+            className={classes.textField}
+            variant="outlined"
+            multiline
+            fullWidth
+            rows={6}
+            onChange={handleChange}
+            error={postError}
+          />
+          <Box mt={3}>
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+              disabled={inputValue}
+              color="secondary"
+            >
+              投稿を送信
+            </Button>
+          </Box>
+        </form>
+      </Container>
       <Notification
         notify={notify}
         setNotify={setNotify}
