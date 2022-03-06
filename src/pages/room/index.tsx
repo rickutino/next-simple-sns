@@ -7,7 +7,9 @@ import { api } from '../../services/api';
 
 import Header from '../../components/Header';
 import { makeStyles } from '@mui/styles';
-import { Grid, Theme } from '@mui/material';
+import { Avatar, Box, ButtonBase, Card, CardContent, CardHeader, Container, Grid, Theme, Typography } from '@mui/material';
+import { BiTimeFive } from 'react-icons/bi';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 interface User {
   id: string;
@@ -37,21 +39,46 @@ interface Messages {
 interface Rooms {
   id: string;
   messages: Messages;
-  roomUsers: [
+  roomUsers: {
+    user: User,
     rooId: string,
     userId: string,
-    user: User,
-  ]
+  }
 }
 
+function jaTimeZone (hours) {
+  const dateToTime = date => date.toLocaleString('ja', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  });
+
+  const dateString = hours;
+  const localDate = new Date(dateString);
+
+  return dateToTime(localDate);
+}
+
+
 const useStyles = makeStyles((theme: Theme) =>({
-  form: {
-    display: 'flex',
-    width: '100%',
+  root: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '2rem auto'
   },
-  textField: {
-    borderRadius: '5px',
-    backgroundColor: theme.palette.grey[200],
+  card: {
+    width: '100%',
+    padding: '1.5rem 6rem 1.5rem 1.5rem',
+  },
+  subText: {
+    color: theme.palette.grey[400],
+  },
+  action: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     borderRadius: '50px',
@@ -79,18 +106,51 @@ export default function Room() {
   return (
     <>
       <Header />
-      <Grid>
-        {console.log(rooms)}
-        {rooms.map((room ,i) => {
+      <Container maxWidth='md'>
+        {rooms.map((room ,i) => (
           <>
-          console.log(i, room)
-            <li key={room.id}>
-              <span>name: {room.messages.content}</span>{" "}
-              <span>age: {room.roomUsers?.user}</span>
-            </li>
+            {console.log(room.roomUsers[0].roomId)}
+            <Grid
+              key={i}
+              className={classes.root}>
+              <ButtonBase
+                sx={{ width: '100%' }}
+                href={`/message/${room.roomUsers[0].roomId}`}
+              >
+                <Card
+                  sx={{
+                  backgroundColor: (theme) => theme.palette.primary.light,
+                  color: (theme) => theme.palette.grey[200],
+                  }}
+                  className={classes.card}
+                >
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        src={room.roomUsers[0].user?.iconImageUrl}
+                        alt={room.roomUsers[0].user?.name}
+                        sx={{ width: 56, height: 56 }}
+                        />
+                      }
+                      action={
+                      <div className={classes.action}>
+                        <AccessTimeIcon color='secondary'/>
+                        <Typography ml={1} className={classes.subText}>{jaTimeZone(room.messages[0].createdAt)}</Typography>
+                      </div>
+                    }
+                    title={<Typography variant='h6'>{room.roomUsers[0].user?.name}</Typography>}
+                    subheader={
+                        <Typography className={classes.subText}>
+                          {room.messages[0].content}
+                        </Typography>
+                    }
+                    />
+                </Card>
+              </ButtonBase>
+            </Grid>
           </>
-        })}
-      </Grid>
+        ))}
+      </Container>
       <Notification
         notify={notify}
         setNotify={setNotify}
