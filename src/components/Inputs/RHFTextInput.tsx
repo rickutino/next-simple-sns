@@ -1,5 +1,5 @@
 import { Controller, useFormContext } from "react-hook-form";
-import StyledInput from "../styles/StyledInput";
+import StyledInput from "../../styles/StyledInput";
 interface ITextInput {
   name: string;
   type: "text" | "password";
