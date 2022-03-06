@@ -1,4 +1,4 @@
-import { Avatar, Theme } from "@mui/material";
+import { Avatar, Box, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 interface User {
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     font: "400 .9em 'Open Sans', sans-serif",
     border: `1px solid ${theme.palette.grey[800]}`,
     borderRadius: '5px',
+    width: '70%',
     '&:after': {
       content: "''",
       position: 'absolute',
@@ -100,7 +101,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   displayName: {
     marginLeft: '20px',
-    width: '100%',
   }
 }));
 function jaTimeZone (hours) {
@@ -128,13 +128,13 @@ export const MessageLeft = ({ user, content, createdAt } : Messages) => {
           alt={user?.name}
           src={user?.iconImageUrl}
         ></Avatar>
-        <div>
+        <Box sx={{ width: '90%' }}>
           <div className={classes.displayName}>{user?.name}</div>
           <div className={classes.friendMessage}>
             <p className={classes.messageContent}>{content}</p>
             <div className={classes.messageTimeStampRight}>{jaTimeZone(createdAt)}</div>
           </div>
-        </div>
+        </Box>
       </div>
     </>
   );
