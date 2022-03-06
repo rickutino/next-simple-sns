@@ -51,7 +51,7 @@ export default function Header() {
           </Profile>
 
           <nav>
-            <Link href="/#">
+            <Link href="/profile">
               <FiHome />
             </Link>
             <Link href="/room">
