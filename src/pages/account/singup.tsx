@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import theme from "../../styles/theme";
 import StyledButton from "../../styles/StyledButton";
-import { RHFTextInput } from "../../components/RHFTextInput";
+import { RHFTextInput } from "../../components/Inputs/RHFTextInput";
 import { Box, Grid, Typography } from '@mui/material';
 
 import { AuthContext } from "../../contexts/AuthContext";

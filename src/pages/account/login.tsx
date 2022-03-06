@@ -12,7 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Grid, Typography } from '@mui/material';
 
 import theme from "../../styles/theme";
-import { RHFTextInput } from "../../components/RHFTextInput";
+import { RHFTextInput } from "../../components/Inputs/RHFTextInput";
 import StyledButton from "../../styles/StyledButton";
 import Notification from "../../components/Notification";
 
