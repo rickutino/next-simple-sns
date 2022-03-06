@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { FormEvent, useContext, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -7,7 +7,7 @@ import { api } from '../../services/api';
 
 import Header from '../../components/Header';
 import { makeStyles } from '@mui/styles';
-import { Button, Grid, TextField, Theme } from '@mui/material';
+import { Box, Button, Container, Grid, TextField, Theme } from '@mui/material';
 import { MessageLeft, MessageRight } from '../../components/Message';
 
 interface User {
@@ -37,8 +37,6 @@ interface Messages {
 
 const useStyles = makeStyles((theme: Theme) =>({
   container: {
-    width: '650px',
-    margin: '0 auto',
     height: '75vh',
     alignItems: "center",
     flexDirection: "column",
@@ -67,36 +65,48 @@ const useStyles = makeStyles((theme: Theme) =>({
 
 export default function Message() {
   const { notify, setNotify } = useContext(AuthContext);
-  const [ currentUser, setCurrentUser] = useState<User>()
+  const [ currentUser, setCurrentUser ] = useState<User>();
+  const [ cursor, setCursor ] = useState<number>();
+  const [ loading, setLoading ] = useState(true);
+  const [ error, setError ] = useState(false);
   const [ messages, setMessages ] = useState<Messages[]>([]);
   const [ inputValue, setInputValue ] = useState(true);
-  const [ inputMessage, setInputMessage] = useState('')
+  const [ inputMessage, setInputMessage ] = useState('')
   const [ messagesError, setMessagesError ] = useState(false);
 
+  const messagesEndRef = useRef(null)
   const classes = useStyles();
 	const router = useRouter();
   const roomId = router.query.slug;
 
-  useEffect(() => {
-    api.get('/account').then(response => {
-      setCurrentUser(response.data.user);
-    }).catch(() => {
-      router.push('/account/login');
-    })
-  }, []);
+  function scrollToBottom() {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
-  useEffect(() => {
-    if(!router.isReady) return;
+  async function getPostsList() {
+    setLoading(true)
 
-    api.get(`/messages?pagination[order]=ASC&roomId=${roomId}`).then(response => {
-      setMessages(response.data.messages);
-    }).catch((error) => {
-      console.log(error);
-    })
-  } ,[router.isReady]);
+    if(cursor === 1){
+      setLoading(false);
+      return;
+    }
 
-  function handleChange ( e ) {
-    setInputMessage(e.target.value);
+    try{
+      const messageResponse = await api.get(`/messages?pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursor}`)
+
+      setCursor(messageResponse.data.messages.pop().id);
+      setMessages((prevMessages) => [...prevMessages, ...messageResponse.data.messages]);
+
+    } catch (e) {
+      console.log(e);
+      setError(true);
+    }
+
+    setLoading(false);
+  };
+
+  function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
+    setInputMessage(event.target.value);
     setInputValue(false);
   }
 
@@ -130,11 +140,34 @@ export default function Message() {
     setInputMessage('');
   }
 
+  useEffect(() => {
+    if(!router.isReady) return;
+
+    api.get('/account').then(response => {
+      setCurrentUser(response.data.user);
+    }).catch(() => {
+      router.push('/account/login');
+    })
+
+    const intersectionObserver = new IntersectionObserver(async entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        await getPostsList();
+      }
+    });
+    intersectionObserver.observe(document.querySelector('#scroll'));
+    return () => intersectionObserver.disconnect();
+  }, [router.isReady,cursor]);
+
+  useEffect(() => {
+    scrollToBottom()
+  })
+
   return (
     <>
       <Header />
-      <Grid className={classes.container}>
+      <Container maxWidth='sm' className={classes.container}>
         <div className={classes.messagesBody}>
+          <div id="scroll"></div>
           {messages.map((message: Messages) => (
             (message.user.id == currentUser.id)
             ? <MessageRight
@@ -149,6 +182,7 @@ export default function Message() {
                 createdAt={message.createdAt}
               />
           ))}
+          <div ref={messagesEndRef} />
         </div>
         <form className={classes.form} onSubmit={e => handleSubmit(e)}>
           <TextField
@@ -156,25 +190,29 @@ export default function Message() {
             variant="outlined"
             multiline
             fullWidth
-            onChange={e => handleChange(e)}
+            onChange={handleChange}
             value={inputMessage}
             error={messagesError}
           />
-          <Button
-            className={classes.button}
-            type="submit"
-            variant="contained"
-            disabled={inputValue}
-            color="secondary"
-          >
-            メッセージを送信
-          </Button>
+          <Box mt={1} >
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+              disabled={inputValue}
+              color="secondary"
+            >
+              メッセージを送信
+            </Button>
+          </Box>
         </form>
-      </Grid>
+      </Container>
       <Notification
         notify={notify}
         setNotify={setNotify}
       />
+      <div>{loading && 'Loading...'}</div>
+      <div>{error && 'Error'}</div>
     </>
   );
 }
