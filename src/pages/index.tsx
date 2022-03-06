@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 import {
   Avatar,
+  Box,
   Card,
   CardHeader,
   CardContent,
@@ -13,9 +14,10 @@ import {
   TextField,
   Theme,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { MdPostAdd } from 'react-icons/md'
+import { AiFillPlusCircle } from 'react-icons/ai'
 
 
 import Header from '../components/Header';
@@ -55,9 +57,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '16rem',
   },
   iconButton: {
-    position: 'relative',
-    top: '600px',
-    right: '-1200px',
+    position: 'absolute',
+    right: '20%',
+    bottom: '10%'
   },
 }))
 
@@ -95,7 +97,7 @@ export default function Home() {
   const router = useRouter();
   const classes = useStyles();
 
-  function handleChange ( event ) {
+  function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
     setComment(event.target.value);
     setInputValue(false);
   }
@@ -126,10 +128,6 @@ export default function Home() {
         message: `${error}`,
         type: 'error'
       });
-      // addToast("このメールアドレスは既に使われています。",{
-      //   appearance: 'error',
-      //   autoDismiss: true,
-      // });
     }
   }
 
@@ -147,9 +145,11 @@ export default function Home() {
   return (
     <>
       <Header />
-      <IconButton className={classes.iconButton} size="large" color='secondary' href="/post" >
-        <MdPostAdd />
-      </IconButton>
+      <Box className={classes.iconButton}>
+        <IconButton sx={{ fontSize: '3.5rem' }} color='secondary' href="/post" >
+          <AiFillPlusCircle />
+        </IconButton>
+      </Box>
       {posts.map((post, i) => (
         <>
           <Grid
@@ -198,7 +198,7 @@ export default function Home() {
                   variant="outlined"
                   multiline
                   fullWidth
-                  onChange={e => handleChange(e)}
+                  onChange={handleChange}
                   error={commentError}
                 />
                 <Button
