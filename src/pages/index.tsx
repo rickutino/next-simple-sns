@@ -174,8 +174,11 @@ export default function Home() {
               <CardHeader
                 avatar={
                   <Avatar
-                    src={post.user?.iconImageUrl}
                     alt={post.user?.name}
+                    src={
+                      user?.iconImageUrl
+                      ? user.iconImageUrl
+                      : `/icons/profileIcon.png` }
                   />
                 }
                 title={<Typography variant='h6'>{post.user?.name}</Typography>}
@@ -216,6 +219,8 @@ export default function Home() {
           </Grid>
         </>
       ))}
+      <div id="scroll"></div>
+
       <BottomHeaderNavigation />
       <Notification
         notify={notify}
@@ -223,7 +228,6 @@ export default function Home() {
       />
       <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
-      <div id="scroll"></div>
     </>
   );
 }

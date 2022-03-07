@@ -127,9 +127,12 @@ export default function Room() {
                   <CardHeader
                     avatar={
                       <Avatar
-                        src={room.roomUsers[0].user?.iconImageUrl}
                         alt={room.roomUsers[0].user?.name}
                         sx={{ width: 56, height: 56 }}
+                        src={
+                          room.roomUsers[0].user?.iconImageUrl
+                          ? room.roomUsers[0].user.iconImageUrl
+                          : `/icons/profileIcon.png` }
                         />
                       }
                       action={

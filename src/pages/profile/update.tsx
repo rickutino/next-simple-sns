@@ -153,8 +153,11 @@ export default function Update(){
         <label htmlFor="icon-button-file" >
           <Avatar
             sx={{ width: 185, height: 185 }}
-            src={currentUser?.iconImageUrl}
             className={classes?.avatar}
+            src={
+              currentUser?.iconImageUrl
+              ? currentUser.iconImageUrl
+              : `/icons/profileIcon.png` }
           />
           <IconButton
             sx={{ fontSize: '3.5rem' }}

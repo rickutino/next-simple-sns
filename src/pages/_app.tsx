@@ -5,7 +5,7 @@ import {
   ThemeProvider as MaterialThemeProvider,
   StylesProvider
 } from "@mui/styles";
-import styled, {
+import  {
   ThemeProvider as StyledThemeProvider
 } from "styled-components";
 import { ToastProvider } from "react-toast-notifications";
@@ -14,8 +14,8 @@ import { ToastProvider } from "react-toast-notifications";
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
-      <StylesProvider injectFirst>
-        <StyledThemeProvider theme={theme}>
+      <StyledThemeProvider theme={theme}>
+        <StylesProvider injectFirst>
           <MaterialThemeProvider theme={theme}>
             <ToastProvider>
               <AuthProvider>
@@ -23,8 +23,8 @@ export default function MyApp({ Component, pageProps }) {
               </AuthProvider>
             </ToastProvider>
           </MaterialThemeProvider>
-        </StyledThemeProvider>
-      </StylesProvider>
+        </StylesProvider>
+      </StyledThemeProvider>
     </>
   );
 }

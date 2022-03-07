@@ -126,7 +126,10 @@ export const MessageLeft = ({ user, content, createdAt } : Messages) => {
       <div className={classes.messageRow}>
         <Avatar
           alt={user?.name}
-          src={user?.iconImageUrl}
+          src={
+            user?.iconImageUrl
+            ? user.iconImageUrl
+            : `/icons/profileIcon.png` }
         ></Avatar>
         <Box sx={{ width: '90%' }}>
           <div className={classes.displayName}>{user?.name}</div>

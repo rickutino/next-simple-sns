@@ -57,6 +57,7 @@ export default function Profile() {
   return (
     <div className={classes.root}>
       <Header />
+
       <Container maxWidth="md" className={classes.root}>
         <Link href="/profile/update">
           <Typography variant="h4" align="right" className={classes.text} mb={2} mt={4}>
@@ -66,8 +67,11 @@ export default function Profile() {
         <Avatar
           className={classes.avatar}
           alt={currentUser?.name}
-          src={currentUser?.iconImageUrl}
           sx={{ width: 185, height: 185 }}
+          src={
+            currentUser?.iconImageUrl
+            ? currentUser.iconImageUrl
+            : `/icons/profileIcon.png` }
         />
         <Box>
           <Typography variant="h4" align="center" className={classes.text} mt={8} mb={2}>

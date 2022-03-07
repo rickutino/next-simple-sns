@@ -7,7 +7,7 @@ import { api } from '../../services/api';
 
 import Header, { BottomHeaderNavigation } from '../../components/Header';
 import { makeStyles } from '@mui/styles';
-import { Box, Button, Container, Grid, TextField, Theme } from '@mui/material';
+import { Box, Button, Container, TextField, Theme } from '@mui/material';
 import { MessageLeft, MessageRight } from '../../components/Message';
 
 interface User {
@@ -208,13 +208,13 @@ export default function Message() {
         </form>
       </Container>
 
-      <BottomHeaderNavigation />
       <Notification
         notify={notify}
         setNotify={setNotify}
       />
       <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
+      <BottomHeaderNavigation />
     </>
   );
 }
