@@ -57,9 +57,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '16rem',
   },
   iconButton: {
-    position: 'absolute',
+    [theme.breakpoints.down('lg')]: {
+      position: 'fixed',
+      right: '4%',
+      bottom: '10%',
+    },
+    [theme.breakpoints.down('md')]: {
+      position: 'fixed',
+      right: '2%',
+      bottom: '10%',
+    },
+    position: 'fixed',
     right: '20%',
-    bottom: '10%'
+    bottom: '10%',
   },
 }))
 
