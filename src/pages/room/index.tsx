@@ -5,7 +5,7 @@ import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 
-import Header from '../../components/Header';
+import Header, { BottomHeaderNavigation } from '../../components/Header';
 import { makeStyles } from '@mui/styles';
 import { Avatar, Box, ButtonBase, Card, CardContent, CardHeader, Container, Grid, Theme, Typography } from '@mui/material';
 import { BiTimeFive } from 'react-icons/bi';
@@ -151,6 +151,8 @@ export default function Room() {
           </>
         ))}
       </Container>
+
+      <BottomHeaderNavigation />
       <Notification
         notify={notify}
         setNotify={setNotify}

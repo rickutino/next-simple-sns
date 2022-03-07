@@ -12,8 +12,10 @@ import {
 
 import { makeStyles } from "@mui/styles";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
-import Header from "../../components/Header";
+import { useContext, useEffect, useState } from "react";
+import Header, { BottomHeaderNavigation } from "../../components/Header";
+import Notification from "../../components/Notification";
+import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 
 interface User {
@@ -40,8 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function Profile() {
+  const { notify, setNotify } = useContext(AuthContext);
   const [currentUser, setCurrentUser] = useState<User>();
   const classes = useStyles();
+
 
   useEffect(() => {
     api.get("/account").then(response => {
@@ -55,7 +59,7 @@ export default function Profile() {
       <Header />
       <Container maxWidth="md" className={classes.root}>
         <Link href="/profile/update">
-          <Typography variant="h4" align="right" className={classes.text} mb={2}>
+          <Typography variant="h4" align="right" className={classes.text} mb={2} mt={4}>
             編集
           </Typography>
         </Link>
@@ -73,40 +77,13 @@ export default function Profile() {
             {currentUser?.email}
           </Typography>
         </Box>
-
-        {/* <Card
-          sx={{ display: 'flex', flexDirection: 'column' }}
-          className={classes.root}
-        >
-          <CardHeader
-            avatar={
-              <Avatar
-                src={currentUser?.iconImageUrl}
-                sx={{ width: 85, height: 85, flex: '1 0 auto'  }}
-              />
-            }
-            action={
-              <Link href="profile/update" underline="none">
-
-              </Link>
-            }
-            className={classes.root}
-          />
-          <CardMedia
-            component="img"
-            height="194"
-            image="/static/images/cards/paella.jpg"
-            alt="Paella dish"
-            className={classes.root}
-          />
-          <CardContent className={classes.root}>
-            <Avatar
-              src={currentUser?.iconImageUrl}
-              sx={{ width: 120, height: 85 }}
-            />
-          </CardContent>
-        </Card> */}
       </Container>
+
+      <BottomHeaderNavigation />
+      <Notification
+        notify={notify}
+        setNotify={setNotify}
+      />
     </div>
   )
 }

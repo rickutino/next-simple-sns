@@ -2,7 +2,7 @@ import { Box, Button, Container, TextField, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
-import Header from "../../components/Header";
+import Header, { BottomHeaderNavigation } from "../../components/Header";
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
@@ -97,6 +97,8 @@ export default function Post() {
           </Box>
         </form>
       </Container>
+
+      <BottomHeaderNavigation />
       <Notification
         notify={notify}
         setNotify={setNotify}

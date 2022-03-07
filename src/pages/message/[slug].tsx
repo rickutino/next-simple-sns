@@ -5,7 +5,7 @@ import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 
-import Header from '../../components/Header';
+import Header, { BottomHeaderNavigation } from '../../components/Header';
 import { makeStyles } from '@mui/styles';
 import { Box, Button, Container, Grid, TextField, Theme } from '@mui/material';
 import { MessageLeft, MessageRight } from '../../components/Message';
@@ -207,6 +207,8 @@ export default function Message() {
           </Box>
         </form>
       </Container>
+
+      <BottomHeaderNavigation />
       <Notification
         notify={notify}
         setNotify={setNotify}

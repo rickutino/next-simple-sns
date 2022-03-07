@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { AiFillPlusCircle, AiOutlineMail } from 'react-icons/ai'
 import { FiUser } from 'react-icons/fi'
-import Header from "../../components/Header";
+import Header, { BottomHeaderNavigation } from "../../components/Header";
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
@@ -222,6 +222,12 @@ export default function Update(){
           setNotify={setNotify}
         />
       </Container>
+
+      <BottomHeaderNavigation />
+      <Notification
+        notify={notify}
+        setNotify={setNotify}
+      />
     </>
   )
 }
