@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import { FiHome, FiPower } from 'react-icons/fi';
 import { RiAccountCircleLine } from 'react-icons/ri';
@@ -7,6 +6,8 @@ import Notification from './Notification';
 import { api } from '../services/api';
 import { Container, HeaderContent, Profile, Info } from '../styles/Header';
 import ConfirmDialog from './ConfirmDialog';
+import { BottomNavigation, BottomNavigationAction, Box, Link, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 interface User {
   name: string;
@@ -14,9 +15,32 @@ interface User {
   iconImageUrl?: string | null
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  bottomRoot: {
+    width: '100%',
+    position: 'fixed',
+    bottom: '0',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  topRoot: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
+  },
+  iconNavigation: {
+    '& svg':{
+      width: '28px',
+      height: '28px'
+    },
+  }
+}));
+
 export default function Header() {
   const { signOut, notify, setNotify, confirmDialog, setConfirmDialog } = useContext(AuthContext);
   const [user, setUser] = useState<User>();
+  const classes = useStyles();
 
   useEffect(() => {
     api.get('/account').then(response => {
@@ -30,7 +54,7 @@ export default function Header() {
 
   return (
     <>
-      <Container>
+      <Container className={classes.topRoot}>
         <HeaderContent>
           <img
             src={'/logo.svg'}
@@ -79,4 +103,48 @@ export default function Header() {
       />
     </>
   )
+}
+
+export function BottomHeaderNavigation() {
+  const { signOut,  confirmDialog, setConfirmDialog } = useContext(AuthContext);
+  const classes = useStyles();
+  const [value, setValue] = useState(0);
+
+  return (
+    <>
+      <Box  className={classes.bottomRoot}>
+        <BottomNavigation
+          className={classes.iconNavigation}
+          showLabels
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+          sx={{ justifyContent: 'space-around'}}
+        >
+          <Link href="/profile">
+            <a>
+              <BottomNavigationAction icon={<FiHome />}/>
+            </a>
+          </Link>
+          <Link href="/room">
+            <a>
+              <BottomNavigationAction icon={<RiAccountCircleLine />} />
+            </a>
+          </Link>
+          <BottomNavigationAction icon={<FiPower color={"#E0483D"}/>} className='logout'  onClick={() => {
+            setConfirmDialog({
+              isOpen: true,
+              title: "ログアウトしてもよろしいでしょうか？",
+              onConfirm: () => { signOut() }
+            });
+          }}/>
+        </BottomNavigation>
+      </Box>
+      <ConfirmDialog
+        confirmDialog={confirmDialog}
+        setConfirmDialog={setConfirmDialog}
+      />
+    </>
+  );
 }

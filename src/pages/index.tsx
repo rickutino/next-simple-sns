@@ -20,7 +20,7 @@ import { makeStyles } from '@mui/styles';
 import { AiFillPlusCircle } from 'react-icons/ai'
 
 
-import Header from '../components/Header';
+import Header, { BottomHeaderNavigation } from '../components/Header';
 import useInfiniteScroll from '../components/InfiniteScroll';
 import { AuthContext } from '../contexts/AuthContext';
 import Notification from '../components/Notification';
@@ -216,6 +216,7 @@ export default function Home() {
           </Grid>
         </>
       ))}
+      <BottomHeaderNavigation />
       <Notification
         notify={notify}
         setNotify={setNotify}
