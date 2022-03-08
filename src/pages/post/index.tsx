@@ -1,8 +1,11 @@
 import { Box, Button, Container, TextField, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
+
 import Header, { BottomHeaderNavigation } from "../../components/Header";
+
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
@@ -11,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   form: {
     display: 'flex',
     width: '80%',
-    margin: "0 auto",
+    margin: "36px auto 0",
   },
   textField: {
     borderRadius: '5px',
@@ -30,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function Post() {
   const { notify, setNotify } = useContext(AuthContext);
   const [ post, setPost ] = useState('');
-  const [ inputValue, setInputValue ] = useState(true);
+  const [ sendButtonDisabled, setSendButtonDisabled ] = useState(true);
   const [ postError, setPostError ] = useState(false);
 
   const router = useRouter();
@@ -38,7 +41,7 @@ export default function Post() {
 
   function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
     setPost(event.target.value);
-    setInputValue(false);
+    setSendButtonDisabled(false);
   }
 
   async function handleSubmit ( event: FormEvent) {
@@ -54,6 +57,7 @@ export default function Post() {
       });
     }
 
+    setSendButtonDisabled(true);
     try{
       await api.post('/posts', {
         post: {
@@ -89,7 +93,7 @@ export default function Post() {
               className={classes.button}
               type="submit"
               variant="contained"
-              disabled={inputValue}
+              disabled={sendButtonDisabled}
               color="secondary"
             >
               投稿を送信
