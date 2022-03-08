@@ -1,9 +1,14 @@
 import { Avatar, Box, Button, Container, IconButton, InputAdornment, TextField, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+
+import { useRouter } from "next/router";
 import { FormEvent, useContext, useEffect, useState } from "react";
+
 import { AiFillPlusCircle, AiOutlineMail } from 'react-icons/ai'
 import { FiUser } from 'react-icons/fi'
+
 import Header, { BottomHeaderNavigation } from "../../components/Header";
+
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
@@ -65,7 +70,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function Update(){
   const [currentUser, setCurrentUser] = useState<User>();
-  const [postFileData, setPostFileData] = useState({});
   const [nameInput, setNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [inputValue, setInputValue] = useState(true);
@@ -73,6 +77,7 @@ export default function Update(){
   const [emailInputError, setEmailInputError] = useState(false);
 
   const { notify, setNotify } = useContext(AuthContext);
+  const router = useRouter();
   const classes = useStyles();
 
   useEffect(() => {
@@ -93,8 +98,18 @@ export default function Update(){
 
     await api.patch('/account/icon_image', formData, config).then(response =>{
       console.log(response);
+
+      setNotify({
+        isOpen: true,
+        message: "プロフィールアイコンを変更しました。",
+        type: 'success'
+      });
     }).catch((error) => {
-      console.log(error);
+      setNotify({
+        isOpen: true,
+        message: `プロフィール変更にエラーが発生しました: ${error}`,
+        type: 'error'
+      });
     });
     event.target.value = '';
   };
@@ -136,6 +151,14 @@ export default function Update(){
         name: nameInput,
         email: emailInput
       });
+
+      setNotify({
+        isOpen: true,
+        message: "プロフィールを変更しました。",
+        type: 'success'
+      });
+
+      router.push('/profile');
     }catch (error) {
       setNotify({
         isOpen: true,
