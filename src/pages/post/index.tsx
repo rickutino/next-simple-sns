@@ -64,6 +64,13 @@ export default function Post() {
           body: post,
         }
       });
+
+      setNotify({
+        isOpen: true,
+        message: "投稿を成功しました。",
+        type: 'success'
+      });
+
       router.push('/');
     }catch (error) {
       setNotify({
