@@ -1,4 +1,4 @@
-import { Box, Button, Container, TextField, Theme } from "@mui/material";
+import { Box, Button, Container, TextField, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import { useRouter } from "next/router";
@@ -33,28 +33,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function Post() {
   const { notify, setNotify } = useContext(AuthContext);
   const [ post, setPost ] = useState('');
+  const [ countLength, setCountLength ] = useState<Number>(0);
   const [ sendButtonDisabled, setSendButtonDisabled ] = useState(true);
-  const [ postError, setPostError ] = useState(false);
+  const [ inputError, setInputError ] = useState(false);
 
   const router = useRouter();
   const classes = useStyles();
 
   function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
+    setCountLength(event.target.value.length);
     setPost(event.target.value);
     setSendButtonDisabled(false);
   }
 
   async function handleSubmit ( event: FormEvent) {
     event.preventDefault();
-    setPostError(false);
+    setInputError(false);
 
     if(post == '') {
-      setPostError(true);
+      setInputError(true);
       setNotify({
         isOpen: true,
         message: "コメントは必須です。",
         type: 'error'
       });
+
+      return;
     }
 
     setSendButtonDisabled(true);
@@ -86,14 +90,16 @@ export default function Post() {
       <Header />
       <Container maxWidth='lg'>
         <form className={classes.form} onSubmit={e => handleSubmit(e)}>
+          <Typography variant="body1" align="right" >{countLength}</Typography>
           <TextField
             className={classes.textField}
             variant="outlined"
             multiline
             fullWidth
-            rows={6}
+            rows={3}
             onChange={handleChange}
-            error={postError}
+            inputProps={{ maxLength: 140 }}
+            error={inputError || post.length == 140 ? true : false}
           />
           <Box mt={3}>
             <Button
