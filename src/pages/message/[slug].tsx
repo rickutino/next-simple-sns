@@ -8,7 +8,7 @@ import { api } from '../../services/api';
 import Header, { BottomHeaderNavigation } from '../../components/Header';
 import { makeStyles } from '@mui/styles';
 import { Box, Button, Container, TextField, Theme } from '@mui/material';
-import { MessageLeft, MessageRight } from '../../components/Message';
+import { MessageLeft, MessageRight, PostContext } from '../../components/Message';
 
 interface User {
   id: string;
@@ -46,7 +46,10 @@ const useStyles = makeStyles((theme: Theme) =>({
     width: "calc( 100% - 20px )",
     margin: 10,
     overflowY: "scroll",
-    height: "calc( 100% - 80px )"
+    height: "calc( 100% - 80px )",
+    // '& #scroll': {
+    //   display: 'none',
+    // }
   },
   form: {
     display: 'flex',
@@ -84,7 +87,9 @@ export default function Message() {
   }
 
   async function getPostsList() {
-    setLoading(true)
+    setLoading(true);
+    const pageSize = 10;
+
 
     if(cursor === 1){
       setLoading(false);
@@ -92,7 +97,7 @@ export default function Message() {
     }
 
     try{
-      const messageResponse = await api.get(`/messages?pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursor}`)
+      const messageResponse = await api.get(`/messages?pagination[size]=${pageSize}&pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursor}`)
 
       setCursor(messageResponse.data.messages.pop().id);
       setMessages((prevMessages) => [...prevMessages, ...messageResponse.data.messages]);
@@ -176,11 +181,11 @@ export default function Message() {
                 createdAt={message.createdAt}
               />
             : <MessageLeft
-                key={message.id}
-                user={message.user}
-                content={message.content}
-                createdAt={message.createdAt}
-              />
+              key={message.id}
+              user={message.user}
+              content={message.content}
+              createdAt={message.createdAt}
+            />
           ))}
           <div ref={messagesEndRef} />
         </div>
