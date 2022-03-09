@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, Container, IconButton, InputAdornment, TextField, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
+import { GetServerSideProps } from 'next';
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useEffect, useState } from "react";
 
@@ -11,6 +12,7 @@ import Header, { BottomHeaderNavigation } from "../../components/Header";
 
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
+import { parseCookies } from 'nookies';
 import { api } from "../../services/api";
 
 interface User {
@@ -256,4 +258,21 @@ export default function Update(){
       />
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['next-simple-sns']: token } = parseCookies(ctx)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/account/login',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
