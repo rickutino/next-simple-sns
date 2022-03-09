@@ -1,8 +1,10 @@
-import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
+import { parseCookies } from 'nookies';
 import { api } from '../../services/api';
 
 import Header, { BottomHeaderNavigation } from '../../components/Header';
@@ -222,4 +224,21 @@ export default function Message() {
       <BottomHeaderNavigation />
     </>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['next-simple-sns']: token } = parseCookies(ctx)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/account/login',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
