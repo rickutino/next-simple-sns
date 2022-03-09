@@ -4,7 +4,6 @@ import { destroyCookie, setCookie } from "nookies";
 import { useRouter } from "next/router";
 import { api } from "../services/api";
 
-import { useToasts } from "react-toast-notifications";
 
 interface User {
   id?: string;
@@ -53,7 +52,6 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { addToast } = useToasts();
   const [notify, setNotify] = useState({isOpen: false, message: "", type: null})
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: ""});
   const [user, setUser] = useState<User>();
@@ -63,7 +61,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     window.addEventListener('popstate', function(e) {
       router.push('/');
     });
-    // cleanup this component
+
     return () => {
       window.removeEventListener('popstate', function(e) {});
     };
@@ -133,10 +131,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         message: "メールアドレスかパスワードが間違っています",
         type: 'error'
       });
-      // addToast("メールアドレスかパスワードが間違っています",{
-      //   appearance: 'error',
-      //   autoDismiss: true,
-      // });
     });
   }
 
@@ -170,10 +164,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         message: "このメールアドレスは既に使われています。",
         type: 'error'
       });
-      // addToast("このメールアドレスは既に使われています。",{
-      //   appearance: 'error',
-      //   autoDismiss: true,
-      // });
     }
   }
 

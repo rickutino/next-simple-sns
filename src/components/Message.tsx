@@ -1,4 +1,4 @@
-import { Avatar, Box, Theme } from "@mui/material";
+import { Avatar, Box, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 interface User {
@@ -20,10 +20,10 @@ interface Messages {
   roomId?: string;
   post?: Posts;
   postId?: number;
-  user: User;
+  user?: User;
   userId?: number;
-  content: string;
-  createdAt: Date;
+  content?: string;
+  createdAt?: Date;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
+  postContext: {},
   friendMessage: {
     position: 'relative',
     marginLeft: '2.5rem',
@@ -116,6 +117,22 @@ function jaTimeZone (hours) {
   const localDate = new Date(dateString);
 
   return dateToTime(localDate);
+}
+
+export const PostContext = ({ post } : Messages) => {
+  const classes = useStyles();
+
+  return (
+    <>
+      <div className={classes.postContext}>
+        <Typography variant="h5" align="center">Post</Typography>
+        <Box sx={{ width: '100%' }}>
+          <p className={classes.messageContent}>{post?.body}</p>
+          <div className={classes.messageTimeStampRight}>{jaTimeZone(post?.createdAt)}</div>
+        </Box>
+      </div>
+    </>
+  );
 }
 
 export const MessageLeft = ({ user, content, createdAt } : Messages) => {
