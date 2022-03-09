@@ -33,6 +33,11 @@ interface Post {
   user: User
 }
 
+interface PropsData {
+  post: Post;
+  currentUser: User;
+}
+
 function jaTimeZone (hours) {
   const dateToTime = date => date.toLocaleString('ja', {
     year: 'numeric',
@@ -66,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default function Post(post: Post, currentUser: User) {
+export default function Post({ post, currentUser }: PropsData) {
   const { notify, setNotify } = useContext(AuthContext);
   const [ comment, setComment ] = useState('');
   const [ inputValue, setInputValue ] = useState(true);
