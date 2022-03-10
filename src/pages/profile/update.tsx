@@ -99,7 +99,12 @@ export default function Update(){
     }
 
     await api.patch('/account/icon_image', formData, config).then(response =>{
-      console.log(response);
+      const uploadUserIcon = {
+        ...currentUser,
+        iconImageUrl: response.data.user.iconImageUrl
+      };
+
+      setCurrentUser(uploadUserIcon);
 
       setNotify({
         isOpen: true,
