@@ -48,10 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>({
     width: "calc( 100% - 20px )",
     margin: 10,
     overflowY: "scroll",
-    height: "calc( 100% - 80px )",
-    // '& #scroll': {
-    //   display: 'none',
-    // }
+    height: "calc( 100% - 140px )",
   },
   form: {
     display: 'flex',
@@ -71,39 +68,63 @@ const useStyles = makeStyles((theme: Theme) =>({
 export default function Message() {
   const { notify, setNotify } = useContext(AuthContext);
   const [ currentUser, setCurrentUser ] = useState<User>();
-  const [ cursor, setCursor ] = useState<number>();
   const [ loading, setLoading ] = useState(true);
   const [ error, setError ] = useState(false);
   const [ messages, setMessages ] = useState<Messages[]>([]);
-  const [ inputValue, setInputValue ] = useState(true);
-  const [ inputMessage, setInputMessage ] = useState('')
   const [ messagesError, setMessagesError ] = useState(false);
+  const [ inputMessage, setInputMessage ] = useState('')
+  const [ inputValue, setInputValue ] = useState(true);
 
-  const messagesEndRef = useRef(null)
+  let cursorIndex = 0;
+  let allMessages = [];
+  let messageIndex = null;
+  let pageSize = 10;
+  const messagesEndRef = useRef(null);
+  const firstUpdate = useRef(true);
   const classes = useStyles();
 	const router = useRouter();
   const roomId = router.query.slug;
 
   function scrollToBottom() {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function getRemainingMessage() {
+    if(messageIndex > pageSize){
+      messageIndex = messageIndex - pageSize;
+      cursorIndex = allMessages[messageIndex].id;
+    } else {
+      pageSize = messageIndex + 1;
+      messageIndex = 0;
+
+      cursorIndex = 1;
+    }
   }
 
   async function getPostsList() {
     setLoading(true);
-    const pageSize = 10;
 
-
-    if(cursor === 1){
+    if(messageIndex == 0) {
       setLoading(false);
+
       return;
     }
 
+    // オールメッセージのリストの最後のエレメントの取得。
+    if(firstUpdate.current) {
+      const response = await api.get(`/messages?roomId=${roomId}&pagination[order]=ASC`);
+
+      allMessages = response.data.messages;
+      messageIndex = allMessages.length - 1;
+      firstUpdate.current = false;
+    };
+
+
     try{
-      const messageResponse = await api.get(`/messages?pagination[size]=${pageSize}&pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursor}`)
+      getRemainingMessage();
+      const messageResponse = await api.get(`/messages?pagination[size]=${pageSize}&pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursorIndex}`);
 
-      setCursor(messageResponse.data.messages.pop().id);
-      setMessages((prevMessages) => [...prevMessages, ...messageResponse.data.messages]);
-
+      setMessages((prevMessages) => [...messageResponse.data.messages, ...prevMessages]);
     } catch (e) {
       console.log(e);
       setError(true);
@@ -163,11 +184,11 @@ export default function Message() {
     });
     intersectionObserver.observe(document.querySelector('#scroll'));
     return () => intersectionObserver.disconnect();
-  }, [router.isReady,cursor]);
+  }, [router.isReady]);
 
   useEffect(() => {
-    scrollToBottom()
-  })
+    scrollToBottom();
+  });
 
   return (
     <>
@@ -178,6 +199,7 @@ export default function Message() {
           {messages.map((message: Messages) => (
             (message.user.id == currentUser.id)
             ? <MessageRight
+                key={message.id}
                 user={message.user}
                 content={message.content}
                 createdAt={message.createdAt}

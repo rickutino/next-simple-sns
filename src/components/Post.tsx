@@ -137,7 +137,6 @@ export default function Post({ post, currentUser }: PropsData) {
       <CardHeader
         avatar={
           <Avatar
-            alt={post.user?.name}
             src={
               post.user?.iconImageUrl
               ? post.user.iconImageUrl
