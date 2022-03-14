@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 
+import { Header, BottomHeaderNavigation } from '../components/Header';
 import {
   Box,
   Theme,
@@ -9,8 +10,6 @@ import {
 import { makeStyles } from '@mui/styles';
 import { AiFillPlusCircle } from 'react-icons/ai'
 
-
-import { Header, BottomHeaderNavigation } from '../components/Header';
 import useInfiniteScroll from '../components/InfiniteScroll';
 import { parseCookies } from 'nookies';
 import { api } from '../services/api';
@@ -35,9 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: '2%',
       bottom: '10%',
     },
-    position: 'fixed',
-    right: '20%',
-    bottom: '10%',
   },
 }));
 
@@ -68,16 +64,23 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Box className={classes.iconButton}>
-        <IconButton sx={{ fontSize: '3.5rem' }} color='secondary' href="/post" >
-          <AiFillPlusCircle />
-        </IconButton>
-      </Box>
       {posts.map((post, i) => (
         <>
           <Post post={post} currentUser={currentUser}  />
         </>
       ))}
+      <Box
+        sx={{
+          position: 'fixed',
+          right: '20%',
+          bottom: '10%',
+        }}
+        className={classes.iconButton}
+      >
+        <IconButton sx={{ fontSize: '3.5rem' }} color='secondary' href="/post" >
+          <AiFillPlusCircle />
+        </IconButton>
+      </Box>
       <div id="scroll"></div>
 
       <BottomHeaderNavigation />
