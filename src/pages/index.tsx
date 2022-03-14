@@ -66,7 +66,7 @@ export default function Home() {
       <Header />
       {posts.map((post, i) => (
         <>
-          <Post post={post} currentUser={currentUser}  />
+          <Post key={post.id} post={post} currentUser={currentUser}  />
         </>
       ))}
       <Box
