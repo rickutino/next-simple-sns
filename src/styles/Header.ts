@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
-export const Container = styled.header`
-  padding: 32px 0;
-  background:  ${props => props.theme.palette.primary.dark};
-`;
 
 export const HeaderContent = styled.div`
+  background-color: ${props => props.theme.palette.primary.dark};
+  width: 100%;
+  height: 8rem;
   max-width: 1120px;
-  margin: 0 auto 56px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   > img {
     height: 42px;
   }
