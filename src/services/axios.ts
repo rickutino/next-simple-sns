@@ -7,7 +7,7 @@ export function getAPIClient(ctx?: any) {
   const cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://simp-340605.an.r.appspot.com/',
     headers: {
       Authorization: `Bearer ${cookies['next-simple-sns']}`
     }
