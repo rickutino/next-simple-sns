@@ -7,7 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { parseCookies } from 'nookies';
 import { api } from '../../services/api';
 
-import Header, { BottomHeaderNavigation } from '../../components/Header';
+import { Header, BottomHeaderNavigation } from '../../components/Header';
 import { makeStyles } from '@mui/styles';
 import { Box, Button, Container, TextField, Theme } from '@mui/material';
 import { MessageLeft, MessageRight, PostContext } from '../../components/Message';
