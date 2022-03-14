@@ -73,11 +73,11 @@ export default function SingUp({}: NextPage) {
         <Grid item xs={12} lg={5.5}>
           <Box
             sx={{
-              my: 13,
-              mx: 13,
+              height: '100vh',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
             <Image
