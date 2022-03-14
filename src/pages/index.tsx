@@ -10,7 +10,7 @@ import { makeStyles } from '@mui/styles';
 import { AiFillPlusCircle } from 'react-icons/ai'
 
 
-import Header, { BottomHeaderNavigation } from '../components/Header';
+import { Header, BottomHeaderNavigation } from '../components/Header';
 import useInfiniteScroll from '../components/InfiniteScroll';
 import { parseCookies } from 'nookies';
 import { api } from '../services/api';

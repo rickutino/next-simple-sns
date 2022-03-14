@@ -20,11 +20,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     position: 'fixed',
     bottom: '0',
+    display: 'block',
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
   topRoot: {
+    display: 'block',
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export default function Header() {
+export function Header() {
   const { signOut, notify, setNotify, confirmDialog, setConfirmDialog } = useContext(AuthContext);
   const [user, setUser] = useState<User>();
   const classes = useStyles();

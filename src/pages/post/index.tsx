@@ -5,7 +5,7 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
 
-import Header, { BottomHeaderNavigation } from "../../components/Header";
+import { Header, BottomHeaderNavigation } from "../../components/Header";
 
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   textField: {
     borderRadius: '5px',
-    background: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[200],
   },
   button: {
     borderRadius: '50px',

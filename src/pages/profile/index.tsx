@@ -14,7 +14,7 @@ import { GetServerSideProps } from 'next';
 import { makeStyles } from "@mui/styles";
 import { Box } from "@mui/system";
 import { useContext, useEffect, useState } from "react";
-import Header, { BottomHeaderNavigation } from "../../components/Header";
+import { Header, BottomHeaderNavigation } from "../../components/Header";
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
 import { parseCookies } from 'nookies';
