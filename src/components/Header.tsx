@@ -40,13 +40,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function Header() {
   const { signOut, notify, setNotify, confirmDialog, setConfirmDialog } = useContext(AuthContext);
   const [user, setUser] = useState<User>();
+  const [loading, setLoading] = useState(true);
   const classes = useStyles();
 
   useEffect(() => {
     api.get('/account').then(response => {
       const { name, email, iconImageUrl } = response.data.user;
 
-      setUser({ name, email, iconImageUrl })
+      setUser({ name, email, iconImageUrl });
+      setLoading(false);
     }).catch((error) => {
       console.log(error);
     });
@@ -54,47 +56,49 @@ export function Header() {
 
   return (
     <>
-      <Container maxWidth="xl" >
-        <Box className={classes.topRoot}>
-          <HeaderContent>
-            <img
-              src={'/logo.svg'}
-              alt="simple-sns"
-            />
-            <Profile>
-              <img src={
-                user?.iconImageUrl
-                ? user.iconImageUrl
-                : `/icons/profileIcon.png` }
+      {!loading &&
+        <Container maxWidth="xl" >
+          <Box className={classes.topRoot}>
+            <HeaderContent>
+              <img
+                src={'/logo.svg'}
+                alt="simple-sns"
               />
-              <Info>
-                <span>Welcome, </span>
-                <Link href="/profile">
-                  <strong>{user?.name}</strong>
-                </Link>
-              </Info>
-            </Profile>
+              <Profile>
+                <img src={
+                  user?.iconImageUrl
+                  ? user.iconImageUrl
+                  : `/icons/profileIcon.png` }
+                />
+                <Info>
+                  <span>Welcome, </span>
+                  <Link href="/profile">
+                    <strong>{user?.name}</strong>
+                  </Link>
+                </Info>
+              </Profile>
 
-            <nav>
-              <Link href="/profile">
-                <FiHome />
-              </Link>
-              <Link href="/room">
-                <RiAccountCircleLine />
-              </Link>
-              <button className='logout' onClick={() => {
-                setConfirmDialog({
-                  isOpen: true,
-                  title: "ログアウトしてもよろしいでしょうか？",
-                  onConfirm: () => { signOut() }
-                });
-              }} >
-                <FiPower color={"#E0483D"}/>
-              </button>
-            </nav>
-          </HeaderContent>
-        </Box>
-      </Container>
+              <nav>
+                <Link href="/profile">
+                  <FiHome />
+                </Link>
+                <Link href="/room">
+                  <RiAccountCircleLine />
+                </Link>
+                <button className='logout' onClick={() => {
+                  setConfirmDialog({
+                    isOpen: true,
+                    title: "ログアウトしてもよろしいでしょうか？",
+                    onConfirm: () => { signOut() }
+                  });
+                }} >
+                  <FiPower color={"#E0483D"}/>
+                </button>
+              </nav>
+            </HeaderContent>
+          </Box>
+        </Container>
+      }
       <Notification
         notify={notify}
         setNotify={setNotify}
