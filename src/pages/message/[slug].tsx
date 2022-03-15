@@ -39,10 +39,10 @@ interface Messages {
 
 const useStyles = makeStyles((theme: Theme) =>({
   container: {
-    height: '75vh',
-    alignItems: "center",
+    height: '80vh',
+    display: 'flex',
     flexDirection: "column",
-    position: "relative"
+    alignItems: "center",
   },
   messagesBody: {
     width: "calc( 100% - 20px )",
@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme: Theme) =>({
   },
   form: {
     display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
   },
   textField: {
@@ -193,8 +196,25 @@ export default function Message() {
   return (
     <>
       <Header />
-      <Container maxWidth='sm' className={classes.container}>
-        <div className={classes.messagesBody}>
+      <Container
+        maxWidth='sm'
+        className={classes.container}
+        sx={{
+          height: '80vh',
+          display: 'flex',
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          className={classes.messagesBody}
+          sx={{
+            width: "calc( 100% - 20px )",
+            margin: 10,
+            overflowY: "scroll",
+            height: "calc( 100% - 140px )",
+          }}
+        >
           <div id="scroll"></div>
           {messages.map((message: Messages) => (
             (message.user.id == currentUser.id)
@@ -212,10 +232,17 @@ export default function Message() {
             />
           ))}
           <div ref={messagesEndRef} />
-        </div>
-        <form className={classes.form} onSubmit={e => handleSubmit(e)}>
+        </Box>
+        <form
+          className={classes.form}
+          onSubmit={e => handleSubmit(e)}
+        >
           <TextField
             className={classes.textField}
+            sx={{
+              borderRadius: '5px',
+              backgroundColor: '#eeeeee',
+            }}
             variant="outlined"
             multiline
             fullWidth
@@ -223,9 +250,14 @@ export default function Message() {
             value={inputMessage}
             error={messagesError}
           />
-          <Box mt={1} >
+          <Box mt={1} sx={{ width: 1 }}>
             <Button
               className={classes.button}
+              sx={{
+                borderRadius: '50px',
+                height: '3.5rem',
+                width: '100%',
+              }}
               type="submit"
               variant="contained"
               disabled={inputValue}
