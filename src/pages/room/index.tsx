@@ -1,15 +1,27 @@
-import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
 
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 
-import Header, { BottomHeaderNavigation } from '../../components/Header';
+import {
+  Avatar,
+  ButtonBase,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  Grid,
+  Theme,
+  Typography
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, ButtonBase, Card, CardContent, CardHeader, Container, Grid, Theme, Typography } from '@mui/material';
-import { BiTimeFive } from 'react-icons/bi';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
+import { Header, BottomHeaderNavigation } from '../../components/Header';
 
 interface User {
   id: string;
@@ -109,7 +121,6 @@ export default function Room() {
       <Container maxWidth='md'>
         {rooms.map((room ,i) => (
           <>
-            {console.log(room.roomUsers[0].roomId)}
             <Grid
               key={i}
               className={classes.root}>
@@ -162,4 +173,21 @@ export default function Room() {
       />
     </>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['next-simple-sns']: token } = parseCookies(ctx)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/account/login',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
