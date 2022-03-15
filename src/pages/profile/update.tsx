@@ -1,19 +1,29 @@
-import { Avatar, Box, Button, Container, IconButton, InputAdornment, TextField, Theme, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
 import { GetServerSideProps } from 'next';
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useEffect, useState } from "react";
+
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Theme,
+  Typography
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import { AiFillPlusCircle, AiOutlineMail } from 'react-icons/ai'
 import { FiUser } from 'react-icons/fi'
 
 import { Header, BottomHeaderNavigation } from "../../components/Header";
 
+import { api } from "../../services/api";
+import { parseCookies } from 'nookies';
 import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
-import { parseCookies } from 'nookies';
-import { api } from "../../services/api";
 
 interface User {
   name: string;

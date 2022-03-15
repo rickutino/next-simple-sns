@@ -64,7 +64,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      {posts.map((post, i) => (
+      {posts.map((post) => (
         <>
           <Post key={post.id} post={post} currentUser={currentUser}  />
         </>

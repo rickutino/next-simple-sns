@@ -29,12 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'none',
     },
   },
-  iconNavigation: {
-    '& svg':{
-      width: '28px',
-      height: '28px'
-    },
-  }
 }));
 
 export function Header() {
@@ -120,13 +114,18 @@ export function BottomHeaderNavigation() {
     <>
       <Box  className={classes.bottomRoot}>
         <BottomNavigation
-          className={classes.iconNavigation}
           showLabels
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
           }}
-          sx={{ justifyContent: 'space-around'}}
+          sx={{
+            justifyContent: 'space-around',
+            '& svg':{
+              width: '28px',
+              height: '28px'
+            },
+          }}
         >
           <Link href="/profile">
             <a>

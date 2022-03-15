@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 export const HeaderContent = styled.div`
-  background-color: ${props => props.theme.palette.primary.dark};
+  background-color: ${props => props.theme.palette.secondary.dark};
   width: 100%;
   height: 8rem;
   max-width: 1120px;

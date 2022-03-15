@@ -105,7 +105,12 @@ export default function Post() {
           />
           <Box mt={3}>
             <Button
-              className={classes.button}
+              sx={{
+                borderRadius: '50px',
+                height: '55px',
+                width: '100%',
+                marginTop: '1.25rem',
+              }}
               type="submit"
               variant="contained"
               disabled={sendButtonDisabled}
