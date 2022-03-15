@@ -34,7 +34,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  postContext: {},
+  postContext: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.grey[200],
+    margin: '0 auto',
+    width: '100%',
+    maxWidth: '250px',
+    borderRadius: '5px',
+    height: '3.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   friendMessage: {
     position: 'relative',
     marginLeft: '2.5rem',
@@ -121,15 +133,12 @@ function jaTimeZone (hours) {
 
 export const PostContext = ({ post } : Messages) => {
   const classes = useStyles();
-
   return (
+    (!!post) &&
     <>
       <div className={classes.postContext}>
-        <Typography variant="h5" align="center">Post</Typography>
-        <Box sx={{ width: '100%' }}>
-          <p className={classes.messageContent}>{post?.body}</p>
-          <div className={classes.messageTimeStampRight}>{jaTimeZone(post?.createdAt)}</div>
-        </Box>
+        <Typography variant="subtitle2">投稿に返信しました</Typography>
+        <Typography variant="body1">{post?.body}</Typography>
       </div>
     </>
   );

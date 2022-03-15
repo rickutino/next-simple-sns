@@ -195,6 +195,7 @@ export default function Message() {
 
   return (
     <>
+      {console.log(messages)}
       <Header />
       <Container
         maxWidth='sm'
@@ -216,21 +217,30 @@ export default function Message() {
           }}
         >
           <div id="scroll"></div>
-          {messages.map((message: Messages) => (
-            (message.user.id == currentUser.id)
-            ? <MessageRight
-                key={message.id}
-                user={message.user}
-                content={message.content}
-                createdAt={message.createdAt}
-              />
-            : <MessageLeft
-              key={message.id}
-              user={message.user}
-              content={message.content}
-              createdAt={message.createdAt}
-            />
-          ))}
+          {messages.map((message: Messages) => {
+            // {!!message.postId && <PostContext messages={message.post}/}
+            return (
+              (message.user.id == currentUser.id)
+              ? <>
+                  <PostContext post={message.post}/>
+                  <MessageRight
+                    key={message.id}
+                    user={message.user}
+                    content={message.content}
+                    createdAt={message.createdAt}
+                  />
+              </>
+              : <>
+                <PostContext post={message.post}/>
+                <MessageLeft
+                  key={message.id}
+                  user={message.user}
+                  content={message.content}
+                  createdAt={message.createdAt}
+                />
+              </>
+            )
+          })}
           <div ref={messagesEndRef} />
         </Box>
         <form
