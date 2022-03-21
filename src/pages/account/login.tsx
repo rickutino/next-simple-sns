@@ -1,25 +1,35 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, Grid, Link, styled, Typography } from '@mui/material';
 import type { GetServerSideProps, NextPage } from "next";
 import Image from 'next/image';
-import Link from 'next/link';
-import { useContext } from "react";
 import { parseCookies } from "nookies";
-import { AuthContext } from "../../contexts/AuthContext";
-
-import { useForm, FormProvider } from "react-hook-form";
+import { useContext } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { MdOutlineLogin } from 'react-icons/md';
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-
-import { Box, Grid, Typography } from '@mui/material';
-
-import theme from "../../styles/theme";
 import { RHFTextInput } from "../../components/Inputs/RHFTextInput";
-import StyledButton from "../../styles/StyledButton";
 import Notification from "../../components/Notification";
+import { AuthContext } from "../../contexts/AuthContext";
+import theme from '../../styles/theme';
 
 interface ILoginForm {
   email: string;
   password: string;
 }
+
+const LoginButton = styled(Button)({
+  backgroundColor: theme.palette.secondary.main,
+  borderRadius: '5px',
+  border: '1px black' ,
+  color: theme.palette.grey[200],
+  height: '48px',
+  weight: '325px',
+  marginTop: '1rem',
+  padding: '0 30px',
+  '&&:hover': {
+    background: theme.palette.secondary.light,
+  },
+});
 
 const schema = yup.object().shape({
   email: yup
@@ -52,7 +62,15 @@ export default function Login({}: NextPage) {
 
   return (
     <>
-      <Grid container component="main" sx={{ height: '100vh', backgroundColor: theme.palette.primary.main, color: theme.palette.grey[200] }}>
+      <Grid
+        container
+        component="main"
+        sx={{
+          height: '100vh',
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.grey[200]
+        }}
+      >
         <Grid item xs={12} lg={5.5}>
           <Box
             sx={{
@@ -94,21 +112,33 @@ export default function Login({}: NextPage) {
                     size="small"
                     fullWidth
                   />
-                  <StyledButton
+                  <LoginButton
                     variant="contained"
                     fullWidth
                     disabled={!methods.formState.isDirty || !methods.formState.isValid}
                     type="submit"
                   >
                     ログイン
-                  </StyledButton>
+                  </LoginButton>
                 </form>
               </FormProvider>
             </Box>
 
-            <Box sx={{ mt: 18 }}>
-              <Link href="/account/singup">新しいアカウントを作成</Link>
-            </Box>
+            <Button
+              color='secondary'
+              href='/account/singup'
+              component={Link}
+              sx={{
+                mt: 18,
+                '& svg': {
+                marginRight: '12px',
+                height: '18px',
+                width: '18px'
+              } }}
+            >
+              <MdOutlineLogin />
+              新しいアカウントを作成
+            </Button>
           </Box>
         </Grid>
 

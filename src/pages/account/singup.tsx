@@ -1,26 +1,41 @@
-import { useContext } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, Container, Grid, Link, styled, Typography } from '@mui/material';
 import type { GetServerSideProps, NextPage } from "next";
 import Image from 'next/image';
-import Link from 'next/link';
-
-import { useForm, FormProvider } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-
-import theme from "../../styles/theme";
-import StyledButton from "../../styles/StyledButton";
-import { RHFTextInput } from "../../components/Inputs/RHFTextInput";
-import { Box, Grid, Typography } from '@mui/material';
-
-import { AuthContext } from "../../contexts/AuthContext";
 import { parseCookies } from "nookies";
+import { useContext } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import * as yup from "yup";
+import { RHFTextInput } from "../../components/Inputs/RHFTextInput";
 import Notification from "../../components/Notification";
+import { AuthContext } from "../../contexts/AuthContext";
+import theme from '../../styles/theme';
 
 interface ISingUpForm {
   name: string;
   email: string;
   password: string;
 }
+
+const ContainerRoot = styled(Container)({
+  height: '100vh',
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.grey[200]
+});
+
+const PostButton = styled(Button)({
+  borderRadius: '5px',
+  border: '1px black' ,
+  color: theme.palette.grey[200],
+  height: '48px',
+  weight: '325px',
+  marginTop: '1rem',
+  padding: '0 30px',
+  '&&:hover': {
+    background: theme.palette.secondary.light,
+  }
+});
 
 const schema = yup.object().shape({
   name: yup
@@ -57,8 +72,7 @@ export default function SingUp({}: NextPage) {
 
   return (
     <>
-      <Grid container component="main" sx={{ height: '100vh', backgroundColor: theme.palette.primary.main, color: theme.palette.grey[200] }}>
-
+      <ContainerRoot>
         <Grid
           item
           xs={false}
@@ -119,24 +133,37 @@ export default function SingUp({}: NextPage) {
                     size="small"
                     fullWidth
                   />
-                  <StyledButton
+                  <PostButton
+                    color="secondary"
                     variant="contained"
                     fullWidth
                     disabled={!methods.formState.isDirty || !methods.formState.isValid}
                     type="submit"
                   >
                     登録
-                  </StyledButton>
+                  </PostButton>
                 </form>
               </FormProvider>
             </Box>
 
-            <Box sx={{ mt: 18 }}>
-              <Link href="/account/login">ログインに戻る</Link>
-            </Box>
+            <Button
+              color='secondary'
+              href='/account/login'
+              component={Link}
+              sx={{
+                mt: 18,
+                '& svg': {
+                marginRight: '12px',
+                height: '18px',
+                width: '18px'
+              }
+            }}>
+              <AiOutlineArrowLeft />
+              ログインに戻る
+            </Button>
           </Box>
         </Grid>
-      </Grid>
+      </ContainerRoot>
       <Notification
         notify={notify}
         setNotify={setNotify}
