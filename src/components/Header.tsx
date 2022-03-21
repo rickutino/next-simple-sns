@@ -6,7 +6,7 @@ import Notification from './Notification';
 import { api } from '../services/api';
 import { HeaderContent, Profile, Info } from '../styles/Header';
 import ConfirmDialog from './ConfirmDialog';
-import { BottomNavigation, BottomNavigationAction, Box, Container, Link, Theme } from '@mui/material';
+import { AppBar, BottomNavigation, BottomNavigationAction, Box, Container, Link, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 interface User {
@@ -51,47 +51,49 @@ export function Header() {
   return (
     <>
       {!loading &&
-        <Container maxWidth="xl" >
-          <Box className={classes.topRoot}>
-            <HeaderContent>
-              <img
-                src={'/logo.svg'}
-                alt="simple-sns"
-              />
-              <Profile>
-                <img src={
-                  user?.iconImageUrl
-                  ? user.iconImageUrl
-                  : `/icons/profileIcon.png` }
+        <>
+          <Container maxWidth="xl" >
+            <Box className={classes.topRoot}>
+              <HeaderContent>
+                <img
+                  src={'/logo.svg'}
+                  alt="simple-sns"
                 />
-                <Info>
-                  <span>Welcome, </span>
-                  <Link href="/profile">
-                    <strong>{user?.name}</strong>
-                  </Link>
-                </Info>
-              </Profile>
+                <Profile>
+                  <img src={
+                    user?.iconImageUrl
+                    ? user.iconImageUrl
+                    : `/icons/profileIcon.png` }
+                  />
+                  <Info>
+                    <span>Welcome, </span>
+                    <Link href="/profile">
+                      <strong>{user?.name}</strong>
+                    </Link>
+                  </Info>
+                </Profile>
 
-              <nav>
-                <Link href="/profile">
-                  <FiHome />
-                </Link>
-                <Link href="/room">
-                  <RiAccountCircleLine />
-                </Link>
-                <button className='logout' onClick={() => {
-                  setConfirmDialog({
-                    isOpen: true,
-                    title: "ログアウトしてもよろしいでしょうか？",
-                    onConfirm: () => { signOut() }
-                  });
-                }} >
-                  <FiPower color={"#E0483D"}/>
-                </button>
-              </nav>
-            </HeaderContent>
-          </Box>
-        </Container>
+                <nav>
+                  <Link href="/profile">
+                    <FiHome />
+                  </Link>
+                  <Link href="/room">
+                    <RiAccountCircleLine />
+                  </Link>
+                  <button className='logout' onClick={() => {
+                    setConfirmDialog({
+                      isOpen: true,
+                      title: "ログアウトしてもよろしいでしょうか？",
+                      onConfirm: () => { signOut() }
+                    });
+                  }} >
+                    <FiPower color={"#E0483D"}/>
+                  </button>
+                </nav>
+              </HeaderContent>
+            </Box>
+          </Container>
+        </>
       }
       <Notification
         notify={notify}

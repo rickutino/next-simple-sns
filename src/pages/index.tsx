@@ -23,6 +23,9 @@ interface User {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.palette.primary.main,
+  },
   iconButton: {
     [theme.breakpoints.down('lg')]: {
       position: 'fixed',
@@ -62,7 +65,7 @@ export default function Home() {
 
 
   return (
-    <>
+    <Box className={classes.root}>
       <Header />
       {posts.map((post) => (
         <>
@@ -86,7 +89,7 @@ export default function Home() {
       <BottomHeaderNavigation />
       <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
-    </>
+    </Box>
   );
 }
 

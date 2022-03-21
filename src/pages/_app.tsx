@@ -14,17 +14,17 @@ import { ToastProvider } from "react-toast-notifications";
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
-      <StyledThemeProvider theme={theme}>
-        <StylesProvider injectFirst>
-          <MaterialThemeProvider theme={theme}>
+      <StylesProvider injectFirst>
+        <MaterialThemeProvider theme={theme}>
+           <StyledThemeProvider theme={theme}>
             <ToastProvider>
               <AuthProvider>
                 <Component {...pageProps} />
               </AuthProvider>
             </ToastProvider>
-          </MaterialThemeProvider>
-        </StylesProvider>
-      </StyledThemeProvider>
+          </StyledThemeProvider>
+        </MaterialThemeProvider>
+      </StylesProvider>
     </>
   );
 }
