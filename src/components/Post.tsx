@@ -1,23 +1,19 @@
-import React, { FormEvent, useContext, useState } from 'react';
 import {
   Avatar,
-  Card,
-  CardHeader,
-  CardContent,
-  Grid,
-  Typography,
   Button,
-  TextField,
-  Theme,
+  Card,
+  CardContent,
+  CardHeader,
+  Container, styled, TextField,
+  Typography
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-
-
+import { useRouter } from 'next/router';
+import React, { FormEvent, useContext, useState } from 'react';
+import { BiTimeFive } from 'react-icons/bi';
 import Notification from '../components/Notification';
 import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
-import { useRouter } from 'next/router';
-
+import theme from '../styles/theme';
 
 interface User {
   id?: string;
@@ -39,8 +35,7 @@ interface PropsData {
 }
 
 function jaTimeZone (hours) {
-  const dateToTime = date => date.toLocaleString('ja', {
-    year: 'numeric',
+  const localTime = date => date.toLocaleString('ja', {
     month: 'numeric',
     day: 'numeric',
     hour: 'numeric',
@@ -50,26 +45,48 @@ function jaTimeZone (hours) {
   const dateString = hours;
   const localDate = new Date(dateString);
 
-  return dateToTime(localDate);
+  return localTime(localDate);
 }
 
+const PostContainer = styled(Container)({
+  marginBottom: '4rem',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 
-const useStyles = makeStyles((theme: Theme) => ({
-  form: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
+const PostTime = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  color: theme.palette.grey[200],
+  '& svg': {
+    color: theme.palette.secondary.main,
+    marginRight: '0.4rem',
+    height: '16px',
+    width: '16px',
+  }
+});
+
+const Form = styled('form')({
+  display: 'flex',
+  flexDirection: 'row',
+  width: '100%',
+  [theme.breakpoints.down('md')]: {
+    margin: '0 1rem',
   },
-  textField: {
+  '& > div': {
     borderRadius: '5px',
     backgroundColor: theme.palette.grey[200],
   },
-  button: {
-    borderRadius: '50px',
+  '& button': {
+    borderRadius: '5px',
     height: '3.5rem',
     width: '16rem',
+    color: theme.palette.grey[800],
   },
-}))
+});
+
 
 export default function Post({ post, currentUser }: PropsData) {
   const { notify, setNotify } = useContext(AuthContext);
@@ -78,7 +95,6 @@ export default function Post({ post, currentUser }: PropsData) {
   const [ commentError, setCommentError ] = useState(false);
 
   const router = useRouter();
-  const classes = useStyles();
 
   function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
     setComment(event.target.value);
@@ -115,73 +131,66 @@ export default function Post({ post, currentUser }: PropsData) {
   }
 
   return(
-    <Grid
-    key={post.id}
-    sx={{
-      mx: 'auto',
-      mb: 8,
-      maxWidth: 735,
-    }}
-    container
-    direction="column"
-    justifyContent="center"
-    alignItems="center">
-    <Card
-      sx={{
-      width: '100%',
-      px: 10,
-      py: 2,
-      backgroundColor: (theme) => theme.palette.primary.light,
-      color: (theme) => theme.palette.grey[200],
-    }}>
-      <CardHeader
-        avatar={
-          <Avatar
-            src={
-              post.user?.iconImageUrl
-              ? post.user.iconImageUrl
-              : `/icons/profileIcon.png` }
-          />
-        }
-        title={<Typography variant='h6'>{post.user?.name}</Typography>}
-        subheader={<Typography>{jaTimeZone(post.createdAt)}</Typography>}
-      />
-      <CardContent sx={{
-        flex: 1,
+    <PostContainer key={post.id} maxWidth="md">
+      <Card
+        sx={{
+        width: '100%',
+        px: 10,
+        py: 2,
+        backgroundColor: (theme) => theme.palette.primary.light,
         color: (theme) => theme.palette.grey[200],
-        }}>
-        <Typography variant="body1">
-          {post.body}
-        </Typography>
-      </CardContent>
-    </Card>
-    { post.user.id != currentUser?.id &&
-      <form className={classes.form} onSubmit={e => handleSubmit(e , post)}>
-        <TextField
-          id={String(post.id)}
-          className={classes.textField}
-          variant="outlined"
-          multiline
-          fullWidth
-          onChange={handleChange}
-          error={commentError}
+      }}>
+        <CardHeader
+          avatar={
+            <Avatar
+              src={
+                post.user?.iconImageUrl
+                ? post.user.iconImageUrl
+                : `/icons/profileIcon.png` }
+              sx={{ height: '56px', width: '56px'}}
+            />
+          }
+          title={<Typography variant='h5'>{post.user?.name}</Typography>}
+          subheader={
+            <PostTime>
+              <BiTimeFive /><Typography>{jaTimeZone(post.createdAt)}</Typography>
+            </PostTime>
+          }
         />
-        <Button
-          id={String(post.id)}
-          className={classes.button}
-          type="submit"
-          variant="contained"
-          disabled={inputValue}
-          color="secondary"
-        >
-          DMを送信
-        </Button>
-      </form>
-    }
-    <Notification
-      notify={notify}
-      setNotify={setNotify}
-    />
-  </Grid>
+        <CardContent sx={{
+          flex: 1,
+          color: (theme) => theme.palette.grey[200],
+          }}>
+          <Typography variant="body1">
+            {post.body}
+          </Typography>
+        </CardContent>
+      </Card>
+      { post.user.id != currentUser?.id &&
+        <Form onSubmit={e => handleSubmit(e , post)}>
+          <TextField
+            id={String(post.id)}
+            variant="outlined"
+            multiline
+            fullWidth
+            onChange={handleChange}
+            error={commentError}
+          />
+          <Button
+            id={String(post.id)}
+            type="submit"
+            variant="contained"
+            disabled={inputValue}
+            color="secondary"
+          >
+            DMを送信
+          </Button>
+        </Form>
+      }
+      <Notification
+        notify={notify}
+        setNotify={setNotify}
+      />
+    </PostContainer>
   )
 }
