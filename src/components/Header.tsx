@@ -1,13 +1,12 @@
+import { BottomNavigation, BottomNavigationAction, Box, Button, Container, Link, styled } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { FiHome, FiPower } from 'react-icons/fi';
 import { RiAccountCircleLine } from 'react-icons/ri';
 import { AuthContext } from '../contexts/AuthContext';
-import Notification from './Notification';
 import { api } from '../services/api';
-import { HeaderContent, Profile, Info } from '../styles/Header';
+import theme from '../styles/theme';
 import ConfirmDialog from './ConfirmDialog';
-import { AppBar, BottomNavigation, BottomNavigationAction, Box, Container, Link, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import Notification from './Notification';
 
 interface User {
   name: string;
@@ -15,27 +14,138 @@ interface User {
   iconImageUrl?: string | null
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  topRoot: {
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
+const BoxRoot = styled(Box)({
+  backgroundColor: theme.palette.primary.dark,
+  width: '100%',
+  height: '8rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  [theme.breakpoints.down('md')]: {
+    display: 'none',
+  },
+});
+
+const HeaderContainer = styled(Container)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  '& > img': {
+    height: '42px',
+  },
+  '& > div': {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '48px',
+    '& > img': {
+      width: '48px',
+      height: '48px',
+      borderRadius: '50%',
+    },
+    '& > div': {
+      display: 'flex',
+      flexDirection: 'column',
+      marginLeft: '16px',
+      lineHeight: '24px',
+      '& > span': {
+        color: '#999591',
+      },
+      '& > a':  {
+        textDecoration: 'none',
+        '&:hover': {
+          opacity: '0.8',
+        },
+        '& strong': {
+          color: theme.palette.secondary.main,
+        },
+      },
     },
   },
-  bottomRoot: {
-    width: '100%',
-    position: 'fixed',
-    bottom: '0',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
+  '& nav': {
+    marginLeft: 'auto',
+    display: 'flex',
+    height: '100%',
+    width: '265px',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    '& svg': {
+      color: theme.palette.grey[200],
+      width: '24px',
+      height: '24px',
+      cursor: 'pointer',
+      '&:hover': {
+        opacity: '0.8',
+      },
+    },
+    '& button.logout': {
+      background: 'transparent',
+      border: '0',
+    }
+  },
+});
+
+const MobileTopHeader = styled(Box)({
+  backgroundColor: theme.palette.primary.dark,
+  height: '8rem',
+  width: '100%',
+  padding: '0 2rem',
+  position: 'fixed',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  top: '0',
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
+  },
+  '& div': {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '48px',
+  },
+  '& > div': {
+    display: 'flex',
+    flexDirection: 'column',
+    marginLeft: '16px',
+    lineHeight: '24px',
+    '& > span': {
+      color: theme.palette.grey[200],
+      fontSize: '20px',
+    },
+    '& > a':  {
+      textDecoration: 'none',
+      '&:hover': {
+        opacity: '0.8',
+      },
+      '& strong': {
+        color: theme.palette.secondary.main,
+        fontSize: '22px',
+      },
     },
   },
-}));
+  '& > img': {
+    width: '68px',
+    height: '68px',
+    borderRadius: '50%',
+  },
+});
+
+const MobileBottomHeader = styled(Box)({
+  width: '100%',
+  position: 'fixed',
+  bottom: '0',
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
+  },
+  '& MuiBottomNavigation-root': {
+    display: 'flex',
+    justifyContent: 'space-around',
+  }
+});
+
 
 export function Header() {
-  const { signOut, notify, setNotify, confirmDialog, setConfirmDialog } = useContext(AuthContext);
-  const [user, setUser] = useState<User>();
+  const { signOut, notify, setNotify, confirmDialog, setConfirmDialog, setUser, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const classes = useStyles();
 
   useEffect(() => {
     api.get('/account').then(response => {
@@ -52,47 +162,45 @@ export function Header() {
     <>
       {!loading &&
         <>
-          <Container maxWidth="xl" >
-            <Box className={classes.topRoot}>
-              <HeaderContent>
-                <img
-                  src={'/logo.svg'}
-                  alt="simple-sns"
+          <BoxRoot>
+            <HeaderContainer maxWidth="lg">
+              <img
+                src={'/logo.svg'}
+                alt="simple-sns"
+              />
+              <div>
+                <img src={
+                  user?.iconImageUrl
+                  ? user.iconImageUrl
+                  : `/icons/profileIcon.png` }
                 />
-                <Profile>
-                  <img src={
-                    user?.iconImageUrl
-                    ? user.iconImageUrl
-                    : `/icons/profileIcon.png` }
-                  />
-                  <Info>
-                    <span>Welcome, </span>
-                    <Link href="/profile">
-                      <strong>{user?.name}</strong>
-                    </Link>
-                  </Info>
-                </Profile>
-
-                <nav>
+                <div>
+                  <span>Welcome, </span>
                   <Link href="/profile">
-                    <FiHome />
+                    <strong>{user?.name}</strong>
                   </Link>
-                  <Link href="/room">
-                    <RiAccountCircleLine />
-                  </Link>
-                  <button className='logout' onClick={() => {
-                    setConfirmDialog({
-                      isOpen: true,
-                      title: "ログアウトしてもよろしいでしょうか？",
-                      onConfirm: () => { signOut() }
-                    });
-                  }} >
-                    <FiPower color={"#E0483D"}/>
-                  </button>
-                </nav>
-              </HeaderContent>
-            </Box>
-          </Container>
+                </div>
+              </div>
+
+              <nav>
+                <Link href="/profile">
+                  <FiHome />
+                </Link>
+                <Link href="/room">
+                  <RiAccountCircleLine />
+                </Link>
+                <button className='logout' onClick={() => {
+                  setConfirmDialog({
+                    isOpen: true,
+                    title: "ログアウトしてもよろしいでしょうか？",
+                    onConfirm: () => { signOut() }
+                  });
+                }} >
+                  <FiPower color={"#E0483D"}/>
+                </button>
+              </nav>
+            </HeaderContainer>
+          </BoxRoot>
         </>
       }
       <Notification
@@ -108,50 +216,74 @@ export function Header() {
 }
 
 export function BottomHeaderNavigation() {
-  const { signOut,  confirmDialog, setConfirmDialog } = useContext(AuthContext);
-  const classes = useStyles();
+  const { signOut,  confirmDialog, setConfirmDialog, user } = useContext(AuthContext);
   const [value, setValue] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    console.log('user',!!user)
+    console.log('currentuser',user)
+    if(!!user) {
+      setLoading(false);
+    };
+  }, [user]);
 
   return (
     <>
-      <Box  className={classes.bottomRoot}>
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-          sx={{
-            justifyContent: 'space-around',
-            '& svg':{
-              width: '28px',
-              height: '28px'
-            },
-          }}
-        >
-          <Link href="/profile">
-            <a>
-              <BottomNavigationAction icon={<FiHome />}/>
-            </a>
-          </Link>
-          <Link href="/room">
-            <a>
-              <BottomNavigationAction icon={<RiAccountCircleLine />} />
-            </a>
-          </Link>
-          <BottomNavigationAction icon={<FiPower color={"#E0483D"}/>} className='logout'  onClick={() => {
-            setConfirmDialog({
-              isOpen: true,
-              title: "ログアウトしてもよろしいでしょうか？",
-              onConfirm: () => { signOut() }
-            });
-          }}/>
-        </BottomNavigation>
-      </Box>
-      <ConfirmDialog
-        confirmDialog={confirmDialog}
-        setConfirmDialog={setConfirmDialog}
-      />
+      {console.log('loading',!loading)}
+      {!loading &&
+        <>
+          <MobileTopHeader>
+            <div>
+              <span>Welcome, </span>
+              <Link href="/profile">
+                <strong>{user?.name}</strong>
+              </Link>
+            </div>
+            <img src={
+              user?.iconImageUrl
+              ? user?.iconImageUrl
+              : `/icons/profileIcon.png` }
+            />
+          </MobileTopHeader>
+          <MobileBottomHeader>
+            <BottomNavigation
+              showLabels
+              value={value}
+              onChange={(event, newValue) => {
+                setValue(newValue);
+              }}
+              sx={{
+                justifyContent: 'space-around',
+                '& svg':{
+                  width: '28px',
+                  height: '28px'
+                },
+              }}
+            >
+              <Button href="/profile" component={Link}>
+                <BottomNavigationAction icon={<FiHome />}/>
+              </Button>
+              <Button href="/room"component={Link}>
+                <BottomNavigationAction icon={<RiAccountCircleLine />} />
+              </Button>
+              <Button>
+                <BottomNavigationAction icon={<FiPower color={"#E0483D"}/>} className='logout'  onClick={() => {
+                  setConfirmDialog({
+                    isOpen: true,
+                    title: "ログアウトしてもよろしいでしょうか？",
+                    onConfirm: () => { signOut() }
+                  });
+                }}/>
+              </Button>
+            </BottomNavigation>
+          </MobileBottomHeader>
+          <ConfirmDialog
+            confirmDialog={confirmDialog}
+            setConfirmDialog={setConfirmDialog}
+          />
+        </>
+      }
     </>
   );
 }

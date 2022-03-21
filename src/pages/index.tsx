@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { GetServerSideProps } from 'next';
-
-import { Header, BottomHeaderNavigation } from '../components/Header';
 import {
-  Box,
-  Theme,
-  IconButton,
+  Box, IconButton, styled
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { AiFillPlusCircle } from 'react-icons/ai'
-
-import useInfiniteScroll from '../components/InfiniteScroll';
+import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
-import { api } from '../services/api';
+import { useEffect, useState } from 'react';
+import { AiFillPlusCircle } from 'react-icons/ai';
+import { BottomHeaderNavigation, Header } from '../components/Header';
+import useInfiniteScroll from '../components/InfiniteScroll';
 import Post from '../components/Post';
+import { api } from '../services/api';
+import theme from "../styles/theme";
 
 interface User {
   id?: string;
@@ -22,28 +18,28 @@ interface User {
   iconImageUrl: string | null;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.palette.primary.main,
+const ContainerRoot = styled(Box)({
+  backgroundColor: theme.palette.primary.main,
+});
+
+const NewPostButton = styled(Box)({
+  position: 'fixed',
+  right: '20%',
+  bottom: '10%',
+  [theme.breakpoints.down('lg')]: {
+    position: 'fixed',
+    right: '4%',
+    bottom: '10%',
   },
-  iconButton: {
-    [theme.breakpoints.down('lg')]: {
-      position: 'fixed',
-      right: '4%',
-      bottom: '10%',
-    },
-    [theme.breakpoints.down('md')]: {
-      position: 'fixed',
-      right: '2%',
-      bottom: '10%',
-    },
+  [theme.breakpoints.down('md')]: {
+    position: 'fixed',
+    right: '2%',
+    bottom: '10%',
   },
-}));
+});
 
 export default function Home() {
   const [ currentUser, setCurrentUser ] = useState<User>();
-
-  const classes = useStyles();
 
   const pageSize = 10;
   const url = `/posts?pagination[size]=${pageSize}`;
@@ -65,31 +61,24 @@ export default function Home() {
 
 
   return (
-    <Box className={classes.root}>
+    <ContainerRoot>
       <Header />
       {posts.map((post) => (
         <>
           <Post key={post.id} post={post} currentUser={currentUser}  />
         </>
       ))}
-      <Box
-        sx={{
-          position: 'fixed',
-          right: '20%',
-          bottom: '10%',
-        }}
-        className={classes.iconButton}
-      >
+      <NewPostButton>
         <IconButton sx={{ fontSize: '3.5rem' }} color='secondary' href="/post" >
           <AiFillPlusCircle />
         </IconButton>
-      </Box>
+      </NewPostButton>
       <div id="scroll"></div>
 
       <BottomHeaderNavigation />
       <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
-    </Box>
+    </ContainerRoot>
   );
 }
 

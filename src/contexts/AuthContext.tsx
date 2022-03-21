@@ -1,7 +1,6 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { destroyCookie, setCookie } from "nookies";
-import { useRouter } from "next/router";
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 import { api } from "../services/api";
 
 
@@ -39,6 +38,7 @@ interface AuthContextData {
   singUp(credentials: SingUpCredentials): Promise<void>;
   signOut(): void,
   user: User;
+  setUser: Dispatch<SetStateAction<User>>;
   notify: Notification;
   setNotify: Dispatch<SetStateAction<Notification>>;
   confirmDialog: DialogData;
@@ -173,6 +173,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       singUp,
       signOut,
       user,
+      setUser,
       notify,
       setNotify,
       confirmDialog,
