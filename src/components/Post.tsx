@@ -37,7 +37,7 @@ interface PropsData {
 }
 
 function jaTimeZone(hours: string) {
-  const localTime = date =>
+  const localTime = (date: Date) =>
     date.toLocaleString('ja', {
       month: 'numeric',
       day: 'numeric',
@@ -57,6 +57,16 @@ const PostContainer = styled(Container)({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center'
+});
+
+const PostCard = styled(Card)({
+  width: '100%',
+  padding: '1rem 5rem',
+  backgroundColor: theme.palette.primary.light,
+  color: theme.palette.grey[200],
+  [theme.breakpoints.down('md')]: {
+    padding: '0.5rem 2rem'
+  }
 });
 
 const PostTime = styled('div')({
@@ -134,15 +144,7 @@ export default function Post({ post, currentUser }: PropsData) {
 
   return (
     <PostContainer key={post.id} maxWidth="md">
-      <Card
-        sx={{
-          width: '100%',
-          px: 10,
-          py: 2,
-          backgroundColor: theme.palette.primary.light,
-          color: theme.palette.grey[200]
-        }}
-      >
+      <PostCard>
         <CardHeader
           avatar={
             <Avatar
@@ -170,7 +172,7 @@ export default function Post({ post, currentUser }: PropsData) {
         >
           <Typography variant="body1">{post.body}</Typography>
         </CardContent>
-      </Card>
+      </PostCard>
       {post.user.id !== currentUser?.id && (
         <Form onSubmit={e => handleSubmit(e)}>
           <TextField
@@ -178,7 +180,7 @@ export default function Post({ post, currentUser }: PropsData) {
             variant="outlined"
             multiline
             fullWidth
-            onChange={() => handleChange}
+            onChange={handleChange}
             error={commentError}
           />
           <Button
