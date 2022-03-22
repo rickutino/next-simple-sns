@@ -2,18 +2,15 @@ import {
   Box,
   Button,
   Container,
-  TextField,
-  Typography,
   styled,
+  TextField,
+  Typography
 } from '@mui/material';
-
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { FormEvent, useContext, useState } from 'react';
-
 import { parseCookies } from 'nookies';
-import { Header, BottomHeaderNavigation } from '../../components/Header';
-
+import { FormEvent, useContext, useState } from 'react';
+import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
@@ -23,8 +20,8 @@ const PostRoot = styled(Box)({
   backgroundColor: theme.palette.primary.main,
   height: '100vh',
   [theme.breakpoints.down('md')]: {
-    marginTop: '8rem',
-  },
+    marginTop: '8rem'
+  }
 });
 
 const Form = styled('form')({
@@ -32,20 +29,20 @@ const Form = styled('form')({
   width: '100%',
   marginTop: '4rem',
   [theme.breakpoints.down('md')]: {
-    paddingTop: '4rem',
-  },
+    paddingTop: '4rem'
+  }
 });
 
 const Input = styled(TextField)({
   borderRadius: '5px',
-  backgroundColor: theme.palette.grey[200],
+  backgroundColor: theme.palette.grey[200]
 });
 
 const PostButton = styled(Button)({
   borderRadius: '5px',
   height: '55px',
   width: '100%',
-  marginTop: '1rem',
+  marginTop: '1rem'
 });
 
 export default function Post() {
@@ -72,7 +69,7 @@ export default function Post() {
       setNotify({
         isOpen: true,
         message: 'コメントは必須です。',
-        type: 'error',
+        type: 'error'
       });
 
       return;
@@ -82,14 +79,14 @@ export default function Post() {
     try {
       await api.post('/posts', {
         post: {
-          body: post,
-        },
+          body: post
+        }
       });
 
       setNotify({
         isOpen: true,
         message: '投稿を成功しました。',
-        type: 'success',
+        type: 'success'
       });
 
       router.push('/');
@@ -97,7 +94,7 @@ export default function Post() {
       setNotify({
         isOpen: true,
         message: `${error}`,
-        type: 'error',
+        type: 'error'
       });
     }
   }
@@ -116,7 +113,7 @@ export default function Post() {
             multiline
             fullWidth
             rows={5}
-            onChange={() => handleChange}
+            onChange={handleChange}
             inputProps={{ maxLength: 140 }}
             error={!!(inputError || post.length === 140)}
           />
@@ -146,12 +143,12 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     return {
       redirect: {
         destination: '/account/login',
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
   return {
-    props: {},
+    props: {}
   };
 };
