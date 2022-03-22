@@ -17,7 +17,7 @@ interface User {
 }
 
 const ContainerRoot = styled(Box)({
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: theme.palette.primary.main
 });
 
 const NewPostButton = styled(Box)({
@@ -25,26 +25,24 @@ const NewPostButton = styled(Box)({
   right: '20%',
   bottom: '10%',
   '& svg': {
-    color: theme.palette.secondary.main,
+    color: theme.palette.secondary.main
   },
   [theme.breakpoints.down('lg')]: {
     position: 'fixed',
     right: '4%',
-    bottom: '10%',
+    bottom: '10%'
   },
   [theme.breakpoints.down('md')]: {
     position: 'fixed',
     right: '2%',
-    bottom: '10%',
-  },
+    bottom: '10%'
+  }
 });
 
 export default function Home() {
   const [currentUser, setCurrentUser] = useState<User>();
 
-  const pageSize = 10;
-  const url = `/posts?pagination[size]=${pageSize}`;
-  const { loading, error, posts } = useInfiniteScroll(url, 'post');
+  const { loading, error, posts } = useInfiniteScroll();
 
   useEffect(() => {
     api
@@ -67,7 +65,11 @@ export default function Home() {
         <Post key={post.id} post={post} currentUser={currentUser} />
       ))}
       <NewPostButton>
-        <IconButton sx={{ fontSize: '3.5rem' }} color="secondary" href="/post">
+        <IconButton
+          sx={{ fontSize: '3.5rem' }}
+          color="secondary"
+          href="/newPost"
+        >
           <AiFillPlusCircle />
         </IconButton>
       </NewPostButton>
@@ -87,12 +89,12 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     return {
       redirect: {
         destination: '/account/login',
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
   return {
-    props: {},
+    props: {}
   };
 };
