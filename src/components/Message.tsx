@@ -1,5 +1,5 @@
-import { Avatar, Box, Theme, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Avatar, Box, Theme, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 interface User {
   id: string;
@@ -12,7 +12,7 @@ interface Posts {
   id: number;
   userId: number;
   body: string;
-  createdAt?: Date;
+  createdAt?: string;
 }
 
 interface Messages {
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   friendMessage: {
     position: 'relative',
@@ -113,17 +113,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing(4)
   },
   displayName: {
-    marginLeft: '20px',
+    marginLeft: '20px'
   }
 }));
-function jaTimeZone (hours) {
-  const dateToTime = date => date.toLocaleString('ja', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  });
+function jaTimeZone(hours) {
+  const dateToTime = date =>
+    date.toLocaleString('ja', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    });
 
   const dateString = hours;
   const localDate = new Date(dateString);
@@ -131,53 +132,51 @@ function jaTimeZone (hours) {
   return dateToTime(localDate);
 }
 
-export const PostContext = ({ post } : Messages) => {
+export function PostContext({ post }: Messages) {
   const classes = useStyles();
   return (
-    (!!post) &&
-    <>
+    !!post && (
       <div className={classes.postContext}>
         <Typography variant="subtitle2">投稿に返信しました</Typography>
         <Typography variant="body1">{post?.body}</Typography>
       </div>
-    </>
+    )
   );
 }
 
-export const MessageLeft = ({ user, content, createdAt } : Messages) => {
+export function MessageLeft({ user, content, createdAt }: Messages) {
   const classes = useStyles();
 
   return (
-    <>
-      <div className={classes.messageRow}>
-        <Avatar
-          alt={user?.name}
-          src={
-            user?.iconImageUrl
-            ? user.iconImageUrl
-            : `/icons/profileIcon.png` }
-        ></Avatar>
-        <Box sx={{ width: '90%' }}>
-          <div className={classes.displayName}>{user?.name}</div>
-          <div className={classes.friendMessage}>
-            <p className={classes.messageContent}>{content}</p>
-            <div className={classes.messageTimeStampRight}>{jaTimeZone(createdAt)}</div>
+    <div className={classes.messageRow}>
+      <Avatar
+        alt={user?.name}
+        src={user?.iconImageUrl ? user.iconImageUrl : `/icons/profileIcon.png`}
+      />
+      <Box sx={{ width: '90%' }}>
+        <div className={classes.displayName}>{user?.name}</div>
+        <div className={classes.friendMessage}>
+          <p className={classes.messageContent}>{content}</p>
+          <div className={classes.messageTimeStampRight}>
+            {jaTimeZone(createdAt)}
           </div>
-        </Box>
-      </div>
-    </>
+        </div>
+      </Box>
+    </div>
   );
 }
 
-export const MessageRight = ({ content, createdAt }: Messages) => {
+export function MessageRight({ content, createdAt }: Messages) {
   const classes = useStyles();
 
   return (
     <div className={classes.messageRowRight}>
       <div className={classes.myMessage}>
         <p className={classes.messageContent}>{content}</p>
-        <div className={classes.messageTimeStampRight}>{jaTimeZone(createdAt)}</div>
+        <div className={classes.messageTimeStampRight}>
+          {jaTimeZone(createdAt)}
+        </div>
       </div>
     </div>
   );
-};
+}
