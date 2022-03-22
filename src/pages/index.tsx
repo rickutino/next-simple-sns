@@ -17,7 +17,10 @@ interface User {
 }
 
 const ContainerRoot = styled(Box)({
-  backgroundColor: theme.palette.primary.main
+  backgroundColor: theme.palette.primary.main,
+  [theme.breakpoints.down('md')]: {
+    paddingTop: '8rem'
+  }
 });
 
 const NewPostButton = styled(Box)({
