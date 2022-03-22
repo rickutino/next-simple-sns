@@ -45,7 +45,7 @@ const PostButton = styled(Button)({
   marginTop: '1rem'
 });
 
-export default function Post() {
+export default function NewPost() {
   const { notify, setNotify } = useContext(AuthContext);
   const [post, setPost] = useState('');
   const [countLength, setCountLength] = useState<number>(0);
@@ -64,7 +64,7 @@ export default function Post() {
     event.preventDefault();
     setInputError(false);
 
-    if (post === null || '') {
+    if (post === '') {
       setInputError(true);
       setNotify({
         isOpen: true,
