@@ -1,16 +1,18 @@
+import { Box, Button, Container, TextField, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+import { parseCookies } from 'nookies';
 import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
-
+import { BottomHeaderNavigation, Header } from '../../components/Header';
+import {
+  MessageLeft,
+  MessageRight,
+  PostContext
+} from '../../components/Message';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
-import { parseCookies } from 'nookies';
 import { api } from '../../services/api';
-
-import { Header, BottomHeaderNavigation } from '../../components/Header';
-import { makeStyles } from '@mui/styles';
-import { Box, Button, Container, TextField, Theme } from '@mui/material';
-import { MessageLeft, MessageRight, PostContext } from '../../components/Message';
 
 interface User {
   id: string;
@@ -23,7 +25,7 @@ interface Posts {
   id: number;
   userId: number;
   body: string;
-  createdAt?: Date;
+  createdAt?: string;
 }
 
 interface Messages {
@@ -37,46 +39,46 @@ interface Messages {
   createdAt: Date;
 }
 
-const useStyles = makeStyles((theme: Theme) =>({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     height: '80vh',
     display: 'flex',
-    flexDirection: "column",
-    alignItems: "center",
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   messagesBody: {
-    width: "calc( 100% - 20px )",
+    width: 'calc( 100% - 20px )',
     margin: 10,
-    overflowY: "scroll",
-    height: "calc( 100% - 140px )",
+    overflowY: 'scroll',
+    height: 'calc( 100% - 140px )'
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
+    width: '100%'
   },
   textField: {
     borderRadius: '5px',
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[200]
   },
   button: {
     borderRadius: '50px',
     height: '3.5rem',
-    width: '100%',
-  },
+    width: '100%'
+  }
 }));
 
 export default function Message() {
   const { notify, setNotify } = useContext(AuthContext);
-  const [ currentUser, setCurrentUser ] = useState<User>();
-  const [ loading, setLoading ] = useState(true);
-  const [ error, setError ] = useState(false);
-  const [ messages, setMessages ] = useState<Messages[]>([]);
-  const [ messagesError, setMessagesError ] = useState(false);
-  const [ inputMessage, setInputMessage ] = useState('')
-  const [ inputValue, setInputValue ] = useState(true);
+  const [currentUser, setCurrentUser] = useState<User>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [messages, setMessages] = useState<Messages[]>([]);
+  const [messagesError, setMessagesError] = useState(false);
+  const [inputMessage, setInputMessage] = useState('');
+  const [inputValue, setInputValue] = useState(true);
 
   let cursorIndex = 0;
   let allMessages = [];
@@ -85,16 +87,16 @@ export default function Message() {
   const messagesEndRef = useRef(null);
   const firstUpdate = useRef(true);
   const classes = useStyles();
-	const router = useRouter();
+  const router = useRouter();
   const roomId = router.query.slug;
 
   function scrollToBottom() {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
 
   function getRemainingMessage() {
-    if(messageIndex > pageSize){
-      messageIndex = messageIndex - pageSize;
+    if (messageIndex > pageSize) {
+      messageIndex -= pageSize;
       cursorIndex = allMessages[messageIndex].id;
     } else {
       pageSize = messageIndex + 1;
@@ -107,63 +109,69 @@ export default function Message() {
   async function getPostsList() {
     setLoading(true);
 
-    if(messageIndex == 0) {
+    if (messageIndex === 0) {
       setLoading(false);
 
       return;
     }
 
     // オールメッセージのリストの最後のエレメントの取得。
-    if(firstUpdate.current) {
-      const response = await api.get(`/messages?roomId=${roomId}&pagination[order]=ASC`);
+    if (firstUpdate.current) {
+      const response = await api.get(
+        `/messages?roomId=${roomId}&pagination[order]=ASC`
+      );
 
       allMessages = response.data.messages;
       messageIndex = allMessages.length - 1;
       firstUpdate.current = false;
-    };
+    }
 
-
-    try{
+    try {
       getRemainingMessage();
-      const messageResponse = await api.get(`/messages?pagination[size]=${pageSize}&pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursorIndex}`);
+      const messageResponse = await api.get(
+        `/messages?pagination[size]=${pageSize}&pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursorIndex}`
+      );
 
-      setMessages((prevMessages) => [...messageResponse.data.messages, ...prevMessages]);
+      setMessages(prevMessages => [
+        ...messageResponse.data.messages,
+        ...prevMessages
+      ]);
     } catch (e) {
       console.log(e);
       setError(true);
     }
 
     setLoading(false);
-  };
+  }
 
-  function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setInputMessage(event.target.value);
     setInputValue(false);
   }
 
-  async function handleSubmit ( event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setMessagesError(false);
 
-    if(inputMessage == '') {
+    if (inputMessage === '') {
       setMessagesError(true);
       setNotify({
         isOpen: true,
-        message: "メッセージは必須です。",
+        message: 'メッセージは必須です。',
         type: 'error'
       });
     }
 
-    try{
+    try {
       const response = await api.post('/messages', {
         content: inputMessage,
-        roomId,
+        roomId
       });
-      setMessages((prevMessage) => [...prevMessage, response.data.message]);
-    }catch (error) {
+      setMessages(prevMessage => [...prevMessage, response.data.message]);
+    } catch (err) {
       setNotify({
         isOpen: true,
-        message: `${error}`,
+        message: `${err}`,
         type: 'error'
       });
     }
@@ -172,13 +180,16 @@ export default function Message() {
   }
 
   useEffect(() => {
-    if(!router.isReady) return;
+    if (!router.isReady) return;
 
-    api.get('/account').then(response => {
-      setCurrentUser(response.data.user);
-    }).catch(() => {
-      router.push('/account/login');
-    })
+    api
+      .get('/account')
+      .then(response => {
+        setCurrentUser(response.data.user);
+      })
+      .catch(() => {
+        router.push('/account/login');
+      });
 
     const intersectionObserver = new IntersectionObserver(async entries => {
       if (entries.some(entry => entry.isIntersecting)) {
@@ -186,6 +197,7 @@ export default function Message() {
       }
     });
     intersectionObserver.observe(document.querySelector('#scroll'));
+    // eslint-disable-next-line consistent-return
     return () => intersectionObserver.disconnect();
   }, [router.isReady]);
 
@@ -195,43 +207,42 @@ export default function Message() {
 
   return (
     <>
-      {console.log(messages)}
       <Header />
       <Container
-        maxWidth='sm'
+        maxWidth="sm"
         className={classes.container}
         sx={{
           height: '80vh',
           display: 'flex',
-          flexDirection: "column",
-          alignItems: "center",
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
       >
         <Box
           className={classes.messagesBody}
           sx={{
-            width: "calc( 100% - 20px )",
+            width: 'calc( 100% - 20px )',
             margin: 10,
-            overflowY: "scroll",
-            height: "calc( 100% - 140px )",
+            overflowY: 'scroll',
+            height: 'calc( 100% - 140px )'
           }}
         >
-          <div id="scroll"></div>
+          <div id="scroll" />
           {messages.map((message: Messages) => {
             // {!!message.postId && <PostContext messages={message.post}/}
-            return (
-              (message.user.id == currentUser.id)
-              ? <>
-                  <PostContext post={message.post}/>
-                  <MessageRight
-                    key={message.id}
-                    user={message.user}
-                    content={message.content}
-                    createdAt={message.createdAt}
-                  />
+            return message.user.id === currentUser.id ? (
+              <>
+                <PostContext post={message.post} />
+                <MessageRight
+                  key={message.id}
+                  user={message.user}
+                  content={message.content}
+                  createdAt={message.createdAt}
+                />
               </>
-              : <>
-                <PostContext post={message.post}/>
+            ) : (
+              <>
+                <PostContext post={message.post} />
                 <MessageLeft
                   key={message.id}
                   user={message.user}
@@ -239,19 +250,16 @@ export default function Message() {
                   createdAt={message.createdAt}
                 />
               </>
-            )
+            );
           })}
           <div ref={messagesEndRef} />
         </Box>
-        <form
-          className={classes.form}
-          onSubmit={e => handleSubmit(e)}
-        >
+        <form className={classes.form} onSubmit={e => handleSubmit(e)}>
           <TextField
             className={classes.textField}
             sx={{
               borderRadius: '5px',
-              backgroundColor: '#eeeeee',
+              backgroundColor: '#eeeeee'
             }}
             variant="outlined"
             multiline
@@ -266,7 +274,7 @@ export default function Message() {
               sx={{
                 borderRadius: '50px',
                 height: '3.5rem',
-                width: '100%',
+                width: '100%'
               }}
               type="submit"
               variant="contained"
@@ -279,10 +287,7 @@ export default function Message() {
         </form>
       </Container>
 
-      <Notification
-        notify={notify}
-        setNotify={setNotify}
-      />
+      <Notification notify={notify} setNotify={setNotify} />
       <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
       <BottomHeaderNavigation />
@@ -290,19 +295,19 @@ export default function Message() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ['next-simple-sns']: token } = parseCookies(ctx)
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const { 'next-simple-sns': token } = parseCookies(ctx);
 
   if (!token) {
     return {
       redirect: {
         destination: '/account/login',
-        permanent: false,
+        permanent: false
       }
-    }
+    };
   }
 
   return {
     props: {}
-  }
-}
+  };
+};
