@@ -1,6 +1,4 @@
-import {
-  Box, IconButton, styled
-} from '@mui/material';
+import { Box, IconButton, styled } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
 import { useEffect, useState } from 'react';
@@ -9,7 +7,7 @@ import { BottomHeaderNavigation, Header } from '../components/Header';
 import useInfiniteScroll from '../components/InfiniteScroll';
 import Post from '../components/Post';
 import { api } from '../services/api';
-import theme from "../styles/theme";
+import theme from '../styles/theme';
 
 interface User {
   id?: string;
@@ -42,41 +40,38 @@ const NewPostButton = styled(Box)({
 });
 
 export default function Home() {
-  const [ currentUser, setCurrentUser ] = useState<User>();
+  const [currentUser, setCurrentUser] = useState<User>();
 
   const pageSize = 10;
   const url = `/posts?pagination[size]=${pageSize}`;
-  const {
-    loading,
-    error,
-    posts
-  } = useInfiniteScroll(url, 'post');
+  const { loading, error, posts } = useInfiniteScroll(url, 'post');
 
   useEffect(() => {
-    api.get('/account').then(response => {
-      const { user } = response.data;
+    api
+      .get('/account')
+      .then(response => {
+        const { user } = response.data;
 
-      setCurrentUser(user);
-    }).catch((error) => {
-      console.log(error);
-    });
+        setCurrentUser(user);
+      })
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.log(err);
+      });
   }, []);
-
 
   return (
     <ContainerRoot>
       <Header />
-      {posts.map((post) => (
-        <>
-          <Post key={post.id} post={post} currentUser={currentUser}  />
-        </>
+      {posts.map(post => (
+        <Post key={post.id} post={post} currentUser={currentUser} />
       ))}
       <NewPostButton>
-        <IconButton sx={{ fontSize: '3.5rem' }} color='secondary' href="/post" >
+        <IconButton sx={{ fontSize: '3.5rem' }} color="secondary" href="/post">
           <AiFillPlusCircle />
         </IconButton>
       </NewPostButton>
-      <div id="scroll"></div>
+      <div id="scroll" />
 
       <BottomHeaderNavigation />
       <div>{loading && 'Loading...'}</div>
@@ -85,19 +80,19 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ['next-simple-sns']: token } = parseCookies(ctx)
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const { 'next-simple-sns': token } = parseCookies(ctx);
 
   if (!token) {
     return {
       redirect: {
         destination: '/account/login',
         permanent: false,
-      }
-    }
+      },
+    };
   }
 
   return {
-    props: {}
-  }
-}
+    props: {},
+  };
+};
