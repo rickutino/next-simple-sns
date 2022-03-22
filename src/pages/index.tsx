@@ -26,6 +26,9 @@ const NewPostButton = styled(Box)({
   position: 'fixed',
   right: '20%',
   bottom: '10%',
+  '& svg': {
+    color: theme.palette.secondary.main,
+  },
   [theme.breakpoints.down('lg')]: {
     position: 'fixed',
     right: '4%',

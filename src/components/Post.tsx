@@ -49,7 +49,7 @@ function jaTimeZone (hours) {
 }
 
 const PostContainer = styled(Container)({
-  marginBottom: '4rem',
+  marginTop: '4rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

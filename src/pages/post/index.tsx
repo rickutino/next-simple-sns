@@ -12,22 +12,33 @@ import { parseCookies } from 'nookies';
 import { api } from "../../services/api";
 import theme from "../../styles/theme";
 
-const Form = styled('form')({
-  display: 'flex',
-  width: '80%',
-  margin: '36px auto 0',
+const PostRoot = styled(Box)({
+  backgroundColor: theme.palette.primary.main,
+  height: '100vh',
+  [theme.breakpoints.down('md')]: {
+    marginTop: '8rem',
+  },
 });
 
+const Form = styled('form')({
+  display: 'flex',
+  width: '100%',
+  marginTop: '4rem',
+  [theme.breakpoints.down('md')]: {
+    paddingTop: '4rem',
+  },
+});
+ 
 const Input = styled(TextField)({
   borderRadius: '5px',
   backgroundColor: theme.palette.grey[200],
 })
 
 const PostButton = styled(Button)({
-  borderRadius: '50px',
+  borderRadius: '5px',
   height: '55px',
   width: '100%',
-  marginTop: '1.25rem',
+  marginTop: '1rem',
 });
 
 export default function Post() {
@@ -83,18 +94,19 @@ export default function Post() {
       });
     }
   }
-
+ 
   return (
-    <>
+    <PostRoot>
       <Header />
-      <Container maxWidth='lg'>
+      <Container maxWidth='md'>
         <Form onSubmit={e => handleSubmit(e)}>
           <Typography variant="body1" align="right" >{countLength}</Typography>
           <Input
+            placeholder="メッセージの入力待ち..."
             variant="outlined"
             multiline
             fullWidth
-            rows={3}
+            rows={5}
             onChange={handleChange}
             inputProps={{ maxLength: 140 }}
             error={inputError || post.length == 140 ? true : false}
@@ -117,7 +129,7 @@ export default function Post() {
         notify={notify}
         setNotify={setNotify}
       />
-    </>
+    </PostRoot>
   )
 }
 
