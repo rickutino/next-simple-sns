@@ -67,7 +67,7 @@ export default function Post() {
     event.preventDefault();
     setInputError(false);
 
-    if (post === '') {
+    if (post === null || '') {
       setInputError(true);
       setNotify({
         isOpen: true,
