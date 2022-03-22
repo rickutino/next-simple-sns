@@ -1,5 +1,4 @@
-import { Box, Button, Container, TextField, Theme, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Button, Container, TextField, Typography, styled } from "@mui/material";
 
 import { GetServerSideProps } from 'next';
 import { useRouter } from "next/router";
@@ -11,26 +10,25 @@ import Notification from "../../components/Notification";
 import { AuthContext } from "../../contexts/AuthContext";
 import { parseCookies } from 'nookies';
 import { api } from "../../services/api";
+import theme from "../../styles/theme";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  form: {
-    display: 'flex',
-    width: '80%',
-    margin: "36px auto 0",
-  },
-  textField: {
-    borderRadius: '5px',
-    backgroundColor: theme.palette.grey[200],
-  },
-  button: {
-    borderRadius: '50px',
-    height: '55px',
-    width: '100%',
-    marginTop: '1.25rem',
-  }
-}));
+const Form = styled('form')({
+  display: 'flex',
+  width: '80%',
+  margin: '36px auto 0',
+});
 
+const Input = styled(TextField)({
+  borderRadius: '5px',
+  backgroundColor: theme.palette.grey[200],
+})
 
+const PostButton = styled(Button)({
+  borderRadius: '50px',
+  height: '55px',
+  width: '100%',
+  marginTop: '1.25rem',
+});
 
 export default function Post() {
   const { notify, setNotify } = useContext(AuthContext);
@@ -40,7 +38,6 @@ export default function Post() {
   const [ inputError, setInputError ] = useState(false);
 
   const router = useRouter();
-  const classes = useStyles();
 
   function handleChange ( event: React.ChangeEvent<HTMLInputElement> ) {
     setCountLength(event.target.value.length);
@@ -91,10 +88,9 @@ export default function Post() {
     <>
       <Header />
       <Container maxWidth='lg'>
-        <form className={classes.form} onSubmit={e => handleSubmit(e)}>
+        <Form onSubmit={e => handleSubmit(e)}>
           <Typography variant="body1" align="right" >{countLength}</Typography>
-          <TextField
-            className={classes.textField}
+          <Input
             variant="outlined"
             multiline
             fullWidth
@@ -103,23 +99,17 @@ export default function Post() {
             inputProps={{ maxLength: 140 }}
             error={inputError || post.length == 140 ? true : false}
           />
-          <Box mt={3}>
-            <Button
-              sx={{
-                borderRadius: '50px',
-                height: '55px',
-                width: '100%',
-                marginTop: '1.25rem',
-              }}
+         <Box mt={3}>
+            <PostButton
               type="submit"
               variant="contained"
               disabled={sendButtonDisabled}
               color="secondary"
             >
               投稿を送信
-            </Button>
+            </PostButton>
           </Box>
-        </form>
+        </Form>
       </Container>
 
       <BottomHeaderNavigation />
