@@ -1,5 +1,4 @@
-import { Box, Button, Container, TextField, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Box, Button, Container, styled, TextField } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies';
@@ -13,6 +12,7 @@ import {
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import theme from '../../styles/theme';
 
 interface User {
   id: string;
@@ -36,39 +36,53 @@ interface Messages {
   user: User;
   userId?: number;
   content: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    height: '80vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  messagesBody: {
-    width: 'calc( 100% - 20px )',
-    margin: 10,
-    overflowY: 'scroll',
-    height: 'calc( 100% - 140px )'
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%'
-  },
-  textField: {
-    borderRadius: '5px',
-    backgroundColor: theme.palette.grey[200]
-  },
-  button: {
-    borderRadius: '50px',
-    height: '3.5rem',
-    width: '100%'
+const Root = styled(Box)({
+  background: theme.palette.primary.main,
+  boxShadow: 'none',
+  height: '100vh',
+  [theme.breakpoints.down('md')]: {
+    paddingTop: theme.spacing(14)
   }
-}));
+});
+
+const MessageContainer = styled(Container)({
+  paddingTop: theme.spacing(4),
+  height: '80vh',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+});
+
+const MessageBody = styled(Box)({
+  backgroundColor: theme.palette.primary.light,
+  borderRadius: '5px',
+  width: '100%',
+  overflowY: 'scroll',
+  height: 'calc( 100% - 140px )'
+});
+
+const MessageForm = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%'
+});
+
+const MessageInput = styled(TextField)({
+  borderRadius: '5px',
+  backgroundColor: theme.palette.grey[200]
+});
+
+const MessageButton = styled(Button)({
+  marginTop: theme.spacing(2),
+  borderRadius: '5px',
+  height: '3.5rem',
+  width: '100%'
+});
 
 export default function Message() {
   const { notify, setNotify } = useContext(AuthContext);
@@ -86,7 +100,6 @@ export default function Message() {
   let pageSize = 10;
   const messagesEndRef = useRef(null);
   const firstUpdate = useRef(true);
-  const classes = useStyles();
   const router = useRouter();
   const roomId = router.query.slug;
 
@@ -206,27 +219,10 @@ export default function Message() {
   });
 
   return (
-    <>
+    <Root>
       <Header />
-      <Container
-        maxWidth="sm"
-        className={classes.container}
-        sx={{
-          height: '80vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}
-      >
-        <Box
-          className={classes.messagesBody}
-          sx={{
-            width: 'calc( 100% - 20px )',
-            margin: 10,
-            overflowY: 'scroll',
-            height: 'calc( 100% - 140px )'
-          }}
-        >
+      <MessageContainer maxWidth="sm">
+        <MessageBody>
           <div id="scroll" />
           {messages.map((message: Messages) => {
             // {!!message.postId && <PostContext messages={message.post}/}
@@ -253,14 +249,9 @@ export default function Message() {
             );
           })}
           <div ref={messagesEndRef} />
-        </Box>
-        <form className={classes.form} onSubmit={e => handleSubmit(e)}>
-          <TextField
-            className={classes.textField}
-            sx={{
-              borderRadius: '5px',
-              backgroundColor: '#eeeeee'
-            }}
+        </MessageBody>
+        <MessageForm onSubmit={e => handleSubmit(e)}>
+          <MessageInput
             variant="outlined"
             multiline
             fullWidth
@@ -268,30 +259,22 @@ export default function Message() {
             value={inputMessage}
             error={messagesError}
           />
-          <Box mt={1} sx={{ width: 1 }}>
-            <Button
-              className={classes.button}
-              sx={{
-                borderRadius: '50px',
-                height: '3.5rem',
-                width: '100%'
-              }}
-              type="submit"
-              variant="contained"
-              disabled={inputValue}
-              color="secondary"
-            >
-              メッセージを送信
-            </Button>
-          </Box>
-        </form>
-      </Container>
+          <MessageButton
+            type="submit"
+            variant="contained"
+            disabled={inputValue}
+            color="secondary"
+          >
+            メッセージを送信
+          </MessageButton>
+        </MessageForm>
+      </MessageContainer>
 
       <Notification notify={notify} setNotify={setNotify} />
       <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
       <BottomHeaderNavigation />
-    </>
+    </Root>
   );
 }
 
