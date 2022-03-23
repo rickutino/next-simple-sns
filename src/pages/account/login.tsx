@@ -126,7 +126,7 @@ export default function Login() {
 
             <Button
               color="secondary"
-              href="/account/singUp"
+              href="/account/singup"
               component={Link}
               sx={{
                 mt: 18,

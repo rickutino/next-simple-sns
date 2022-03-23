@@ -1,3 +1,5 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable react/no-unused-prop-types */
 import { Avatar, Box, Theme, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 

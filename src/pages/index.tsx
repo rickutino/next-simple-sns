@@ -71,7 +71,7 @@ export default function Home() {
         <IconButton
           sx={{ fontSize: '3.5rem' }}
           color="secondary"
-          href="/newPost"
+          href="/newpost"
         >
           <AiFillPlusCircle />
         </IconButton>

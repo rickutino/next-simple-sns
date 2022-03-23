@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { GetServerSideProps } from 'next';
-import { useRouter } from "next/router";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { useRouter } from 'next/router';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 
 import {
   Avatar,
@@ -12,38 +13,37 @@ import {
   TextField,
   Theme,
   Typography
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
-import { AiFillPlusCircle, AiOutlineMail } from 'react-icons/ai'
-import { FiUser } from 'react-icons/fi'
+import { AiFillPlusCircle, AiOutlineMail } from 'react-icons/ai';
+import { FiUser } from 'react-icons/fi';
 
-import { Header, BottomHeaderNavigation } from "../../components/Header";
-
-import { api } from "../../services/api";
 import { parseCookies } from 'nookies';
-import Notification from "../../components/Notification";
-import { AuthContext } from "../../contexts/AuthContext";
+import { Header, BottomHeaderNavigation } from '../../components/Header';
+
+import { api } from '../../services/api';
+import Notification from '../../components/Notification';
+import { AuthContext } from '../../contexts/AuthContext';
 
 interface User {
   name: string;
   email: string;
-  iconImageUrl?: string | null
+  iconImageUrl?: string | null;
 }
-
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignSelf: 'center',
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     display: 'flex',
     '& > *': {
-      margin: theme.spacing(1),
-    },
+      margin: theme.spacing(1)
+    }
   },
   input: {
-    display: "none",
+    display: 'none'
   },
   avatar: {
     margin: '0 auto'
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   form: {
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
+    width: '100%'
   },
   textField: {
     borderRadius: '5px',
@@ -64,23 +64,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     borderRadius: '50px',
     height: '3.5rem',
-    width: '16rem',
+    width: '16rem'
   },
   icon: {
     position: 'absolute',
-    right: "-54%",
-    top: "-4rem",
+    right: '-54%',
+    top: '-4rem'
   },
   iconButton: {
     position: 'relative',
     top: '600px',
-    right: '-1200px',
-  },
-}))
+    right: '-1200px'
+  }
+}));
 
-
-
-export default function Update(){
+export default function Update() {
   const [currentUser, setCurrentUser] = useState<User>();
   const [nameInput, setNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
@@ -95,41 +93,45 @@ export default function Update(){
   useEffect(() => {
     api.get('/account').then(response => {
       setCurrentUser(response.data.user);
-    })
-  },[]);
+    });
+  }, []);
 
   async function changeUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
     const imageFile = event.target.files[0];
 
     const formData = new FormData();
-    formData.append("file", imageFile);
+    formData.append('file', imageFile);
 
     const config = {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }
+      headers: { 'Content-Type': 'multipart/form-data' }
+    };
 
-    await api.patch('/account/icon_image', formData, config).then(response =>{
-      const uploadUserIcon = {
-        ...currentUser,
-        iconImageUrl: response.data.user.iconImageUrl
-      };
+    await api
+      .patch('/account/icon_image', formData, config)
+      .then(response => {
+        const uploadUserIcon = {
+          ...currentUser,
+          iconImageUrl: response.data.user.iconImageUrl
+        };
 
-      setCurrentUser(uploadUserIcon);
+        setCurrentUser(uploadUserIcon);
 
-      setNotify({
-        isOpen: true,
-        message: "プロフィールアイコンを変更しました。",
-        type: 'success'
+        setNotify({
+          isOpen: true,
+          message: 'プロフィールアイコンを変更しました。',
+          type: 'success'
+        });
+      })
+      .catch(error => {
+        setNotify({
+          isOpen: true,
+          message: `プロフィール変更にエラーが発生しました: ${error}`,
+          type: 'error'
+        });
       });
-    }).catch((error) => {
-      setNotify({
-        isOpen: true,
-        message: `プロフィール変更にエラーが発生しました: ${error}`,
-        type: 'error'
-      });
-    });
+    // eslint-disable-next-line no-param-reassign
     event.target.value = '';
-  };
+  }
 
   async function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setNameInput(event.target.value);
@@ -143,27 +145,27 @@ export default function Update(){
     setInputValue(false);
   }
 
-  async function handleSubmit ( event: FormEvent ) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    if(nameInput == '') {
+    if (nameInput === '') {
       setNameInputError(true);
       setNotify({
         isOpen: true,
-        message: "名前は必須です。",
+        message: '名前は必須です。',
         type: 'error'
       });
     }
-    if(emailInput == '') {
+    if (emailInput === '') {
       setEmailInputError(true);
       setNotify({
         isOpen: true,
-        message: "名前は必須です。",
+        message: '名前は必須です。',
         type: 'error'
       });
     }
 
-    try{
+    try {
       await api.post('/account/profile', {
         name: nameInput,
         email: emailInput
@@ -171,12 +173,12 @@ export default function Update(){
 
       setNotify({
         isOpen: true,
-        message: "プロフィールを変更しました。",
+        message: 'プロフィールを変更しました。',
         type: 'success'
       });
 
       router.push('/profile');
-    }catch (error) {
+    } catch (error) {
       setNotify({
         isOpen: true,
         message: `${error}`,
@@ -189,15 +191,22 @@ export default function Update(){
     <>
       <Header />
       <Container maxWidth="sm" className={classes.root}>
-        <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={changeUploadFile} />
-        <label htmlFor="icon-button-file" >
+        <input
+          accept="image/*"
+          className={classes.input}
+          id="icon-button-file"
+          type="file"
+          onChange={changeUploadFile}
+        />
+        <label htmlFor="icon-button-file">
           <Avatar
             sx={{ width: 185, height: 185 }}
             className={classes?.avatar}
             src={
               currentUser?.iconImageUrl
-              ? currentUser.iconImageUrl
-              : `/icons/profileIcon.png` }
+                ? currentUser.iconImageUrl
+                : `/icons/profileIcon.png`
+            }
           />
           <IconButton
             sx={{ fontSize: '3.5rem' }}
@@ -211,7 +220,9 @@ export default function Update(){
         </label>
         <form className={classes.form} onSubmit={e => handleSubmit(e)}>
           <Box mb={2}>
-            <Typography variant="h6" className={classes.text} >Name</Typography>
+            <Typography variant="h6" className={classes.text}>
+              Name
+            </Typography>
             <TextField
               className={classes.textField}
               variant="outlined"
@@ -225,12 +236,14 @@ export default function Update(){
                   <InputAdornment position="start">
                     <FiUser />
                   </InputAdornment>
-                ),
+                )
               }}
             />
           </Box>
 
-          <Typography variant="h6" className={classes.text} >Email</Typography>
+          <Typography variant="h6" className={classes.text}>
+            Email
+          </Typography>
           <TextField
             className={classes.textField}
             variant="outlined"
@@ -244,7 +257,7 @@ export default function Update(){
                 <InputAdornment position="start">
                   <AiOutlineMail />
                 </InputAdornment>
-              ),
+              )
             }}
           />
           <Box mt={3}>
@@ -260,34 +273,28 @@ export default function Update(){
             </Button>
           </Box>
         </form>
-        <Notification
-          notify={notify}
-          setNotify={setNotify}
-        />
+        <Notification notify={notify} setNotify={setNotify} />
       </Container>
 
       <BottomHeaderNavigation />
-      <Notification
-        notify={notify}
-        setNotify={setNotify}
-      />
+      <Notification notify={notify} setNotify={setNotify} />
     </>
-  )
+  );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ['next-simple-sns']: token } = parseCookies(ctx)
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const { 'next-simple-sns': token } = parseCookies(ctx);
 
   if (!token) {
     return {
       redirect: {
         destination: '/account/login',
-        permanent: false,
+        permanent: false
       }
-    }
+    };
   }
 
   return {
     props: {}
-  }
-}
+  };
+};

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -8,27 +8,26 @@ import {
   Button,
   Theme,
   IconButton
-} from "@mui/material";
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { GiExitDoor } from "react-icons/gi"
-
+import { GiExitDoor } from 'react-icons/gi';
 
 interface DialogData {
   isOpen: boolean;
   title: string;
   onConfirm?(): void;
-};
+}
 
 interface DialogProps {
   confirmDialog: DialogData;
-  setConfirmDialog: Dispatch<SetStateAction<DialogData>>,
-};
+  setConfirmDialog: Dispatch<SetStateAction<DialogData>>;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
     padding: theme.spacing(3),
-    position: "absolute",
-    top: theme.spacing(10),
+    position: 'absolute',
+    top: theme.spacing(10)
   },
   dialogTitle: {
     textAlign: 'center'
@@ -47,41 +46,43 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'default'
     },
     '& .MuiButtonBase-root': {
-      fontSize: '8rem',
+      fontSize: '8rem'
     }
   }
 }));
 
 export default function ConfirmDialog({
   confirmDialog,
-  setConfirmDialog,
+  setConfirmDialog
 }: DialogProps) {
   const classes = useStyles();
-  const handleClose = (event: React.SyntheticEvent, reason?) => {
-    // アラートのそのにクリックしても閉じない方法。
-    // if (reason === 'clickaway') {
-    //   return;
-    // }
+  const handleClose = () => {
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
     });
-  }
+  };
 
-  return(
-    <Dialog open={confirmDialog.isOpen} className={classes.dialog} onClick={handleClose}>
+  return (
+    <Dialog
+      open={confirmDialog.isOpen}
+      className={classes.dialog}
+      onClick={handleClose}
+    >
       <DialogTitle className={classes.dialogTitle}>
         <IconButton disableRipple className={classes.titleIcon}>
-          <GiExitDoor className="MuiButtonBase-root"/>
+          <GiExitDoor className="MuiButtonBase-root" />
         </IconButton>
       </DialogTitle>
       <DialogContent className={classes.dialogContent}>
-        <Typography variant="h6" >
-          {confirmDialog.title}
-        </Typography>
+        <Typography variant="h6">{confirmDialog.title}</Typography>
       </DialogContent>
       <DialogActions className={classes.dialogAction}>
-        <Button variant="outlined" color="info" onClick={confirmDialog.onConfirm}>
+        <Button
+          variant="outlined"
+          color="info"
+          onClick={confirmDialog.onConfirm}
+        >
           Yes
         </Button>
         <Button variant="outlined" color="error" onClick={handleClose}>
@@ -89,6 +90,5 @@ export default function ConfirmDialog({
         </Button>
       </DialogActions>
     </Dialog>
-
-  )
+  );
 }

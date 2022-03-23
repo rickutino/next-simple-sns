@@ -1,17 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
-
-import Notification from '../../components/Notification';
-import { AuthContext } from '../../contexts/AuthContext';
-import { api } from '../../services/api';
 
 import {
   Avatar,
   ButtonBase,
   Card,
-  CardContent,
   CardHeader,
   Container,
   Grid,
@@ -20,6 +14,9 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Notification from '../../components/Notification';
+import { AuthContext } from '../../contexts/AuthContext';
+import { api } from '../../services/api';
 
 import { Header, BottomHeaderNavigation } from '../../components/Header';
 
@@ -52,20 +49,21 @@ interface Rooms {
   id: string;
   messages: Messages;
   roomUsers: {
-    user: User,
-    rooId: string,
-    userId: string,
-  }
+    user: User;
+    rooId: string;
+    userId: string;
+  };
 }
 
-function jaTimeZone (hours) {
-  const dateToTime = date => date.toLocaleString('ja', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  });
+function jaTimeZone(hours: string) {
+  const dateToTime = (date: Date) =>
+    date.toLocaleString('ja', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    });
 
   const dateString = hours;
   const localDate = new Date(dateString);
@@ -73,8 +71,7 @@ function jaTimeZone (hours) {
   return dateToTime(localDate);
 }
 
-
-const useStyles = makeStyles((theme: Theme) =>({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -82,112 +79,112 @@ const useStyles = makeStyles((theme: Theme) =>({
   },
   card: {
     width: '100%',
-    padding: '1.5rem 6rem 1.5rem 1.5rem',
+    padding: '1.5rem 6rem 1.5rem 1.5rem'
   },
   subText: {
-    color: theme.palette.grey[400],
+    color: theme.palette.grey[400]
   },
   action: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   button: {
     borderRadius: '50px',
     height: '3.5rem',
-    width: '100%',
-  },
+    width: '100%'
+  }
 }));
 
 export default function Room() {
   const { notify, setNotify } = useContext(AuthContext);
-  const [ rooms, setRooms ] = useState<Rooms[]>([]);
+  const [rooms, setRooms] = useState<Rooms[]>([]);
   const classes = useStyles();
-	const router = useRouter();
 
   useEffect(() => {
-
-    api.get('/rooms').then(response => {
-      setRooms(response.data.rooms);
-    }).catch((error) => {
-      console.log(error);
-    })
-  } ,[]);
-
+    api
+      .get('/rooms')
+      .then(response => {
+        setRooms(response.data.rooms);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
       <Header />
-      <Container maxWidth='md'>
-        {rooms.map((room ,i) => (
-          <>
-            <Grid
-              key={i}
-              className={classes.root}>
-              <ButtonBase
-                sx={{ width: '100%' }}
-                href={`/message/${room.roomUsers[0].roomId}`}
+      <Container maxWidth="md">
+        {rooms.map(room => (
+          <Grid key={room.id} className={classes.root}>
+            <ButtonBase
+              sx={{ width: '100%' }}
+              href={`/message/${room.roomUsers[0].roomId}`}
+            >
+              <Card
+                sx={{
+                  backgroundColor: theme => theme.palette.primary.light,
+                  color: theme => theme.palette.grey[200]
+                }}
+                className={classes.card}
               >
-                <Card
-                  sx={{
-                  backgroundColor: (theme) => theme.palette.primary.light,
-                  color: (theme) => theme.palette.grey[200],
-                  }}
-                  className={classes.card}
-                >
-                  <CardHeader
-                    avatar={
-                      <Avatar
-                        alt={room.roomUsers[0].user?.name}
-                        sx={{ width: 56, height: 56 }}
-                        src={
-                          room.roomUsers[0].user?.iconImageUrl
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      alt={room.roomUsers[0].user?.name}
+                      sx={{ width: 56, height: 56 }}
+                      src={
+                        room.roomUsers[0].user?.iconImageUrl
                           ? room.roomUsers[0].user.iconImageUrl
-                          : `/icons/profileIcon.png` }
-                        />
+                          : `/icons/profileIcon.png`
                       }
-                      action={
-                      <div className={classes.action}>
-                        <AccessTimeIcon color='secondary'/>
-                        <Typography ml={1} className={classes.subText}>{jaTimeZone(room.messages[0].createdAt)}</Typography>
-                      </div>
-                    }
-                    title={<Typography variant='h6'>{room.roomUsers[0].user?.name}</Typography>}
-                    subheader={
-                        <Typography className={classes.subText}>
-                          {room.messages[0].content}
-                        </Typography>
-                    }
                     />
-                </Card>
-              </ButtonBase>
-            </Grid>
-          </>
+                  }
+                  action={
+                    <div className={classes.action}>
+                      <AccessTimeIcon color="secondary" />
+                      <Typography ml={1} className={classes.subText}>
+                        {jaTimeZone(room.messages[0].createdAt)}
+                      </Typography>
+                    </div>
+                  }
+                  title={
+                    <Typography variant="h6">
+                      {room.roomUsers[0].user?.name}
+                    </Typography>
+                  }
+                  subheader={
+                    <Typography className={classes.subText}>
+                      {room.messages[0].content}
+                    </Typography>
+                  }
+                />
+              </Card>
+            </ButtonBase>
+          </Grid>
         ))}
       </Container>
 
       <BottomHeaderNavigation />
-      <Notification
-        notify={notify}
-        setNotify={setNotify}
-      />
+      <Notification notify={notify} setNotify={setNotify} />
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ['next-simple-sns']: token } = parseCookies(ctx)
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const { 'next-simple-sns': token } = parseCookies(ctx);
 
   if (!token) {
     return {
       redirect: {
         destination: '/account/login',
-        permanent: false,
+        permanent: false
       }
-    }
+    };
   }
 
   return {
     props: {}
-  }
-}
+  };
+};

@@ -1,22 +1,15 @@
-import {
-  Button,
-  Theme,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
+/* eslint-disable react/destructuring-assignment */
+import { Button, styled } from '@mui/material';
 
-const useStyles = makeStyles((theme: Theme) =>({
-  input: {
-    display: 'none',
-  },
-}));
+const Input = styled('label')({
+  display: 'none'
+});
 
-export const UploadButton = (props) => {
-  const classes = useStyles();
+export function UploadButton(props) {
   return (
     <label htmlFor={`upload-button-${props.name}`}>
-      <input
+      <Input
         accept="image/*"
-        className={classes.input}
         id={`upload-button-${props.name}`}
         name={props.name}
         multiple
@@ -26,6 +19,6 @@ export const UploadButton = (props) => {
       <Button variant="contained" component="span" {...props}>
         {props.children}
       </Button>
-      </label>
+    </label>
   );
-};
+}
