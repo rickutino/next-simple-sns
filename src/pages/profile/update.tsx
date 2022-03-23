@@ -1,8 +1,4 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-import { FormEvent, useContext, useEffect, useState } from 'react';
-
 import {
   Avatar,
   Box,
@@ -10,73 +6,90 @@ import {
   Container,
   IconButton,
   InputAdornment,
+  styled,
   TextField,
-  Theme,
   Typography
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import { parseCookies } from 'nookies';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { AiFillPlusCircle, AiOutlineMail } from 'react-icons/ai';
 import { FiUser } from 'react-icons/fi';
-
-import { parseCookies } from 'nookies';
-import { Header, BottomHeaderNavigation } from '../../components/Header';
-
-import { api } from '../../services/api';
+import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
+import { api } from '../../services/api';
+import theme from '../../styles/theme';
 
 interface User {
   name: string;
   email: string;
   iconImageUrl?: string | null;
 }
+const Root = styled(Box)({
+  backgroundColor: theme.palette.primary.main,
+  height: '100vh',
+  [theme.breakpoints.down('md')]: {
+    paddingTop: theme.spacing(18)
+  }
+});
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
-    '& > *': {
-      margin: theme.spacing(1)
-    }
+const UpdateProfile = styled(Container)({
+  paddingTop: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  '& > *': {
+    margin: theme.spacing(1)
   },
-  input: {
-    display: 'none'
+  '& span svg': {
+    fontSize: '3.5rem',
+    position: 'absolute',
+    right: '-10.8rem',
+    top: '-3.6rem'
+  }
+});
+
+const Input = styled('input')({
+  display: 'none'
+});
+
+const ProfileAvatar = styled(Avatar)({
+  margin: '0 auto',
+  width: 185,
+  height: 185
+});
+
+const Form = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  '& h6': {
+    color: theme.palette.grey[400]
   },
-  avatar: {
-    margin: '0 auto'
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%'
-  },
-  textField: {
+  '& h6 div': {
     borderRadius: '5px',
     background: theme.palette.grey[300],
     color: theme.palette.grey[400]
   },
-  text: {
-    color: theme.palette.grey[400]
-  },
-  button: {
+  '& div button': {
     borderRadius: '50px',
     height: '3.5rem',
-    width: '16rem'
-  },
-  icon: {
-    position: 'absolute',
-    right: '-54%',
-    top: '-4rem'
-  },
-  iconButton: {
-    position: 'relative',
-    top: '600px',
-    right: '-1200px'
+    width: '100%',
+    marginTop: theme.spacing(7),
+    [theme.breakpoints.down('md')]: {
+      marginTop: theme.spacing(15)
+    }
   }
-}));
+});
+
+const ProfileInput = styled(TextField)({
+  borderRadius: '5px',
+  background: theme.palette.grey[300],
+  color: theme.palette.grey[400]
+});
 
 export default function Update() {
   const [currentUser, setCurrentUser] = useState<User>();
@@ -88,7 +101,6 @@ export default function Update() {
 
   const { notify, setNotify } = useContext(AuthContext);
   const router = useRouter();
-  const classes = useStyles();
 
   useEffect(() => {
     api.get('/account').then(response => {
@@ -188,20 +200,17 @@ export default function Update() {
   }
 
   return (
-    <>
+    <Root>
       <Header />
-      <Container maxWidth="sm" className={classes.root}>
-        <input
+      <UpdateProfile maxWidth="sm">
+        <Input
           accept="image/*"
-          className={classes.input}
           id="icon-button-file"
           type="file"
           onChange={changeUploadFile}
         />
         <label htmlFor="icon-button-file">
-          <Avatar
-            sx={{ width: 185, height: 185 }}
-            className={classes?.avatar}
+          <ProfileAvatar
             src={
               currentUser?.iconImageUrl
                 ? currentUser.iconImageUrl
@@ -209,22 +218,17 @@ export default function Update() {
             }
           />
           <IconButton
-            sx={{ fontSize: '3.5rem' }}
             color="secondary"
             aria-label="upload picture"
             component="span"
-            className={classes.icon}
           >
             <AiFillPlusCircle />
           </IconButton>
         </label>
-        <form className={classes.form} onSubmit={e => handleSubmit(e)}>
+        <Form onSubmit={e => handleSubmit(e)}>
           <Box mb={2}>
-            <Typography variant="h6" className={classes.text}>
-              Name
-            </Typography>
-            <TextField
-              className={classes.textField}
+            <Typography variant="h6">Name</Typography>
+            <ProfileInput
               variant="outlined"
               multiline
               fullWidth
@@ -241,11 +245,8 @@ export default function Update() {
             />
           </Box>
 
-          <Typography variant="h6" className={classes.text}>
-            Email
-          </Typography>
-          <TextField
-            className={classes.textField}
+          <Typography variant="h6">Email</Typography>
+          <ProfileInput
             variant="outlined"
             multiline
             fullWidth
@@ -260,9 +261,8 @@ export default function Update() {
               )
             }}
           />
-          <Box mt={3}>
+          <Box>
             <Button
-              className={classes.button}
               type="submit"
               variant="contained"
               disabled={inputValue}
@@ -272,13 +272,13 @@ export default function Update() {
               更新
             </Button>
           </Box>
-        </form>
+        </Form>
         <Notification notify={notify} setNotify={setNotify} />
-      </Container>
+      </UpdateProfile>
 
       <BottomHeaderNavigation />
       <Notification notify={notify} setNotify={setNotify} />
-    </>
+    </Root>
   );
 }
 
