@@ -17,7 +17,16 @@ import theme from '../../styles/theme';
 const Root = styled(Box)({
   background: theme.palette.primary.main,
   boxShadow: 'none',
-  height: '100vh'
+  height: '100vh',
+  [theme.breakpoints.down('md')]: {
+    paddingTop: '8rem'
+  }
+});
+
+const WhenMobileDisplayNoneHeader = styled(Box)({
+  [theme.breakpoints.down('md')]: {
+    display: 'none'
+  }
 });
 
 export default function Profile() {
@@ -25,7 +34,9 @@ export default function Profile() {
 
   return (
     <Root>
-      <Header />
+      <WhenMobileDisplayNoneHeader>
+        <Header />
+      </WhenMobileDisplayNoneHeader>
 
       <Container maxWidth="md">
         <Link href="/profile/update">
