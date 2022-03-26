@@ -11,10 +11,10 @@ import {
 import { api } from '../services/api';
 
 interface User {
-  id: string;
+  id?: string;
   name: string;
   email: string;
-  iconImageUrl: string | null;
+  iconImageUrl?: string | null;
 }
 interface Notification {
   isOpen: boolean;
@@ -76,6 +76,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       window.removeEventListener('popstate', () => {});
     };
   }, []);
@@ -139,12 +140,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
           path: '/' // どのパスがこのクッキーをアクセスできるか。
         });
 
-        setUser({
-          name,
-          email,
-          iconImageUrl
-        });
-
         // Headerにあるtokenの更新
         api.defaults.headers.Authorization = `Bearer ${token}`;
 
@@ -165,11 +160,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         name,
         email,
         password
-      });
-
-      setUser({
-        name,
-        email
       });
 
       const { token } = response.data;
@@ -194,6 +184,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         login,
         singUp,
