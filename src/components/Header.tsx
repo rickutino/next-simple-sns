@@ -160,9 +160,9 @@ export function Header() {
     api
       .get('/account')
       .then(response => {
-        const { name, email, iconImageUrl } = response.data.user;
+        const { id, name, email, iconImageUrl } = response.data.user;
 
-        setUser({ name, email, iconImageUrl });
+        setUser({ id, name, email, iconImageUrl });
         setLoading(false);
       })
       .catch(error => {

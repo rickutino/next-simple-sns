@@ -1,7 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
-import { GetServerSideProps } from 'next';
-import { parseCookies } from 'nookies';
-
+/* eslint-disable no-unused-expressions */
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
   Avatar,
   ButtonBase,
@@ -9,16 +7,17 @@ import {
   CardHeader,
   Container,
   Grid,
-  Theme,
+  styled,
   Typography
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
+import { useContext, useEffect, useState } from 'react';
+import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
-
-import { Header, BottomHeaderNavigation } from '../../components/Header';
+import theme from '../../styles/theme';
 
 interface User {
   id: string;
@@ -28,7 +27,7 @@ interface User {
 }
 
 interface Posts {
-  id: number;
+  id?: number;
   userId: number;
   body: string;
   createdAt?: Date;
@@ -71,35 +70,58 @@ function jaTimeZone(hours: string) {
   return dateToTime(localDate);
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: '2rem auto'
-  },
-  card: {
-    width: '100%',
-    padding: '1.5rem 6rem 1.5rem 1.5rem'
-  },
-  subText: {
-    color: theme.palette.grey[400]
-  },
-  action: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  button: {
-    borderRadius: '50px',
-    height: '3.5rem',
-    width: '100%'
+const RoomRoot = styled(Container)({
+  backgroundColor: theme.palette.primary.main,
+  height: '100%',
+  width: '100%',
+  maxWidth: '1600px',
+  padding: '0',
+  [theme.breakpoints.down('md')]: {
+    paddingTop: '8rem'
   }
-}));
+});
+
+const RoomGrid = styled(Grid)({
+  margin: '2rem 0',
+  '& > a': {
+    width: '100%',
+    '& > div': {
+      width: '100%',
+      padding: '1.5rem 6rem 1.5rem 1.5rem',
+      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.grey[200],
+      [theme.breakpoints.down('md')]: {
+        padding: '1.5rem'
+      }
+    }
+  }
+});
+
+const RoomAvatar = styled(Avatar)({
+  width: '56',
+  height: '56'
+});
+
+const RoomAction = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
+});
+
+const RoomSubtitle = styled(Typography)({
+  color: theme.palette.grey[400]
+});
+
+function getUserFriendIndex(room: Rooms, currentUser: User) {
+  if (room.roomUsers[0].user.id !== currentUser.id) {
+    return 0;
+  }
+  return 1;
+}
 
 export default function Room() {
-  const { notify, setNotify } = useContext(AuthContext);
+  const { notify, setNotify, user } = useContext(AuthContext);
   const [rooms, setRooms] = useState<Rooms[]>([]);
-  const classes = useStyles();
 
   useEffect(() => {
     api
@@ -113,62 +135,54 @@ export default function Room() {
   }, []);
 
   return (
-    <>
+    <RoomRoot>
       <Header />
       <Container maxWidth="md">
         {rooms.map(room => (
-          <Grid key={room.id} className={classes.root}>
-            <ButtonBase
-              sx={{ width: '100%' }}
-              href={`/message/${room.roomUsers[0].roomId}`}
-            >
-              <Card
-                sx={{
-                  backgroundColor: theme => theme.palette.primary.light,
-                  color: theme => theme.palette.grey[200]
-                }}
-                className={classes.card}
-              >
+          <RoomGrid key={room.id}>
+            <ButtonBase href={`/message/${room.messages[0]?.roomId}`}>
+              <Card>
                 <CardHeader
                   avatar={
-                    <Avatar
-                      alt={room.roomUsers[0].user?.name}
-                      sx={{ width: 56, height: 56 }}
+                    <RoomAvatar
+                      alt={
+                        room.messages[getUserFriendIndex(room, user)]?.user.name
+                      }
                       src={
-                        room.roomUsers[0].user?.iconImageUrl
-                          ? room.roomUsers[0].user.iconImageUrl
-                          : `/icons/profileIcon.png`
+                        room.messages[getUserFriendIndex(room, user)]?.user
+                          .iconImageUrl
                       }
                     />
                   }
                   action={
-                    <div className={classes.action}>
+                    <RoomAction>
                       <AccessTimeIcon color="secondary" />
-                      <Typography ml={1} className={classes.subText}>
-                        {jaTimeZone(room.messages[0].createdAt)}
-                      </Typography>
-                    </div>
+                      <RoomSubtitle ml={1}>
+                        {jaTimeZone(room.messages[0]?.createdAt)}
+                      </RoomSubtitle>
+                    </RoomAction>
                   }
                   title={
                     <Typography variant="h6">
-                      {room.roomUsers[0].user?.name}
+                      {
+                        room.roomUsers[getUserFriendIndex(room, user)]?.user
+                          .name
+                      }
                     </Typography>
                   }
                   subheader={
-                    <Typography className={classes.subText}>
-                      {room.messages[0].content}
-                    </Typography>
+                    <RoomSubtitle>{room.messages[0]?.content}</RoomSubtitle>
                   }
                 />
               </Card>
             </ButtonBase>
-          </Grid>
+          </RoomGrid>
         ))}
       </Container>
 
       <BottomHeaderNavigation />
       <Notification notify={notify} setNotify={setNotify} />
-    </>
+    </RoomRoot>
   );
 }
 
