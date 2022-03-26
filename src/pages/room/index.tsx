@@ -1,7 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
-import { GetServerSideProps } from 'next';
-import { parseCookies } from 'nookies';
-
+/* eslint-disable no-unused-expressions */
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
   Avatar,
   ButtonBase,
@@ -13,12 +11,13 @@ import {
   Typography
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
+import { useContext, useEffect, useState } from 'react';
+import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
-
-import { Header, BottomHeaderNavigation } from '../../components/Header';
 
 interface User {
   id: string;
@@ -28,7 +27,7 @@ interface User {
 }
 
 interface Posts {
-  id: number;
+  id?: number;
   userId: number;
   body: string;
   createdAt?: Date;
@@ -96,8 +95,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+// eslint-disable-next-line consistent-return
+function getUserFriendIndex(room, currentUser: User) {
+  console.log(room);
+  if (room.roomUsers[0].user.id !== currentUser.id) {
+    return 0;
+  }
+  if (room.roomUsers[1].user.id !== currentUser.id) {
+    return 1;
+  }
+}
+
 export default function Room() {
-  const { notify, setNotify } = useContext(AuthContext);
+  const { notify, setNotify, user } = useContext(AuthContext);
   const [rooms, setRooms] = useState<Rooms[]>([]);
   const classes = useStyles();
 
@@ -120,7 +130,7 @@ export default function Room() {
           <Grid key={room.id} className={classes.root}>
             <ButtonBase
               sx={{ width: '100%' }}
-              href={`/message/${room.roomUsers[0].roomId}`}
+              href={`/message/${room.messages[0]?.roomId}`}
             >
               <Card
                 sx={{
@@ -132,12 +142,13 @@ export default function Room() {
                 <CardHeader
                   avatar={
                     <Avatar
-                      alt={room.roomUsers[0].user?.name}
+                      alt={
+                        room.messages[getUserFriendIndex(room, user)]?.user.name
+                      }
                       sx={{ width: 56, height: 56 }}
                       src={
-                        room.roomUsers[0].user?.iconImageUrl
-                          ? room.roomUsers[0].user.iconImageUrl
-                          : `/icons/profileIcon.png`
+                        room.messages[getUserFriendIndex(room, user)]?.user
+                          .iconImageUrl
                       }
                     />
                   }
@@ -145,18 +156,21 @@ export default function Room() {
                     <div className={classes.action}>
                       <AccessTimeIcon color="secondary" />
                       <Typography ml={1} className={classes.subText}>
-                        {jaTimeZone(room.messages[0].createdAt)}
+                        {jaTimeZone(room.messages[0]?.createdAt)}
                       </Typography>
                     </div>
                   }
                   title={
                     <Typography variant="h6">
-                      {room.roomUsers[0].user?.name}
+                      {
+                        room.roomUsers[getUserFriendIndex(room, user)]?.user
+                          .name
+                      }
                     </Typography>
                   }
                   subheader={
                     <Typography className={classes.subText}>
-                      {room.messages[0].content}
+                      {room.messages[0]?.content}
                     </Typography>
                   }
                 />
