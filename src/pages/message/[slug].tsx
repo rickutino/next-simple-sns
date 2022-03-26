@@ -85,8 +85,7 @@ const MessageButton = styled(Button)({
 });
 
 export default function Message() {
-  const { notify, setNotify } = useContext(AuthContext);
-  const [currentUser, setCurrentUser] = useState<User>();
+  const { notify, setNotify, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [messages, setMessages] = useState<Messages[]>([]);
@@ -195,15 +194,6 @@ export default function Message() {
   useEffect(() => {
     if (!router.isReady) return;
 
-    api
-      .get('/account')
-      .then(response => {
-        setCurrentUser(response.data.user);
-      })
-      .catch(() => {
-        router.push('/account/login');
-      });
-
     const intersectionObserver = new IntersectionObserver(async entries => {
       if (entries.some(entry => entry.isIntersecting)) {
         await getPostsList();
@@ -226,7 +216,7 @@ export default function Message() {
           <div id="scroll" />
           {messages.map((message: Messages) => {
             // {!!message.postId && <PostContext messages={message.post}/}
-            return message.user.id === currentUser.id ? (
+            return message.user.id === user.id ? (
               <>
                 <PostContext post={message.post} />
                 <MessageRight
