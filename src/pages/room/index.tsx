@@ -74,7 +74,7 @@ const RoomRoot = styled(Container)({
   backgroundColor: theme.palette.primary.main,
   height: '100%',
   width: '100%',
-  maxWidth: '1600px',
+  maxWidth: '2300px',
   padding: '0',
   [theme.breakpoints.down('md')]: {
     paddingTop: '8rem'
