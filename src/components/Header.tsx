@@ -1,4 +1,5 @@
 import {
+  Avatar,
   BottomNavigation,
   BottomNavigationAction,
   Box,
@@ -123,12 +124,13 @@ const MobileTopHeader = styled(Box)({
         fontSize: '22px'
       }
     }
-  },
-  '& > img': {
-    width: '68px',
-    height: '68px',
-    borderRadius: '50%'
   }
+});
+
+const AvatarHeader = styled(Avatar)({
+  width: '56px',
+  height: '56px',
+  borderRadius: '50%'
 });
 
 const MobileBottomHeader = styled(Box)({
@@ -177,14 +179,7 @@ export function Header() {
           <HeaderContainer maxWidth="lg">
             <img src="/logo.svg" alt="simple-sns" />
             <div>
-              <img
-                alt=""
-                src={
-                  user?.iconImageUrl
-                    ? user.iconImageUrl
-                    : `/icons/profileIcon.png`
-                }
-              />
+              <AvatarHeader alt="" src={user?.iconImageUrl} />
               <div>
                 <span>Welcome, </span>
                 <Link href="/profile">
@@ -252,14 +247,7 @@ export function BottomHeaderNavigation() {
                 <strong>{user?.name}</strong>
               </Link>
             </div>
-            <img
-              alt=""
-              src={
-                user?.iconImageUrl
-                  ? user?.iconImageUrl
-                  : `/icons/profileIcon.png`
-              }
-            />
+            <AvatarHeader alt="" src={user?.iconImageUrl} />
           </MobileTopHeader>
           <MobileBottomHeader>
             <BottomNavigation
