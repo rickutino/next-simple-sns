@@ -141,7 +141,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         // Headerにあるtokenの更新
-        api.defaults.headers.Authorization = `Bearer ${token}`;
+        api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
         router.push('/');
       })
@@ -170,7 +170,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       // Headerにあるtokenアクセスの更新をさせる。
-      api.defaults.headers.Authorization = `Bearer ${token}`;
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
       router.push('/');
     } catch (error) {
