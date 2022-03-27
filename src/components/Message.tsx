@@ -56,7 +56,6 @@ const PostContent = styled(Box)({
 const FriendMessage = styled(Box)({
   position: 'relative',
   marginLeft: '2.5rem',
-  marginBottom: '1.25rem',
   padding: '1.25rem 3.75rem',
   backgroundColor: theme.palette.grey[200],
   textAlign: 'left',
@@ -161,11 +160,11 @@ export function MessageLeft({ user, content, createdAt }: Messages) {
         <FriendName>{user?.name}</FriendName>
         <FriendMessage>
           <MessageContent>{content}</MessageContent>
-          <MessageTime>
-            <BiTimeFive />
-            {jaTimeZone(createdAt)}
-          </MessageTime>
         </FriendMessage>
+        <MessageTime>
+          <BiTimeFive />
+          {jaTimeZone(createdAt)}
+        </MessageTime>
       </Box>
     </MessageRow>
   );
