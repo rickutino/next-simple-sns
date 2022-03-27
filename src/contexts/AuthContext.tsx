@@ -11,10 +11,10 @@ import {
 import { api } from '../services/api';
 
 interface User {
-  id?: string;
+  id: string;
   name: string;
   email: string;
-  iconImageUrl?: string | null;
+  iconImageUrl: string | null;
 }
 interface Notification {
   isOpen: boolean;
@@ -130,14 +130,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password
       })
       .then(response => {
-        const {
-          token,
-          user: { name, iconImageUrl }
-        } = response.data;
+        const { token } = response.data;
 
         setCookie(undefined, 'next-simple-sns', token, {
           maxAge: 60 * 60 * 24, // 24 hours;
-          path: '/' // どのパスがこのクッキーをアクセスできるか。
+          path: '/' // どのパスでもこのクッキーにアクセスできる。
         });
 
         // Headerにあるtokenの更新
@@ -166,7 +163,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setCookie(undefined, 'next-simple-sns', token, {
         maxAge: 60 * 60 * 24, // 24 hours;
-        path: '/' // どのパスがこのクッキーをアクセスできるか。
+        path: '/' // どのパスでもこのクッキーにアクセスできる。
       });
 
       // Headerにあるtokenアクセスの更新をさせる。

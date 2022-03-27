@@ -1,24 +1,21 @@
-import '../styles/styles.css';
 import {
-  ThemeProvider as MaterialThemeProvider,
-  StylesProvider
+  StylesProvider,
+  ThemeProvider as MaterialThemeProvider
 } from '@mui/styles';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { ToastProvider } from 'react-toast-notifications';
 import { AuthProvider } from '../contexts/AuthContext';
+import '../styles/styles.css';
 import theme from '../styles/theme';
 
 export default function MyApp({ Component, pageProps }) {
   return (
     <StylesProvider injectFirst>
       <MaterialThemeProvider theme={theme}>
-        <StyledThemeProvider theme={theme}>
-          <ToastProvider>
-            <AuthProvider>
-              <Component {...pageProps} />
-            </AuthProvider>
-          </ToastProvider>
-        </StyledThemeProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
+        </ToastProvider>
       </MaterialThemeProvider>
     </StylesProvider>
   );

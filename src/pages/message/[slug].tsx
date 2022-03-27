@@ -215,7 +215,6 @@ export default function Message() {
         <MessageBody>
           <div id="scroll" />
           {messages.map((message: Messages) => {
-            // {!!message.postId && <PostContext messages={message.post}/}
             return message.user.id === user.id ? (
               <>
                 <PostContext post={message.post} />
