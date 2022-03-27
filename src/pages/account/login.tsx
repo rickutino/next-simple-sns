@@ -31,6 +31,14 @@ const LoginButton = styled(Button)({
   }
 });
 
+const Title = styled(Typography)({
+  mt: 2,
+  fontWeight: 'bold',
+  [theme.breakpoints.up('sm')]: {
+    marginTop: theme.spacing(5)
+  }
+});
+
 const schema = yup.object().shape({
   email: yup
     .string()
@@ -66,7 +74,7 @@ export default function Login() {
         container
         component="main"
         sx={{
-          height: '100vh',
+          height: '100%',
           backgroundColor: theme.palette.primary.main,
           color: theme.palette.grey[200]
         }}
@@ -78,18 +86,16 @@ export default function Login() {
               mx: 13,
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center'
+              alignItems: 'center',
+              [theme.breakpoints.down('sm')]: {
+                my: 1,
+                mx: 1
+              }
             }}
           >
-            <Image src="/logo.svg" alt="logo" width={200} height={200} />
+            <Image src="/logo.svg" alt="logo" width={200} height={150} />
 
-            <Typography
-              component="h2"
-              variant="h5"
-              sx={{ mt: 2, fontWeight: 'bold' }}
-            >
-              ログイン
-            </Typography>
+            <Title variant="h5">ログイン</Title>
 
             <Box sx={{ mt: 7 }}>
               <FormProvider {...methods}>
