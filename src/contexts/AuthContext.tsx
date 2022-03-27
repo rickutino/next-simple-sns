@@ -138,7 +138,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         // Headerにあるtokenの更新
-        api.defaults.headers.common.Authorization = `Bearer ${token}`;
+        // eslint-disable-next-line dot-notation
+        api.defaults.headers.common['Authorization'] = token
+          ? `Bearer ${token}`
+          : '';
 
         router.push('/');
       })
@@ -167,7 +170,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       // Headerにあるtokenアクセスの更新をさせる。
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+      // eslint-disable-next-line dot-notation
+      api.defaults.headers.common['Authorization'] = token
+        ? `Bearer ${token}`
+        : '';
 
       router.push('/');
     } catch (error) {

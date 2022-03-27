@@ -102,8 +102,7 @@ export default function SingUp() {
               alignItems: 'center',
               justifyContent: 'center',
               [theme.breakpoints.down('sm')]: {
-                my: 1,
-                mx: 1
+                m: 0
               }
             }}
           >

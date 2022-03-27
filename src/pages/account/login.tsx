@@ -88,8 +88,7 @@ export default function Login() {
               flexDirection: 'column',
               alignItems: 'center',
               [theme.breakpoints.down('sm')]: {
-                my: 1,
-                mx: 1
+                m: 0
               }
             }}
           >
