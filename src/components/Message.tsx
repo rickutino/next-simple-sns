@@ -96,13 +96,22 @@ const MyMessage = styled(Box)({
     borderRight: '15px solid transparent',
     top: '-0.5',
     right: '-15px'
+  },
+  [theme.breakpoints.down('md')]: {
+    marginRight: '1.5rem',
+    padding: '1.25rem 1rem',
+    width: '85%',
+    textAlign: 'center',
+    '&:after': {
+      top: '0'
+    }
   }
 });
 
 const MessageContent = styled(Typography)({
   padding: 0,
   margin: 0,
-  width: '300px'
+  maxWidth: '300px'
 });
 
 const FriendName = styled(Box)({
