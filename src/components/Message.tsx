@@ -97,7 +97,7 @@ const MyMessage = styled(Box)({
     top: '-0.5',
     right: '-15px'
   },
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('sm')]: {
     marginRight: '1.5rem',
     padding: '1.25rem 1rem',
     width: '85%',
