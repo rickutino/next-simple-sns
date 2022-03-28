@@ -55,14 +55,14 @@ const PostContent = styled(Box)({
 
 const FriendMessage = styled(Box)({
   position: 'relative',
-  marginLeft: '2.5rem',
+  marginLeft: '1.5rem',
   padding: '1.25rem 3.75rem',
   backgroundColor: theme.palette.grey[200],
   textAlign: 'left',
   font: "400 .9em 'Open Sans', sans-serif",
   border: `1px solid ${theme.palette.grey[800]}`,
   borderRadius: '5px',
-  width: '70%',
+  width: '80%',
   '&:after': {
     content: "''",
     position: 'absolute',
@@ -73,6 +73,16 @@ const FriendMessage = styled(Box)({
     borderRight: '15px solid transparent',
     top: '0',
     left: '-15px'
+  },
+  [theme.breakpoints.down('sm')]: {
+    marginRight: '1rem',
+    marginLeft: '1rem',
+    padding: '1.25rem 1rem',
+    width: '88%',
+    textAlign: 'left',
+    '&:after': {
+      top: '0'
+    }
   }
 });
 
@@ -82,7 +92,7 @@ const MyMessage = styled(Box)({
   padding: '1.25rem 3.75rem',
   backgroundColor: theme.palette.grey[200],
   width: '70%',
-  textAlign: 'left',
+  textAlign: 'right',
   font: "400 .9em 'Open Sans', sans-serif",
   border: `1px solid ${theme.palette.grey[800]}`,
   borderRadius: '5px',
@@ -100,8 +110,8 @@ const MyMessage = styled(Box)({
   [theme.breakpoints.down('sm')]: {
     marginRight: '1.5rem',
     padding: '1.25rem 1rem',
-    width: '85%',
-    textAlign: 'center',
+    width: '80%',
+    textAlign: 'right',
     '&:after': {
       top: '0'
     }

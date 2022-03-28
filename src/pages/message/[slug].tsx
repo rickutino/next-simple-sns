@@ -80,7 +80,7 @@ const MessageInput = styled(TextField)({
   },
   [theme.breakpoints.down('sm')]: {
     '& textarea': {
-      margin: '0px 11%',
+      margin: '0px 11%'
     }
   }
 });
