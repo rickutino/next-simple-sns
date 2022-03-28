@@ -74,7 +74,15 @@ const MessageForm = styled('form')({
 
 const MessageInput = styled(TextField)({
   borderRadius: '5px',
-  backgroundColor: theme.palette.grey[200]
+  backgroundColor: theme.palette.grey[200],
+  '& textarea': {
+    margin: '0px 3%'
+  },
+  [theme.breakpoints.down('sm')]: {
+    '& textarea': {
+      margin: '0px 11%',
+    }
+  }
 });
 
 const MessageButton = styled(Button)({
