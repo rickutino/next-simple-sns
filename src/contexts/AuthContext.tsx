@@ -143,8 +143,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
           ? `Bearer ${token}`
           : '';
 
-        console.log('token', token);
-        console.log('token', !token);
         router.push('/');
       })
       .catch(() => {
