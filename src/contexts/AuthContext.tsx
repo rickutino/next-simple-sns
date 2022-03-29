@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import Router, { useRouter } from 'next/router';
 import { destroyCookie, setCookie } from 'nookies';
 import {
@@ -138,10 +139,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         // Headerにあるtokenの更新
-        // eslint-disable-next-line dot-notation
-        api.defaults.headers.common['Authorization'] = token
-          ? `Bearer ${token}`
-          : '';
+        api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
         router.push('/');
       })
@@ -170,10 +168,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       // Headerにあるtokenアクセスの更新をさせる。
-      // eslint-disable-next-line dot-notation
-      api.defaults.headers.common['Authorization'] = token
-        ? `Bearer ${token}`
-        : '';
+      api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       router.push('/');
     } catch (error) {
