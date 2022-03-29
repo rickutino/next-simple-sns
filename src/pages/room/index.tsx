@@ -143,6 +143,11 @@ export default function Room() {
             <ButtonBase href={`/message/${room.messages[0]?.roomId}`}>
               <Card>
                 <CardHeader
+                  sx={{
+                    whiteSpace: 'break-spaces',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}
                   avatar={
                     <RoomAvatar
                       alt={
