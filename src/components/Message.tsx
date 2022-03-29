@@ -50,7 +50,9 @@ const PostContent = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center'
+  justifyContent: 'center',
+  overflowWrap: 'break-word',
+  whiteSpace: 'break-spaces'
 });
 
 const FriendMessage = styled(Box)({
@@ -63,6 +65,8 @@ const FriendMessage = styled(Box)({
   border: `1px solid ${theme.palette.grey[800]}`,
   borderRadius: '5px',
   width: '70%',
+  overflowWrap: 'break-word',
+  whiteSpace: 'break-spaces',
   '&:after': {
     content: "''",
     position: 'absolute',
@@ -86,6 +90,8 @@ const MyMessage = styled(Box)({
   font: "400 .9em 'Open Sans', sans-serif",
   border: `1px solid ${theme.palette.grey[800]}`,
   borderRadius: '5px',
+  overflowWrap: 'break-word',
+  whiteSpace: 'break-spaces',
   '&:after': {
     content: "''",
     position: 'absolute',

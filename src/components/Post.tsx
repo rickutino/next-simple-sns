@@ -166,7 +166,15 @@ export default function Post({ post, currentUser }: PropsData) {
             color: theme.palette.grey[200]
           }}
         >
-          <Typography variant="body1">{post.body}</Typography>
+          <Typography
+            sx={{
+              overflowWrap: 'break-word',
+              whiteSpace: 'break-spaces'
+            }}
+            variant="body1"
+          >
+            {post.body}
+          </Typography>
         </CardContent>
       </PostCard>
       {post.user.id !== currentUser?.id && (
