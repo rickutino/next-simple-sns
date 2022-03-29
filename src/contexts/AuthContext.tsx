@@ -139,9 +139,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         // Headerにあるtokenの更新
-        api.defaults.headers.common['Authorization'] = !token
+        api.defaults.headers.common['Authorization'] = token
           ? `Bearer ${token}`
-          : '';
+          : 'test';
 
         router.push('/');
       })
