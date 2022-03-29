@@ -72,7 +72,6 @@ function jaTimeZone(hours: string) {
 
 const RoomRoot = styled(Container)({
   backgroundColor: theme.palette.primary.main,
-  height: '100%',
   width: '100%',
   maxWidth: '2300px',
   padding: '0',
@@ -146,10 +145,11 @@ export default function Room() {
                   avatar={
                     <RoomAvatar
                       alt={
-                        room.messages[getUserFriendIndex(room, user)]?.user.name
+                        room.roomUsers[getUserFriendIndex(room, user)]?.user
+                          .name
                       }
                       src={
-                        room.messages[getUserFriendIndex(room, user)]?.user
+                        room.roomUsers[getUserFriendIndex(room, user)]?.user
                           .iconImageUrl
                       }
                     />
