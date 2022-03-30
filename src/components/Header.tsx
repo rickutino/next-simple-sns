@@ -237,7 +237,7 @@ export function BottomHeaderNavigation() {
 
   return (
     <>
-      {console.log('loading', !loading)}
+      {}
       {!loading && (
         <>
           <MobileTopHeader>
