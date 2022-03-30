@@ -10,7 +10,8 @@ import {
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { FiHome, FiPower } from 'react-icons/fi';
-import { RiAccountCircleLine } from 'react-icons/ri';
+import { ImProfile } from 'react-icons/im';
+import { IoIosPeople } from 'react-icons/io';
 import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import theme from '../styles/theme';
@@ -189,11 +190,14 @@ export function Header() {
             </div>
 
             <nav>
-              <Link href="/profile">
+              <Link href="/">
                 <FiHome />
               </Link>
+              <Link href="/profile">
+                <ImProfile />
+              </Link>
               <Link href="/room">
-                <RiAccountCircleLine />
+                <IoIosPeople />
               </Link>
               <button
                 type="submit"
@@ -264,11 +268,14 @@ export function BottomHeaderNavigation() {
                 }
               }}
             >
-              <Button href="/profile" component={Link}>
+              <Button href="/" component={Link}>
                 <BottomNavigationAction icon={<FiHome />} />
               </Button>
+              <Button href="/profile" component={Link}>
+                <BottomNavigationAction icon={<ImProfile />} />
+              </Button>
               <Button href="/room" component={Link}>
-                <BottomNavigationAction icon={<RiAccountCircleLine />} />
+                <BottomNavigationAction icon={<IoIosPeople />} />
               </Button>
               <Button>
                 <BottomNavigationAction
