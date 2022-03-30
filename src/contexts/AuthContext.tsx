@@ -138,10 +138,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
           path: '/' // どのパスでもこのクッキーにアクセスできる。
         });
 
-        // Headerにあるtokenの更新
-        api.defaults.headers.common['Authorization'] = token
-          ? `Bearer ${token}`
-          : 'test';
+        api.interceptors.request.use(request => {
+          request.headers['Authorization'] = token ? `Bearer ${token}` : '';
+
+          return request;
+        });
 
         router.push('/');
       })
@@ -169,10 +170,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: '/' // どのパスでもこのクッキーにアクセスできる。
       });
 
-      // Headerにあるtokenアクセスの更新をさせる。
-      api.defaults.headers.common['Authorization'] = !token
-        ? `Bearer ${token}`
-        : '';
+      api.interceptors.request.use(request => {
+        request.headers['Authorization'] = token ? `Bearer ${token}` : '';
+
+        return request;
+      });
 
       router.push('/');
     } catch (error) {
