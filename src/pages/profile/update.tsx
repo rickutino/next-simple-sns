@@ -105,6 +105,8 @@ export default function Update() {
   useEffect(() => {
     api.get('/account').then(response => {
       setCurrentUser(response.data.user);
+      setNameInput(response.data.user.name);
+      setEmailInput(response.data.user.email);
     });
   }, []);
 
