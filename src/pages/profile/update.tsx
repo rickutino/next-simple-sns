@@ -147,12 +147,14 @@ export default function Update() {
 
   async function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setNameInput(event.target.value);
+
     setNameInputError(false);
     setInputValue(false);
   }
 
   async function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
     setEmailInput(event.target.value);
+
     setEmailInputError(false);
     setInputValue(false);
   }
@@ -178,7 +180,7 @@ export default function Update() {
     }
 
     try {
-      await api.post('/account/profile', {
+      await api.patch('/account/profile', {
         name: nameInput,
         email: emailInput
       });
@@ -225,7 +227,7 @@ export default function Update() {
             <AiFillPlusCircle />
           </IconButton>
         </label>
-        <Form onSubmit={e => handleSubmit(e)}>
+        <Form onSubmit={handleSubmit}>
           <Box mb={2}>
             <Typography variant="h6">Name</Typography>
             <ProfileInput
