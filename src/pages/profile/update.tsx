@@ -214,13 +214,7 @@ export default function Update() {
           onChange={changeUploadFile}
         />
         <label htmlFor="icon-button-file">
-          <ProfileAvatar
-            src={
-              currentUser?.iconImageUrl
-                ? currentUser.iconImageUrl
-                : `/icons/profileIcon.png`
-            }
-          />
+          <ProfileAvatar src={currentUser?.iconImageUrl} />
           <IconButton
             color="secondary"
             aria-label="upload picture"
