@@ -147,14 +147,14 @@ export default function Update() {
 
   async function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setNameInput(event.target.value);
-    console.log(nameInput);
+    
     setNameInputError(false);
     setInputValue(false);
   }
 
   async function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
     setEmailInput(event.target.value);
-    console.log(emailInput);
+    
     setEmailInputError(false);
     setInputValue(false);
   }
