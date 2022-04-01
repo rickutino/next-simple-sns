@@ -31,7 +31,7 @@ const Root = styled(Box)({
   backgroundColor: theme.palette.primary.main,
   height: '100vh',
   [theme.breakpoints.down('md')]: {
-    paddingTop: theme.spacing(18)
+    paddingTop: theme.spacing(13)
   }
 });
 
@@ -48,7 +48,12 @@ const UpdateProfile = styled(Container)({
     fontSize: '3.5rem',
     position: 'absolute',
     right: '-10.8rem',
-    top: '-3.6rem'
+    top: '-3.6rem',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '3.3rem',
+      right: '-7.2rem',
+      top: '-3.3rem'
+    }
   }
 });
 
@@ -59,7 +64,11 @@ const Input = styled('input')({
 const ProfileAvatar = styled(Avatar)({
   margin: '0 auto',
   width: 185,
-  height: 185
+  height: 185,
+  [theme.breakpoints.down('md')]: {
+    width: 125,
+    height: 125
+  }
 });
 
 const Form = styled('form')({
@@ -80,7 +89,7 @@ const Form = styled('form')({
     width: '100%',
     marginTop: theme.spacing(7),
     [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing(15)
+      marginTop: theme.spacing(6)
     }
   }
 });
