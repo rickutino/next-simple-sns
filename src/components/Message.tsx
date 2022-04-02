@@ -67,6 +67,11 @@ const FriendMessage = styled(Box)({
   width: '70%',
   overflowWrap: 'break-word',
   whiteSpace: 'break-spaces',
+  [theme.breakpoints.down('md')]: {
+    padding: '0.7rem',
+    marginLeft: '1rem',
+    width: '90%'
+  },
   '&:after': {
     content: "''",
     position: 'absolute',
@@ -92,6 +97,10 @@ const MyMessage = styled(Box)({
   borderRadius: '5px',
   overflowWrap: 'break-word',
   whiteSpace: 'break-spaces',
+  [theme.breakpoints.down('md')]: {
+    padding: '1.2rem',
+    width: '85%'
+  },
   '&:after': {
     content: "''",
     position: 'absolute',
@@ -108,7 +117,7 @@ const MyMessage = styled(Box)({
 const MessageContent = styled(Typography)({
   padding: 0,
   margin: 0,
-  width: '300px'
+  maxWidth: '300px'
 });
 
 const FriendName = styled(Box)({
