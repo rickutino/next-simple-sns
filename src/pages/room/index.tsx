@@ -4,6 +4,7 @@ import {
   Avatar,
   ButtonBase,
   Card,
+  CardContent,
   CardHeader,
   Container,
   Grid,
@@ -57,7 +58,6 @@ interface Rooms {
 function jaTimeZone(hours: string) {
   const dateToTime = (date: Date) =>
     date.toLocaleString('ja', {
-      year: 'numeric',
       month: 'numeric',
       day: 'numeric',
       hour: 'numeric',
@@ -72,7 +72,6 @@ function jaTimeZone(hours: string) {
 
 const RoomRoot = styled(Container)({
   backgroundColor: theme.palette.primary.main,
-  height: '100%',
   width: '100%',
   maxWidth: '2300px',
   padding: '0',
@@ -83,11 +82,14 @@ const RoomRoot = styled(Container)({
 
 const RoomGrid = styled(Grid)({
   margin: '2rem 0',
+  [theme.breakpoints.down('md')]: {
+    margin: '1.2rem 0'
+  },
   '& > a': {
     width: '100%',
     '& > div': {
       width: '100%',
-      padding: '1.5rem 6rem 1.5rem 1.5rem',
+      padding: '1.5rem',
       backgroundColor: theme.palette.primary.light,
       color: theme.palette.grey[200],
       [theme.breakpoints.down('md')]: {
@@ -105,7 +107,11 @@ const RoomAvatar = styled(Avatar)({
 const RoomAction = styled('div')({
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center'
+  alignItems: 'center',
+  '& svg': {
+    width: '1.1rem',
+    height: '1.1rem'
+  }
 });
 
 const RoomSubtitle = styled(Typography)({
@@ -160,7 +166,16 @@ export default function Room() {
                     />
                   }
                   action={
-                    <RoomAction>
+                    <RoomAction
+                      sx={{
+                        marginRight: '4rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        [theme.breakpoints.down('md')]: {
+                          marginRight: '0'
+                        }
+                      }}
+                    >
                       <AccessTimeIcon color="secondary" />
                       <RoomSubtitle ml={1}>
                         {jaTimeZone(room.messages[0]?.createdAt)}
@@ -175,10 +190,16 @@ export default function Room() {
                       }
                     </Typography>
                   }
-                  subheader={
-                    <RoomSubtitle>{room.messages[0]?.content}</RoomSubtitle>
-                  }
                 />
+                <CardContent>
+                  <RoomSubtitle
+                    align="left"
+                    variant="body1"
+                    color="text.secondary"
+                  >
+                    {room.messages[0]?.content}
+                  </RoomSubtitle>
+                </CardContent>
               </Card>
             </ButtonBase>
           </RoomGrid>
