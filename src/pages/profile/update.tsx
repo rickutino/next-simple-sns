@@ -63,11 +63,11 @@ const Input = styled('input')({
 
 const ProfileAvatar = styled(Avatar)({
   margin: '0 auto',
-  width: 185,
-  height: 185,
+  width: '185px',
+  height: '185px',
   [theme.breakpoints.down('md')]: {
-    width: 125,
-    height: 125
+    width: '125px',
+    height: '125px'
   }
 });
 
