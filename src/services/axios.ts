@@ -1,8 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { destroyCookie, parseCookies } from 'nookies';
 
-export function getAPIClient(ctx?: any) {
+export function getAPIClient<T = unknown>(ctx?: any) {
   const { 'next-simple-sns': token } = parseCookies(ctx);
 
   const api = axios.create({
@@ -12,7 +12,7 @@ export function getAPIClient(ctx?: any) {
     }
   });
 
-  api.interceptors.response.use(
+  api.interceptors.response.use<AxiosResponse<T>>(
     config => {
       return config;
     },

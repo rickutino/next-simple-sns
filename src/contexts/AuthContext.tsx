@@ -17,6 +17,15 @@ interface User {
   email: string;
   iconImageUrl: string | null;
 }
+
+interface AxiosResponseData {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    iconImageUrl: string | null;
+  };
+}
 interface Notification {
   isOpen: boolean;
   message: string;
@@ -84,7 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     api
-      .get('/account')
+      .get<AxiosResponseData>('/account')
       .then(response => {
         const { id, name, email, iconImageUrl } = response.data.user;
 
