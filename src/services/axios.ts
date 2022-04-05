@@ -5,6 +5,7 @@ import { destroyCookie, parseCookies } from 'nookies';
 export function getAPIClient(ctx?: any) {
   const { 'next-simple-sns': token } = parseCookies(ctx);
 
+  console.log(process.env.NEXT_PUBLIC_REACT_APP_HOST);
   const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_REACT_APP_HOST,
     headers: {
