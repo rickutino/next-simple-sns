@@ -19,12 +19,7 @@ interface User {
 }
 
 interface AxiosResponseData {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    iconImageUrl: string | null;
-  };
+  user: User;
 }
 interface Notification {
   isOpen: boolean;
