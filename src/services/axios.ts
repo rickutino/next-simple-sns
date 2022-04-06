@@ -6,7 +6,7 @@ export function getAPIClient(ctx?: any) {
   const { 'next-simple-sns': token } = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: 'https://simp-340605.an.r.appspot.com/',
+    baseURL: process.env.NEXT_PUBLIC_REACT_APP_HOST,
     headers: {
       Authorization: `Bearer ${token}`
     }
