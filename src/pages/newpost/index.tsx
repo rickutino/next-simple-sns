@@ -6,6 +6,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
+import { AxiosResponse } from 'axios';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies';
@@ -77,7 +78,7 @@ export default function NewPost() {
 
     setSendButtonDisabled(true);
     try {
-      await api.post('/posts', {
+      await api.post<AxiosResponse>('/posts', {
         post: {
           body: post
         }

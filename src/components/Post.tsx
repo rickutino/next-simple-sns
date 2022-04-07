@@ -31,6 +31,21 @@ interface Post {
   user: User;
 }
 
+interface Messages {
+  id: number;
+  roomId?: string;
+  post?: Post;
+  postId?: number;
+  user: User;
+  userId?: number;
+  content: string;
+  createdAt: string;
+}
+
+interface AxiosResponseData {
+  message: Messages;
+}
+
 interface PropsData {
   post: Post;
   currentUser: User;
@@ -127,7 +142,7 @@ export default function Post({ post, currentUser }: PropsData) {
     }
 
     try {
-      const response = await api.post('/messages/via_post', {
+      const response = await api.post<AxiosResponseData>('/messages/via_post', {
         content: comment,
         postId: post.id
       });

@@ -39,6 +39,11 @@ interface Messages {
   createdAt: string;
 }
 
+interface AxiosResponseData {
+  messages: Messages[];
+  message: Messages;
+}
+
 const Root = styled(Box)({
   background: theme.palette.primary.main,
   boxShadow: 'none',
@@ -129,7 +134,7 @@ export default function Message() {
 
     // オールメッセージのリストの最後のエレメントの取得。
     if (firstUpdate.current) {
-      const response = await api.get(
+      const response = await api.get<AxiosResponseData>(
         `/messages?roomId=${roomId}&pagination[order]=ASC`
       );
 
@@ -140,7 +145,7 @@ export default function Message() {
 
     try {
       getRemainingMessage();
-      const messageResponse = await api.get(
+      const messageResponse = await api.get<AxiosResponseData>(
         `/messages?pagination[size]=${pageSize}&pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursorIndex}`
       );
 
@@ -175,7 +180,7 @@ export default function Message() {
     }
 
     try {
-      const response = await api.post('/messages', {
+      const response = await api.post<AxiosResponseData>('/messages', {
         content: inputMessage,
         roomId
       });

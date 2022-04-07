@@ -54,6 +54,9 @@ interface Rooms {
     userId: string;
   };
 }
+interface AxiosResponseData {
+  rooms: Rooms[];
+}
 
 function jaTimeZone(hours: string) {
   const dateToTime = (date: Date) =>
@@ -131,7 +134,7 @@ export default function Room() {
 
   useEffect(() => {
     api
-      .get('/rooms')
+      .get<AxiosResponseData>('/rooms')
       .then(response => {
         setRooms(response.data.rooms);
       })

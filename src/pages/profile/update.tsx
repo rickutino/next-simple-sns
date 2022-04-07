@@ -27,6 +27,11 @@ interface User {
   email: string;
   iconImageUrl?: string | null;
 }
+
+interface AxiosResponseUserData {
+  user: User;
+}
+
 const Root = styled(Box)({
   backgroundColor: theme.palette.primary.main,
   height: '100vh',
@@ -112,7 +117,7 @@ export default function Update() {
   const router = useRouter();
 
   useEffect(() => {
-    api.get('/account').then(response => {
+    api.get<AxiosResponseUserData>('/account').then(response => {
       setCurrentUser(response.data.user);
       setNameInput(response.data.user.name);
       setEmailInput(response.data.user.email);
@@ -130,7 +135,7 @@ export default function Update() {
     };
 
     await api
-      .patch('/account/icon_image', formData, config)
+      .patch<AxiosResponseUserData>('/account/icon_image', formData, config)
       .then(response => {
         const uploadUserIcon = {
           ...currentUser,
@@ -191,7 +196,7 @@ export default function Update() {
     }
 
     try {
-      await api.patch('/account/profile', {
+      await api.patch<AxiosResponseUserData>('/account/profile', {
         name: nameInput,
         email: emailInput
       });

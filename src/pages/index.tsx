@@ -16,6 +16,10 @@ interface User {
   iconImageUrl: string | null;
 }
 
+interface AxiosResponseData {
+  user: User;
+}
+
 const ContainerRoot = styled(Box)({
   backgroundColor: theme.palette.primary.main,
   [theme.breakpoints.down('md')]: {
@@ -49,7 +53,7 @@ export default function Home() {
 
   useEffect(() => {
     api
-      .get('/account')
+      .get<AxiosResponseData>('/account')
       .then(response => {
         const { user } = response.data;
 

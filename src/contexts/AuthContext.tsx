@@ -1,4 +1,5 @@
 /* eslint-disable dot-notation */
+import { AxiosResponse } from 'axios';
 import Router, { useRouter } from 'next/router';
 import { destroyCookie, setCookie } from 'nookies';
 import {
@@ -106,7 +107,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
 
     api
-      .delete('/auth')
+      .delete<AxiosResponse>('/auth')
       .then(() => {
         destroyCookie(undefined, 'next-simple-sns');
 
