@@ -56,6 +56,13 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+function setToken(token) {
+  setCookie(undefined, 'next-simple-sns', token, {
+    maxAge: 60 * 60 * 24, // 24 hours;
+    path: '/' // どのパスでもこのクッキーにアクセスできる。
+  });
+}
+
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -133,10 +140,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       .then(response => {
         const { token } = response.data;
 
-        setCookie(undefined, 'next-simple-sns', token, {
-          maxAge: 60 * 60 * 24, // 24 hours;
-          path: '/' // どのパスでもこのクッキーにアクセスできる。
-        });
+        setToken(token);
 
         api.interceptors.request.use(request => {
           request.headers['Authorization'] = token ? `Bearer ${token}` : '';
@@ -165,10 +169,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const { token } = response.data;
 
-      setCookie(undefined, 'next-simple-sns', token, {
-        maxAge: 60 * 60 * 24, // 24 hours;
-        path: '/' // どのパスでもこのクッキーにアクセスできる。
-      });
+      setToken(token);
 
       api.interceptors.request.use(request => {
         request.headers['Authorization'] = token ? `Bearer ${token}` : '';
