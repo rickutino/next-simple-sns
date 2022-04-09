@@ -10,7 +10,7 @@ import { api } from '../services/api';
 import theme from '../styles/theme';
 
 interface User {
-  id?: string;
+  id: string;
   name: string;
   email: string;
   iconImageUrl: string | null;

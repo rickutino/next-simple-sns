@@ -12,32 +12,8 @@ import {
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { Messages } from '../../shared/interfaces/messages.interface';
 import theme from '../../styles/theme';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id: number;
-  userId: number;
-  body: string;
-  createdAt?: string;
-}
-
-interface Messages {
-  id: number;
-  roomId?: string;
-  post?: Posts;
-  postId?: number;
-  user: User;
-  userId?: number;
-  content: string;
-  createdAt: string;
-}
 
 const Root = styled(Box)({
   background: theme.palette.primary.main,

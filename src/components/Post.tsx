@@ -14,15 +14,9 @@ import React, { FormEvent, useContext, useState } from 'react';
 import { BiTimeFive } from 'react-icons/bi';
 import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import { User } from '../shared/interfaces/user.interface';
 import theme from '../styles/theme';
 import Notification from './Notification';
-
-interface User {
-  id?: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
 
 interface Post {
   id?: number;

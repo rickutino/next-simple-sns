@@ -1,35 +1,19 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
+import { Messages } from '../shared/interfaces/messages.interface';
+import { User } from '../shared/interfaces/user.interface';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id: number;
+interface Post {
+  id?: number;
   body: string;
   createdAt?: string;
   user: User;
 }
 
-interface Messages {
-  id: number;
-  roomId?: string;
-  post?: Posts;
-  postId?: number;
-  user: User;
-  userId?: number;
-  content: string;
-  createdAt: Date;
-}
-
 export default function useInfiniteScroll() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [posts, setPosts] = useState<Posts[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [messages, setMessages] = useState<Messages[]>([]);
   const [cursor, setCursor] = useState<number>();
   const pageSize = 10;

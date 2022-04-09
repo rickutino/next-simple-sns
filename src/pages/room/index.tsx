@@ -18,42 +18,9 @@ import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { Rooms } from '../../shared/interfaces/rooms.interface';
+import { User } from '../../shared/interfaces/user.interface';
 import theme from '../../styles/theme';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id?: number;
-  userId: number;
-  body: string;
-  createdAt?: Date;
-}
-
-interface Messages {
-  id: number;
-  roomId: string;
-  post: Posts;
-  postId: number;
-  user: User;
-  userId: number;
-  content: string;
-  createdAt: Date;
-}
-
-interface Rooms {
-  id: string;
-  messages: Messages;
-  roomUsers: {
-    user: User;
-    rooId: string;
-    userId: string;
-  };
-}
 
 function jaTimeZone(hours: string) {
   const dateToTime = (date: Date) =>

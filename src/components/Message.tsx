@@ -2,32 +2,8 @@
 /* eslint-disable react/no-unused-prop-types */
 import { Avatar, Box, styled, Typography } from '@mui/material';
 import { BiTimeFive } from 'react-icons/bi';
+import { Messages } from '../shared/interfaces/messages.interface';
 import theme from '../styles/theme';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id: number;
-  userId: number;
-  body: string;
-  createdAt?: string;
-}
-
-interface Messages {
-  id?: number;
-  roomId?: string;
-  post?: Posts;
-  postId?: number;
-  user?: User;
-  userId?: number;
-  content?: string;
-  createdAt?: string;
-}
 
 const MessageRow = styled(Box)({
   display: 'flex'

@@ -10,13 +10,7 @@ import {
   useState
 } from 'react';
 import { api } from '../services/api';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
+import { User } from '../shared/interfaces/user.interface';
 
 interface AxiosResponseData {
   user: User;

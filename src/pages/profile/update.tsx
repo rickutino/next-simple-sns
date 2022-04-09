@@ -20,13 +20,9 @@ import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { User } from '../../shared/interfaces/user.interface';
 import theme from '../../styles/theme';
 
-interface User {
-  name: string;
-  email: string;
-  iconImageUrl?: string | null;
-}
 const Root = styled(Box)({
   backgroundColor: theme.palette.primary.main,
   height: '100vh',
