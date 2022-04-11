@@ -12,6 +12,7 @@ import {
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { tokenKey } from '../../shared/const';
 import theme from '../../styles/theme';
 
 interface User {
@@ -273,9 +274,9 @@ export default function Message() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { 'next-simple-sns': token } = parseCookies(ctx);
+  const currentUserToken = parseCookies(ctx);
 
-  if (!token) {
+  if (!currentUserToken[tokenKey]) {
     return {
       redirect: {
         destination: '/account/login',

@@ -10,6 +10,7 @@ import * as yup from 'yup';
 import { RHFTextInput } from '../../components/Inputs/RHFTextInput';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
+import { tokenKey } from '../../shared/const';
 import theme from '../../styles/theme';
 
 interface ISingUpForm {
@@ -177,9 +178,9 @@ export default function SingUp() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { 'next-simple-sns': token } = parseCookies(ctx);
+  const currentUserToken = parseCookies(ctx);
 
-  if (token) {
+  if (!currentUserToken[tokenKey]) {
     return {
       redirect: {
         destination: '/',
