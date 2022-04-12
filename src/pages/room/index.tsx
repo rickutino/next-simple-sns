@@ -18,8 +18,8 @@ import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
-import { Rooms } from '../../shared/interfaces/rooms.interface';
-import { User } from '../../shared/interfaces/user.interface';
+import { IRooms } from '../../shared/interfaces/rooms.interface';
+import { IUser } from '../../shared/interfaces/user.interface';
 import theme from '../../styles/theme';
 
 function jaTimeZone(hours: string) {
@@ -85,7 +85,7 @@ const RoomSubtitle = styled(Typography)({
   color: theme.palette.grey[400]
 });
 
-function getUserFriendIndex(room: Rooms, currentUser: User) {
+function getUserFriendIndex(room: IRooms, currentUser: IUser) {
   if (room.roomUsers[0].user.id !== currentUser.id) {
     return 0;
   }
@@ -94,7 +94,7 @@ function getUserFriendIndex(room: Rooms, currentUser: User) {
 
 export default function Room() {
   const { notify, setNotify, user } = useContext(AuthContext);
-  const [rooms, setRooms] = useState<Rooms[]>([]);
+  const [rooms, setRooms] = useState<IRooms[]>([]);
 
   useEffect(() => {
     api

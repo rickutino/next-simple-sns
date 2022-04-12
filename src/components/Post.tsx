@@ -14,14 +14,14 @@ import React, { FormEvent, useContext, useState } from 'react';
 import { BiTimeFive } from 'react-icons/bi';
 import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
-import { Post } from '../shared/interfaces/post.interface';
-import { User } from '../shared/interfaces/user.interface';
+import { IPost } from '../shared/interfaces/post.interface';
+import { IUser } from '../shared/interfaces/user.interface';
 import theme from '../styles/theme';
 import Notification from './Notification';
 
 interface PropsData {
-  post: Post;
-  currentUser: User;
+  post: IPost;
+  currentUser: IUser;
 }
 
 function jaTimeZone(hours: string) {

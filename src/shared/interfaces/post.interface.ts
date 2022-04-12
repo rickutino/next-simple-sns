@@ -1,7 +1,7 @@
-import { User } from './user.interface';
+import { IUser } from './user.interface';
 
-export interface Post {
-  user?: User;
+export interface IPost {
+  user?: IUser;
   id?: number;
   userId?: number;
   body: string;

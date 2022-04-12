@@ -1,11 +1,11 @@
-import { Messages } from './messages.interface';
-import { User } from './user.interface';
+import { IMessages } from './messages.interface';
+import { IUser } from './user.interface';
 
-export interface Rooms {
+export interface IRooms {
   id: string;
-  messages: Messages;
+  messages: IMessages;
   roomUsers: {
-    user: User;
+    user: IUser;
     rooId: string;
     userId: string;
   };

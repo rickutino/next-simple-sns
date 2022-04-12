@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unused-prop-types */
 import { Avatar, Box, styled, Typography } from '@mui/material';
 import { BiTimeFive } from 'react-icons/bi';
-import { Messages } from '../shared/interfaces/messages.interface';
+import { IMessages } from '../shared/interfaces/messages.interface';
 import theme from '../styles/theme';
 
 const MessageRow = styled(Box)({
@@ -129,7 +129,7 @@ function jaTimeZone(hours: string) {
   return localTime(localDate);
 }
 
-export function PostContext({ post }: Messages) {
+export function PostContext({ post }: IMessages) {
   return (
     !!post && (
       <PostContent>
@@ -140,7 +140,7 @@ export function PostContext({ post }: Messages) {
   );
 }
 
-export function MessageLeft({ user, content, createdAt }: Messages) {
+export function MessageLeft({ user, content, createdAt }: IMessages) {
   return (
     <MessageRow>
       <Avatar
@@ -161,7 +161,7 @@ export function MessageLeft({ user, content, createdAt }: Messages) {
   );
 }
 
-export function MessageRight({ content, createdAt }: Messages) {
+export function MessageRight({ content, createdAt }: IMessages) {
   return (
     <MessageRowRight>
       <MyMessage>

@@ -1,12 +1,12 @@
-import { Post } from './post.interface';
-import { User } from './user.interface';
+import { IPost } from './post.interface';
+import { IUser } from './user.interface';
 
-export interface Messages {
+export interface IMessages {
   id?: number;
   roomId?: string;
-  post?: Post;
+  post?: IPost;
   postId?: number;
-  user?: User;
+  user?: IUser;
   userId?: number;
   content?: string;
   createdAt?: string;

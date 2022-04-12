@@ -20,7 +20,7 @@ import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
-import { User } from '../../shared/interfaces/user.interface';
+import { IUser } from '../../shared/interfaces/user.interface';
 import theme from '../../styles/theme';
 
 const Root = styled(Box)({
@@ -97,7 +97,7 @@ const ProfileInput = styled(TextField)({
 });
 
 export default function Update() {
-  const [currentUser, setCurrentUser] = useState<User>();
+  const [currentUser, setCurrentUser] = useState<IUser>();
   const [nameInput, setNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [inputValue, setInputValue] = useState(true);
