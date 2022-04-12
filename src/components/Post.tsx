@@ -14,19 +14,13 @@ import React, { FormEvent, useContext, useState } from 'react';
 import { BiTimeFive } from 'react-icons/bi';
 import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import { Posts } from '../shared/interfaces/posts.interface';
 import { User } from '../shared/interfaces/user.interface';
 import theme from '../styles/theme';
 import Notification from './Notification';
 
-interface Post {
-  id?: number;
-  body: string;
-  createdAt?: string;
-  user: User;
-}
-
 interface PropsData {
-  post: Post;
+  post: Posts;
   currentUser: User;
 }
 
