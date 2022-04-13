@@ -1,7 +1,7 @@
 import { IPost } from './post.interface';
 import { IUser } from './user.interface';
 
-export interface IMessages {
+export interface IMessage {
   id?: number;
   roomId?: string;
   post?: IPost;

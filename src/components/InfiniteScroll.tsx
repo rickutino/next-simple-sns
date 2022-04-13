@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
-import { IMessages } from '../shared/interfaces/messages.interface';
-import { IPosts } from '../shared/interfaces/posts.interface';
+import { IMessage } from '../shared/interfaces/message.interface';
+import { IPost } from '../shared/interfaces/post.interface';
 
 export default function useInfiniteScroll() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [posts, setPosts] = useState<IPosts[]>([]);
-  const [messages, setMessages] = useState<IMessages[]>([]);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [cursor, setCursor] = useState<number>();
   const pageSize = 10;
 

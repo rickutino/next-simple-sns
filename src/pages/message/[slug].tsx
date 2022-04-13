@@ -12,7 +12,7 @@ import {
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
-import { IMessages } from '../../shared/interfaces/messages.interface';
+import { IMessage } from '../../shared/interfaces/message.interface';
 import theme from '../../styles/theme';
 
 const Root = styled(Box)({
@@ -64,7 +64,7 @@ export default function Message() {
   const { notify, setNotify, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [messages, setMessages] = useState<IMessages[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [messagesError, setMessagesError] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const [inputValue, setInputValue] = useState(true);
@@ -190,7 +190,7 @@ export default function Message() {
       <MessageContainer maxWidth="sm">
         <MessageBody>
           <div id="scroll" />
-          {messages.map((message: IMessages) => {
+          {messages.map((message: IMessage) => {
             return message.user.id === user.id ? (
               <>
                 <PostContext post={message.post} />
