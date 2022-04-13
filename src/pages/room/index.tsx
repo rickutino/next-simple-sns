@@ -18,7 +18,7 @@ import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
-import { IRooms } from '../../shared/interfaces/rooms.interface';
+import { IRoom } from '../../shared/interfaces/room.interface';
 import { IUser } from '../../shared/interfaces/user.interface';
 import theme from '../../styles/theme';
 
@@ -85,7 +85,7 @@ const RoomSubtitle = styled(Typography)({
   color: theme.palette.grey[400]
 });
 
-function getUserFriendIndex(room: IRooms, currentUser: IUser) {
+function getUserFriendIndex(room: IRoom, currentUser: IUser) {
   if (room.roomUsers[0].user.id !== currentUser.id) {
     return 0;
   }
@@ -94,7 +94,7 @@ function getUserFriendIndex(room: IRooms, currentUser: IUser) {
 
 export default function Room() {
   const { notify, setNotify, user } = useContext(AuthContext);
-  const [rooms, setRooms] = useState<IRooms[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
 
   useEffect(() => {
     api

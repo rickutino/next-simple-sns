@@ -1,9 +1,9 @@
-import { IMessages } from './messages.interface';
+import { IMessage } from './message.interface';
 import { IUser } from './user.interface';
 
-export interface IRooms {
+export interface IRoom {
   id: string;
-  messages: IMessages;
+  messages: IMessage;
   roomUsers: {
     user: IUser;
     rooId: string;
