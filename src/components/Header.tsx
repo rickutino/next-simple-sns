@@ -18,6 +18,17 @@ import theme from '../styles/theme';
 import ConfirmDialog from './ConfirmDialog';
 import Notification from './Notification';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  iconImageUrl: string | null;
+}
+
+interface AxiosResponseData {
+  user: User;
+}
+
 const BoxRoot = styled(Box)({
   backgroundColor: theme.palette.primary.dark,
   width: '100%',
@@ -161,7 +172,7 @@ export function Header() {
 
   useEffect(() => {
     api
-      .get('/account')
+      .get<AxiosResponseData>('/account')
       .then(response => {
         const { id, name, email, iconImageUrl } = response.data.user;
 

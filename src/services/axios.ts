@@ -1,18 +1,25 @@
-import axios, { AxiosError } from 'axios';
+/* eslint-disable dot-notation */
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { destroyCookie, parseCookies } from 'nookies';
+import { tokenKey } from '../shared/const';
 
 export function getAPIClient(ctx?: any) {
-  const { 'next-simple-sns': token } = parseCookies(ctx);
-
   const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_REACT_APP_HOST,
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    baseURL: 'https://simp-340605.an.r.appspot.com/'
   });
 
-  api.interceptors.response.use(
+  api.interceptors.request.use(request => {
+    const userToken = parseCookies(ctx);
+
+    request.headers['Authorization'] = userToken[tokenKey]
+      ? `Bearer ${userToken[tokenKey]}`
+      : '';
+
+    return request;
+  });
+
+  api.interceptors.response.use<AxiosResponse>(
     config => {
       return config;
     },
