@@ -64,12 +64,12 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [notify, setNotify] = useState({
+  const [notify, setNotify] = useState<Notification>({
     isOpen: false,
     message: '',
     type: null
   });
-  const [confirmDialog, setConfirmDialog] = useState({
+  const [confirmDialog, setConfirmDialog] = useState<DialogData>({
     isOpen: false,
     title: ''
   });
