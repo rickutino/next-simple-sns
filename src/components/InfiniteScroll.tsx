@@ -15,6 +15,10 @@ interface Posts {
   user: User;
 }
 
+interface AxiosResponseData {
+  posts: Posts[];
+}
+
 interface Messages {
   id: number;
   roomId?: string;
@@ -43,7 +47,7 @@ export default function useInfiniteScroll() {
     }
 
     try {
-      const postResponse = await api.get(
+      const postResponse = await api.get<AxiosResponseData>(
         `/posts?pagination[size]=${pageSize}&pagination[cursor]=${cursor}`
       );
       setCursor(postResponse.data.posts.pop().id);

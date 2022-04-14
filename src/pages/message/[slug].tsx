@@ -12,6 +12,7 @@ import {
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { tokenKey } from '../../shared/const';
 import theme from '../../styles/theme';
 
 interface User {
@@ -37,6 +38,14 @@ interface Messages {
   userId?: number;
   content: string;
   createdAt: string;
+}
+
+interface AxiosResponseAllMessages {
+  messages: Messages[];
+}
+
+interface AxiosResponsePostMessage {
+  message: Messages;
 }
 
 const Root = styled(Box)({
@@ -129,7 +138,7 @@ export default function Message() {
 
     // オールメッセージのリストの最後のエレメントの取得。
     if (firstUpdate.current) {
-      const response = await api.get(
+      const response = await api.get<AxiosResponseAllMessages>(
         `/messages?roomId=${roomId}&pagination[order]=ASC`
       );
 
@@ -140,7 +149,7 @@ export default function Message() {
 
     try {
       getRemainingMessage();
-      const messageResponse = await api.get(
+      const messageResponse = await api.get<AxiosResponseAllMessages>(
         `/messages?pagination[size]=${pageSize}&pagination[order]=ASC&roomId=${roomId}&pagination[cursor]=${cursorIndex}`
       );
 
@@ -175,7 +184,7 @@ export default function Message() {
     }
 
     try {
-      const response = await api.post('/messages', {
+      const response = await api.post<AxiosResponsePostMessage>('/messages', {
         content: inputMessage,
         roomId
       });
@@ -268,9 +277,9 @@ export default function Message() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { 'next-simple-sns': token } = parseCookies(ctx);
+  const currentUserToken = parseCookies(ctx);
 
-  if (!token) {
+  if (!currentUserToken[tokenKey]) {
     return {
       redirect: {
         destination: '/account/login',

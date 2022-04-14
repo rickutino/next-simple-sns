@@ -1,4 +1,4 @@
-/* eslint-disable dot-notation */
+import { AxiosResponse } from 'axios';
 import Router, { useRouter } from 'next/router';
 import { destroyCookie, setCookie } from 'nookies';
 import {
@@ -10,6 +10,7 @@ import {
   useState
 } from 'react';
 import { api } from '../services/api';
+import { tokenKey } from '../shared/const';
 
 interface User {
   id: string;
@@ -106,7 +107,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
 
     api
-      .delete('/auth')
+      .delete<AxiosResponse>('/auth')
       .then(() => {
         destroyCookie(undefined, 'next-simple-sns');
 
@@ -137,15 +138,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       .then(response => {
         const { token } = response.data;
 
-        setCookie(undefined, 'next-simple-sns', token, {
+        setCookie(undefined, tokenKey, token, {
           maxAge: 60 * 60 * 24, // 24 hours;
           path: '/' // どのパスでもこのクッキーにアクセスできる。
-        });
-
-        api.interceptors.request.use(request => {
-          request.headers['Authorization'] = token ? `Bearer ${token}` : '';
-
-          return request;
         });
 
         router.push('/');
@@ -169,15 +164,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const { token } = response.data;
 
-      setCookie(undefined, 'next-simple-sns', token, {
+      setCookie(undefined, tokenKey, token, {
         maxAge: 60 * 60 * 24, // 24 hours;
         path: '/' // どのパスでもこのクッキーにアクセスできる。
-      });
-
-      api.interceptors.request.use(request => {
-        request.headers['Authorization'] = token ? `Bearer ${token}` : '';
-
-        return request;
       });
 
       router.push('/');
