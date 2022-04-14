@@ -21,7 +21,12 @@ import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 import { IUser } from '../../shared/interfaces/user.interface';
+import { tokenKey } from '../../shared/const';
 import theme from '../../styles/theme';
+
+interface AxiosResponseUserData {
+  user: IUser;
+}
 
 const Root = styled(Box)({
   backgroundColor: theme.palette.primary.main,
@@ -108,7 +113,7 @@ export default function Update() {
   const router = useRouter();
 
   useEffect(() => {
-    api.get('/account').then(response => {
+    api.get<AxiosResponseUserData>('/account').then(response => {
       setCurrentUser(response.data.user);
       setNameInput(response.data.user.name);
       setEmailInput(response.data.user.email);
@@ -126,7 +131,7 @@ export default function Update() {
     };
 
     await api
-      .patch('/account/icon_image', formData, config)
+      .patch<AxiosResponseUserData>('/account/icon_image', formData, config)
       .then(response => {
         const uploadUserIcon = {
           ...currentUser,
@@ -187,7 +192,7 @@ export default function Update() {
     }
 
     try {
-      await api.patch('/account/profile', {
+      await api.patch<AxiosResponseUserData>('/account/profile', {
         name: nameInput,
         email: emailInput
       });
@@ -286,9 +291,9 @@ export default function Update() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { 'next-simple-sns': token } = parseCookies(ctx);
+  const currentUserToken = parseCookies(ctx);
 
-  if (!token) {
+  if (!currentUserToken[tokenKey]) {
     return {
       redirect: {
         destination: '/account/login',

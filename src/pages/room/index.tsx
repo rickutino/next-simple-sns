@@ -20,7 +20,12 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 import { IRoom } from '../../shared/interfaces/room.interface';
 import { IUser } from '../../shared/interfaces/user.interface';
+import { tokenKey } from '../../shared/const';
 import theme from '../../styles/theme';
+
+interface AxiosResponseData {
+  rooms: IRoom[];
+}
 
 function jaTimeZone(hours: string) {
   const dateToTime = (date: Date) =>
@@ -98,7 +103,7 @@ export default function Room() {
 
   useEffect(() => {
     api
-      .get('/rooms')
+      .get<AxiosResponseData>('/rooms')
       .then(response => {
         setRooms(response.data.rooms);
       })
@@ -180,9 +185,9 @@ export default function Room() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { 'next-simple-sns': token } = parseCookies(ctx);
+  const currentUserToken = parseCookies(ctx);
 
-  if (!token) {
+  if (!currentUserToken[tokenKey]) {
     return {
       redirect: {
         destination: '/account/login',

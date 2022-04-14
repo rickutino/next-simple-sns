@@ -115,7 +115,7 @@ export default function Post({ post, currentUser }: PropsData) {
     }
 
     try {
-      const response = await api.post('/messages/via_post', {
+      const response = await api.post<AxiosResponseData>('/messages/via_post', {
         content: comment,
         postId: post.id
       });
