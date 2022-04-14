@@ -12,6 +12,7 @@ import {
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { tokenKey } from '../../shared/const';
 import { IMessage } from '../../shared/interfaces/message.interface';
 import theme from '../../styles/theme';
 

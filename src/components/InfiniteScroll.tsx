@@ -11,6 +11,10 @@ export default function useInfiniteScroll() {
   const [cursor, setCursor] = useState<number>();
   const pageSize = 10;
 
+  interface AxiosResponseData {
+    posts: IPost[];
+  }
+
   async function getPostsList() {
     setLoading(true);
 
