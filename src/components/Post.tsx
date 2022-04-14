@@ -14,41 +14,19 @@ import React, { FormEvent, useContext, useState } from 'react';
 import { BiTimeFive } from 'react-icons/bi';
 import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import { IMessage } from '../shared/interfaces/message.interface';
+import { IPost } from '../shared/interfaces/post.interface';
+import { IUser } from '../shared/interfaces/user.interface';
 import theme from '../styles/theme';
 import Notification from './Notification';
 
-interface User {
-  id?: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Post {
-  id?: number;
-  body: string;
-  createdAt?: string;
-  user: User;
-}
-
-interface Messages {
-  id: number;
-  roomId?: string;
-  post?: Post;
-  postId?: number;
-  user: User;
-  userId?: number;
-  content: string;
-  createdAt: string;
-}
-
 interface AxiosResponseData {
-  message: Messages;
+  message: IMessage;
 }
 
 interface PropsData {
-  post: Post;
-  currentUser: User;
+  post: IPost;
+  currentUser: IUser;
 }
 
 function jaTimeZone(hours: string) {

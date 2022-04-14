@@ -20,17 +20,12 @@ import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { IUser } from '../../shared/interfaces/user.interface';
 import { tokenKey } from '../../shared/const';
 import theme from '../../styles/theme';
 
-interface User {
-  name: string;
-  email: string;
-  iconImageUrl?: string | null;
-}
-
 interface AxiosResponseUserData {
-  user: User;
+  user: IUser;
 }
 
 const Root = styled(Box)({
@@ -107,7 +102,7 @@ const ProfileInput = styled(TextField)({
 });
 
 export default function Update() {
-  const [currentUser, setCurrentUser] = useState<User>();
+  const [currentUser, setCurrentUser] = useState<IUser>();
   const [nameInput, setNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [inputValue, setInputValue] = useState(true);

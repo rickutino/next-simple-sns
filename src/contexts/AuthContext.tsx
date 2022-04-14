@@ -10,17 +10,13 @@ import {
   useState
 } from 'react';
 import { api } from '../services/api';
+
+import { IUser } from '../shared/interfaces/user.interface';
 import { tokenKey } from '../shared/const';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
 
 interface AxiosResponseData {
-  user: User;
+  user: IUser;
 }
 interface Notification {
   isOpen: boolean;
@@ -49,8 +45,8 @@ interface AuthContextData {
   login(credentials: LoginCredentials): Promise<void>;
   singUp(credentials: SingUpCredentials): Promise<void>;
   signOut(): void;
-  user: User;
-  setUser: Dispatch<SetStateAction<User>>;
+  user: IUser;
+  setUser: Dispatch<SetStateAction<IUser>>;
   notify: Notification;
   setNotify: Dispatch<SetStateAction<Notification>>;
   confirmDialog: DialogData;
@@ -73,7 +69,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isOpen: false,
     title: ''
   });
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<IUser>();
   const router = useRouter();
 
   useEffect(() => {

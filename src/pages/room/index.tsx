@@ -18,45 +18,13 @@ import { BottomHeaderNavigation, Header } from '../../components/Header';
 import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
+import { IRoom } from '../../shared/interfaces/room.interface';
+import { IUser } from '../../shared/interfaces/user.interface';
 import { tokenKey } from '../../shared/const';
 import theme from '../../styles/theme';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id?: number;
-  userId: number;
-  body: string;
-  createdAt?: Date;
-}
-
-interface Messages {
-  id: number;
-  roomId: string;
-  post: Posts;
-  postId: number;
-  user: User;
-  userId: number;
-  content: string;
-  createdAt: Date;
-}
-
-interface Rooms {
-  id: string;
-  messages: Messages;
-  roomUsers: {
-    user: User;
-    rooId: string;
-    userId: string;
-  };
-}
 interface AxiosResponseData {
-  rooms: Rooms[];
+  rooms: IRoom[];
 }
 
 function jaTimeZone(hours: string) {
@@ -122,7 +90,7 @@ const RoomSubtitle = styled(Typography)({
   color: theme.palette.grey[400]
 });
 
-function getUserFriendIndex(room: Rooms, currentUser: User) {
+function getUserFriendIndex(room: IRoom, currentUser: IUser) {
   if (room.roomUsers[0].user.id !== currentUser.id) {
     return 0;
   }
@@ -131,7 +99,7 @@ function getUserFriendIndex(room: Rooms, currentUser: User) {
 
 export default function Room() {
   const { notify, setNotify, user } = useContext(AuthContext);
-  const [rooms, setRooms] = useState<Rooms[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
 
   useEffect(() => {
     api

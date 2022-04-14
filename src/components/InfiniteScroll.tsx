@@ -1,42 +1,19 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id: number;
-  body: string;
-  createdAt?: string;
-  user: User;
-}
-
-interface AxiosResponseData {
-  posts: Posts[];
-}
-
-interface Messages {
-  id: number;
-  roomId?: string;
-  post?: Posts;
-  postId?: number;
-  user: User;
-  userId?: number;
-  content: string;
-  createdAt: Date;
-}
+import { IMessage } from '../shared/interfaces/message.interface';
+import { IPost } from '../shared/interfaces/post.interface';
 
 export default function useInfiniteScroll() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [posts, setPosts] = useState<Posts[]>([]);
-  const [messages, setMessages] = useState<Messages[]>([]);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [cursor, setCursor] = useState<number>();
   const pageSize = 10;
+
+  interface AxiosResponseData {
+    posts: IPost[];
+  }
 
   async function getPostsList() {
     setLoading(true);

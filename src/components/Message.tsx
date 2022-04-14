@@ -2,32 +2,8 @@
 /* eslint-disable react/no-unused-prop-types */
 import { Avatar, Box, styled, Typography } from '@mui/material';
 import { BiTimeFive } from 'react-icons/bi';
+import { IMessage } from '../shared/interfaces/message.interface';
 import theme from '../styles/theme';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id: number;
-  userId: number;
-  body: string;
-  createdAt?: string;
-}
-
-interface Messages {
-  id?: number;
-  roomId?: string;
-  post?: Posts;
-  postId?: number;
-  user?: User;
-  userId?: number;
-  content?: string;
-  createdAt?: string;
-}
 
 const MessageRow = styled(Box)({
   display: 'flex'
@@ -153,7 +129,7 @@ function jaTimeZone(hours: string) {
   return localTime(localDate);
 }
 
-export function PostContext({ post }: Messages) {
+export function PostContext({ post }: IMessage) {
   return (
     !!post && (
       <PostContent>
@@ -164,7 +140,7 @@ export function PostContext({ post }: Messages) {
   );
 }
 
-export function MessageLeft({ user, content, createdAt }: Messages) {
+export function MessageLeft({ user, content, createdAt }: IMessage) {
   return (
     <MessageRow>
       <Avatar
@@ -185,7 +161,7 @@ export function MessageLeft({ user, content, createdAt }: Messages) {
   );
 }
 
-export function MessageRight({ content, createdAt }: Messages) {
+export function MessageRight({ content, createdAt }: IMessage) {
   return (
     <MessageRowRight>
       <MyMessage>

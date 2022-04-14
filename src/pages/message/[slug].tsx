@@ -13,39 +13,15 @@ import Notification from '../../components/Notification';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 import { tokenKey } from '../../shared/const';
+import { IMessage } from '../../shared/interfaces/message.interface';
 import theme from '../../styles/theme';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  iconImageUrl: string | null;
-}
-
-interface Posts {
-  id: number;
-  userId: number;
-  body: string;
-  createdAt?: string;
-}
-
-interface Messages {
-  id: number;
-  roomId?: string;
-  post?: Posts;
-  postId?: number;
-  user: User;
-  userId?: number;
-  content: string;
-  createdAt: string;
-}
-
 interface AxiosResponseAllMessages {
-  messages: Messages[];
+  messages: IMessage[];
 }
 
 interface AxiosResponsePostMessage {
-  message: Messages;
+  message: IMessage;
 }
 
 const Root = styled(Box)({
@@ -97,7 +73,7 @@ export default function Message() {
   const { notify, setNotify, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [messages, setMessages] = useState<Messages[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [messagesError, setMessagesError] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const [inputValue, setInputValue] = useState(true);
@@ -223,7 +199,7 @@ export default function Message() {
       <MessageContainer maxWidth="sm">
         <MessageBody>
           <div id="scroll" />
-          {messages.map((message: Messages) => {
+          {messages.map((message: IMessage) => {
             return message.user.id === user.id ? (
               <>
                 <PostContext post={message.post} />

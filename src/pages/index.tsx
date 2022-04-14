@@ -11,7 +11,7 @@ import { tokenKey } from '../shared/const';
 import theme from '../styles/theme';
 
 interface User {
-  id?: string;
+  id: string;
   name: string;
   email: string;
   iconImageUrl: string | null;
