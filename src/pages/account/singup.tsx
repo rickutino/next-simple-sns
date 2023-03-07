@@ -180,7 +180,7 @@ export default function SingUp() {
 export const getServerSideProps: GetServerSideProps = async ctx => {
   const currentUserToken = parseCookies(ctx);
 
-  if (!currentUserToken[tokenKey]) {
+  if (currentUserToken[tokenKey]) {
     return {
       redirect: {
         destination: '/',
